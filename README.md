@@ -43,7 +43,7 @@ flutter run
 ## Package
 
 - Application id: `space.d11s.niceproportions`
-- Display name: Nice Pro Portions
+- Display name: Nice Pro Portions ;-)
 
 ## License
 

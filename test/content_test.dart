@@ -8,7 +8,7 @@ void main() {
     final raw = File('assets/content.json').readAsStringSync();
     final content = ContentLoader.parse(raw);
 
-    expect(content.appName, 'Good Pro Portion');
+    expect(content.appName, 'Nice Pro Portions');
     expect(content.moves.length, greaterThanOrEqualTo(15));
     expect(content.meals.length, 5);
 

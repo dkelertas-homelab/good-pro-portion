@@ -47,7 +47,7 @@ function buildAll(theme /* 'teal' | 'coral' */) {
   const F = (name, size) => figures[name](size, theme);
   const isDark = theme === 'coral';
   const extra = isDark ? DARK_CSS : '';
-  const chipLabel = isDark ? 'Good Pro Portion · dark' : 'Good Pro Portion';
+  const chipLabel = isDark ? 'Nice Pro Portions · dark' : 'Nice Pro Portions';
   const ringAccent = isDark ? '#FF6B4A' : '#0D9488';
   const ringTrack = isDark ? '#252B38' : '#E5E7EB';
   const ringText = isDark ? '#F3F4F6' : '#1A1D23';
@@ -440,7 +440,7 @@ function buildAll(theme /* 'teal' | 'coral' */) {
       <div class="card" style="margin:18px 0;padding:18px;background:var(--accent-soft);border:none;box-shadow:none;">
         <div class="row">
           <div>
-            <h3 style="color:var(--accent-dark);">Good Pro Portion · Ad-free</h3>
+            <h3 style="color:var(--accent-dark);">Nice Pro Portions · Ad-free</h3>
             <p class="muted" style="margin-top:4px;">Unlock once, keep forever on this Google account</p>
           </div>
         </div>

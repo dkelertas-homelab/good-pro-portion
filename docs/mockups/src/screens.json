@@ -1,0 +1,28 @@
+{
+  "light": [
+    "01-home",
+    "02-routine",
+    "03-exercise",
+    "04-timer-work",
+    "05-timer-rest",
+    "06-done",
+    "07-meals",
+    "08-settings",
+    "09-remove-ads",
+    "10-reminders-setup",
+    "11-reminder-notification"
+  ],
+  "dark": [
+    "dark-01-home",
+    "dark-02-routine",
+    "dark-03-exercise",
+    "dark-04-timer-work",
+    "dark-05-timer-rest",
+    "dark-06-done",
+    "dark-07-meals",
+    "dark-08-settings",
+    "dark-09-remove-ads",
+    "dark-10-reminders-setup",
+    "dark-11-reminder-notification"
+  ]
+}

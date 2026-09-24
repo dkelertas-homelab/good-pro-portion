@@ -49,3 +49,8 @@ app.*.map.json
 
 # Kotlin incremental
 android/.kotlin/
+
+# Play / signing — never commit
+android/key.properties
+*.jks
+*.keystore

@@ -17,6 +17,8 @@ Flutter app skeleton (Phase 2):
 
 Approved design mockups live under [`docs/mockups/`](docs/mockups/).
 
+Product and coding rules: [`docs/GUIDE.md`](docs/GUIDE.md).
+
 ## Requirements
 
 - Flutter stable (3.x)

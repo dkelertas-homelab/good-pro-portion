@@ -1,4 +1,4 @@
-# Good Pro Portion — product & coding guide
+# Nice Pro Portions — product & coding guide
 
 Every new feature should fit this guide. Keep it short, friendly, and easy to follow.
 

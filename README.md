@@ -1,4 +1,4 @@
-# Good Pro Portion
+# Nice Pro Portions
 
 A free Android home-workout app for short, quiet bodyweight sessions — plus simple “eat simple” meal ideas with hand-portion guides.
 
@@ -43,7 +43,7 @@ flutter run
 ## Package
 
 - Application id: `space.d11s.goodproportion`
-- Display name: Good Pro Portion
+- Display name: Nice Pro Portions
 
 ## License
 

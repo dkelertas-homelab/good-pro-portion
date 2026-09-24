@@ -140,10 +140,10 @@ async function makeSmoothGifs(browser) {
     ['10-reminders-setup.png','Reminders setup'],['11-reminder-notification.png','Reminder notif'],
   ];
   await contactSheet(browser, labels, 'contact-sheet.png',
-    'Good Pro Portion — Phase 1 mockups (light teal)',
+    'Nice Pro Portions — Phase 1 mockups (light teal)',
     'Default theme · Round 2 figures · 24 Sep 2026 · for David to review');
   await contactSheet(browser, labels.map(([f,l]) => ['dark-' + f, l]), 'contact-sheet-dark.png',
-    'Good Pro Portion — Phase 1 mockups (dark coral)',
+    'Nice Pro Portions — Phase 1 mockups (dark coral)',
     'Dark mode · Round 2 figures · 24 Sep 2026 · for David to review');
 
   await browser.close();

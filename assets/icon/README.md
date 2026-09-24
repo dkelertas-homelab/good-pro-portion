@@ -1,6 +1,7 @@
 # App icons
 
-- `test/` — current launcher icon (solid lunge figure + coral towel accents + B badge).
-- `release/` — outline variant kept for later; not wired to the Android launcher yet.
+- `test/` — current Android launcher (from approved TEST raster + B badge).
+- `release/` — outline variant from approved RELEASE raster; not wired to the launcher yet.
 
-Source SVGs are hand-drawn (not pixel-traced). Regenerated mipmaps via `dart run flutter_launcher_icons`.
+Round 4: colour-keyed from David's generated images (not hand-redrawn SVGs).
+Regenerate mipmaps with `dart run flutter_launcher_icons`.

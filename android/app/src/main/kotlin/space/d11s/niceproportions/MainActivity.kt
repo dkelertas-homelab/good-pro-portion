@@ -1,4 +1,4 @@
-package space.d11s.goodproportion
+package space.d11s.niceproportions
 
 import io.flutter.embedding.android.FlutterActivity
 

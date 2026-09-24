@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"/>
+<style>:root {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface-2: #EEF1F5;
+  --text: #1A1D23;
+  --text-2: #5C6570;
+  --text-3: #8A939E;
+  --accent: #0D9488;
+  --accent-soft: #CCFBF1;
+  --accent-dark: #0F766E;
+  --danger: #E11D48;
+  --warn: #F59E0B;
+  --ad: #E8ECF1;
+  --ad-border: #C5CDD8;
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 2px 8px rgba(26,29,35,0.06);
+  --phone-w: 412px;
+  --phone-h: 915px;
+  --font: "Inter", "Roboto", system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: var(--phone-w);
+  height: var(--phone-h);
+  overflow: hidden;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+.phone {
+  width: var(--phone-w);
+  height: var(--phone-h);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.status-bar {
+  height: 36px;
+  padding: 8px 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.status-icons { display: flex; gap: 6px; align-items: center; opacity: 0.85; font-size: 12px; }
+.nav-bar {
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+.nav-pill { width: 108px; height: 4px; background: #1A1D23; border-radius: 4px; opacity: 0.35; }
+.content {
+  flex: 1;
+  overflow: hidden;
+  padding: 8px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.15; }
+h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
+h3 { font-size: 16px; font-weight: 600; }
+.sub { color: var(--text-2); font-size: 14px; line-height: 1.4; }
+.muted { color: var(--text-3); font-size: 13px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-soft); color: var(--accent-dark);
+  font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+}
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(26,29,35,0.04);
+}
+.card.disabled { opacity: 0.45; filter: grayscale(0.3); }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--accent); color: white; font-weight: 700; font-size: 17px;
+  border: none; border-radius: 28px; height: 56px; width: 100%;
+  letter-spacing: 0.2px;
+}
+.btn.secondary {
+  background: var(--surface-2); color: var(--text);
+}
+.btn.ghost {
+  background: transparent; color: var(--accent); border: 2px solid var(--accent-soft);
+}
+.ad-banner {
+  background: var(--ad);
+  border: 1.5px dashed var(--ad-border);
+  border-radius: 12px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  flex-shrink: 0;
+  margin: 0 20px 8px;
+}
+.ad-banner.inline { margin: 0; height: 72px; }
+.row { display: flex; align-items: center; gap: 12px; }
+.spacer { flex: 1; }
+.figure-wrap {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft);
+  border-radius: 20px;
+}
+.figure-wrap svg { display: block; }
+.thumb {
+  width: 52px; height: 52px; border-radius: 12px;
+  background: var(--accent-soft);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.thumb svg { width: 40px; height: 40px; }
+.list-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(26,29,35,0.06);
+}
+.list-item:last-child { border-bottom: none; }
+.badge {
+  font-size: 11px; font-weight: 700; color: var(--accent-dark);
+  background: var(--accent-soft); padding: 2px 8px; border-radius: 6px;
+}
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text-3); margin-bottom: 4px;
+}
+.example-tag {
+  position: absolute; top: 44px; right: 16px;
+  background: #FEF3C7; color: #92400E;
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 6px; letter-spacing: 0.3px; z-index: 5;
+}
+
+:root {
+  --bg: #0F1218;
+  --surface: #1A1F2A;
+  --surface-2: #252B38;
+  --text: #F3F4F6;
+  --text-2: #A0A8B5;
+  --text-3: #6B7280;
+  --accent: #FF6B4A;
+  --accent-soft: #3A221C;
+  --accent-dark: #FF8A70;
+  --ad: #1F2530;
+  --ad-border: #3A4250;
+  --danger: #FB7185;
+}
+.nav-pill { background: #F3F4F6; opacity: 0.4; }
+.card { border-color: rgba(255,255,255,0.04); box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+.btn.secondary { background: var(--surface-2); color: var(--text); }
+.btn.ghost { border-color: #4A2E28; color: var(--accent); }
+.example-tag { background: #3A2E14; color: #FBBF24; }
+
+.list-item { border-bottom: none !important; }
+</style>
+</head><body>
+<div class="phone">
+  <div class="status-bar"><span>6:30</span><span class="status-icons">▮▮▮  LTE  🔋</span></div>
+  <div class="example-tag">EXAMPLE MOCKUP</div>
+  <div class="content" style="gap:6px;padding-bottom:0;flex:1;overflow:hidden;">
+    <div class="row">
+      <span style="font-size:22px;color:var(--text-2);">‹</span>
+      <div class="spacer">
+        <h2>Day A</h2>
+        <p class="muted">Quiet morning · ~9 min · example</p>
+      </div>
+      <span class="chip">No cool-down</span>
+    </div>
+    <div class="card" style="padding:8px 12px;background:var(--accent-soft);border:none;box-shadow:none;">
+      <div class="row"><strong style="color:var(--accent-dark);font-size:13px;">Warm-up · 2 min</strong><span class="spacer"></span><span class="muted">30s each</span></div>
+    </div>
+    
+      <div class="list-item" style="padding:3px 0;border:none;">
+        <div class="thumb" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 200 200" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="182" rx="40" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="100" y1="100" x2="88" y2="148" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="100" x2="122" y2="128" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="88" y1="148" x2="84" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="122" y1="128" x2="128" y2="155" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="88" cy="148" r="8" fill="#FF6B4A"/><circle cx="122" cy="128" r="8" fill="#FF6B4A"/><circle cx="84" cy="178" r="6" fill="#FF6B4A"/><circle cx="128" cy="155" r="6" fill="#FF6B4A"/><g transform="rotate(0 100 71)">
+    <rect x="84" y="44.32" width="32" height="53.36" rx="16" fill="#FF6B4A"/>
+  </g><line x1="84" y1="50" x2="72" y2="42" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="116" y1="50" x2="130" y2="78" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="72" y1="42" x2="66" y2="28" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="130" y1="78" x2="138" y2="102" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="72" cy="42" r="6" fill="#FF6B4A"/><circle cx="130" cy="78" r="6" fill="#FF6B4A"/><circle cx="66" cy="28" r="5.5" fill="#FF6B4A"/><circle cx="138" cy="102" r="5.5" fill="#FF6B4A"/><circle cx="84" cy="50" r="8" fill="#FF6B4A"/><circle cx="116" cy="50" r="8" fill="#FF6B4A"/><circle cx="100" cy="100" r="9" fill="#FF6B4A"/><circle cx="100" cy="26" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">March on the spot</h3></div>
+        <span class="muted">30s</span>
+      </div>
+      <div class="list-item" style="padding:3px 0;border:none;">
+        <div class="thumb" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 200 200" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="182" rx="40" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="100" y1="102" x2="88" y2="148" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="102" x2="112" y2="148" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="88" y1="148" x2="84" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="112" y1="148" x2="116" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="88" cy="148" r="8" fill="#FF6B4A"/><circle cx="112" cy="148" r="8" fill="#FF6B4A"/><circle cx="84" cy="178" r="6" fill="#FF6B4A"/><circle cx="116" cy="178" r="6" fill="#FF6B4A"/><g transform="rotate(0 100 74)">
+    <rect x="84" y="48.239999999999995" width="32" height="51.52" rx="16" fill="#FF6B4A"/>
+  </g><line x1="82" y1="52" x2="52" y2="48" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="118" y1="52" x2="148" y2="48" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="52" y1="48" x2="38" y2="42" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="148" y1="48" x2="162" y2="42" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="52" cy="48" r="6" fill="#FF6B4A"/><circle cx="148" cy="48" r="6" fill="#FF6B4A"/><circle cx="38" cy="42" r="5.5" fill="#FF6B4A"/><circle cx="162" cy="42" r="5.5" fill="#FF6B4A"/><circle cx="82" cy="52" r="8" fill="#FF6B4A"/><circle cx="118" cy="52" r="8" fill="#FF6B4A"/><circle cx="100" cy="102" r="9" fill="#FF6B4A"/><circle cx="100" cy="30" r="16" fill="#FF6B4A"/>
+      <circle cx="38" cy="42" r="20" fill="none" stroke="#FF8A70" stroke-width="3" stroke-dasharray="5 4" opacity="0.75"/>
+      <circle cx="162" cy="42" r="20" fill="none" stroke="#FF8A70" stroke-width="3" stroke-dasharray="5 4" opacity="0.75"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">Arm circles (text only)</h3></div>
+        <span class="muted">30s</span>
+      </div>
+      <div class="list-item" style="padding:3px 0;border:none;">
+        <div class="thumb" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 200 200" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><ellipse cx="110" cy="182" rx="40" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="110" y1="100" x2="100" y2="145" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="110" y1="100" x2="122" y2="145" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="145" x2="94" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="122" y1="145" x2="128" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="100" cy="145" r="8" fill="#FF6B4A"/><circle cx="122" cy="145" r="8" fill="#FF6B4A"/><circle cx="94" cy="178" r="6" fill="#FF6B4A"/><circle cx="128" cy="178" r="6" fill="#FF6B4A"/><g transform="rotate(-40.100907546212234 94 81)">
+    <rect x="78" y="58.14767407899143" width="32" height="45.704651842017135" rx="16" fill="#FF6B4A"/>
+  </g><line x1="72" y1="68" x2="62" y2="90" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="90" y1="64" x2="100" y2="88" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="62" y1="90" x2="58" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="100" y1="88" x2="108" y2="110" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="62" cy="90" r="6" fill="#FF6B4A"/><circle cx="100" cy="88" r="6" fill="#FF6B4A"/><circle cx="58" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="108" cy="110" r="5.5" fill="#FF6B4A"/><circle cx="72" cy="68" r="8" fill="#FF6B4A"/><circle cx="90" cy="64" r="8" fill="#FF6B4A"/><circle cx="110" cy="100" r="9" fill="#FF6B4A"/><circle cx="68" cy="48" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">Good mornings</h3></div>
+        <span class="muted">30s</span>
+      </div>
+      <div class="list-item" style="padding:3px 0;border:none;">
+        <div class="thumb" style="width:36px;height:36px;border-radius:10px;"><svg viewBox="0 0 200 200" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="182" rx="48" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="100" y1="108" x2="70" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="108" x2="130" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="70" y1="138" x2="62" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="130" y1="138" x2="138" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="70" cy="138" r="8" fill="#FF6B4A"/><circle cx="130" cy="138" r="8" fill="#FF6B4A"/><circle cx="62" cy="178" r="6" fill="#FF6B4A"/><circle cx="138" cy="178" r="6" fill="#FF6B4A"/><g transform="rotate(0 100 86)">
+    <rect x="84" y="65.75999999999999" width="32" height="40.480000000000004" rx="16" fill="#FF6B4A"/>
+  </g><line x1="80" y1="72" x2="68" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="120" y1="72" x2="132" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="68" y1="92" x2="62" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="132" y1="92" x2="138" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="68" cy="92" r="6" fill="#FF6B4A"/><circle cx="132" cy="92" r="6" fill="#FF6B4A"/><circle cx="62" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="138" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="80" cy="72" r="8" fill="#FF6B4A"/><circle cx="120" cy="72" r="8" fill="#FF6B4A"/><circle cx="100" cy="108" r="9" fill="#FF6B4A"/><circle cx="100" cy="48" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">Slow squats</h3></div>
+        <span class="muted">30s</span>
+      </div>
+    <div class="card" style="padding:8px 12px;background:var(--accent-soft);border:none;box-shadow:none;margin-top:2px;">
+      <div class="row"><strong style="color:var(--accent-dark);font-size:13px;">Work · 7 moves</strong><span class="spacer"></span><span class="muted">40s / 20s</span></div>
+    </div>
+    
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="182" rx="48" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="100" y1="108" x2="70" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="108" x2="130" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="70" y1="138" x2="62" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="130" y1="138" x2="138" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="70" cy="138" r="8" fill="#FF6B4A"/><circle cx="130" cy="138" r="8" fill="#FF6B4A"/><circle cx="62" cy="178" r="6" fill="#FF6B4A"/><circle cx="138" cy="178" r="6" fill="#FF6B4A"/><g transform="rotate(0 100 86)">
+    <rect x="84" y="65.75999999999999" width="32" height="40.480000000000004" rx="16" fill="#FF6B4A"/>
+  </g><line x1="80" y1="72" x2="68" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="120" y1="72" x2="132" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="68" y1="92" x2="62" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="132" y1="92" x2="138" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="68" cy="92" r="6" fill="#FF6B4A"/><circle cx="132" cy="92" r="6" fill="#FF6B4A"/><circle cx="62" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="138" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="80" cy="72" r="8" fill="#FF6B4A"/><circle cx="120" cy="72" r="8" fill="#FF6B4A"/><circle cx="100" cy="108" r="9" fill="#FF6B4A"/><circle cx="100" cy="48" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">1. Squats</h3></div>
+        <span class="muted">40s</span>
+      </div>
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="110" cy="142" rx="70" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="118" y1="92" x2="145" y2="100" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="118" y1="92" x2="150" y2="100" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="145" y1="100" x2="168" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="150" y1="100" x2="175" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="145" cy="100" r="8" fill="#FF6B4A"/><circle cx="150" cy="100" r="8" fill="#FF6B4A"/><circle cx="168" cy="138" r="6" fill="#FF6B4A"/><circle cx="175" cy="138" r="6" fill="#FF6B4A"/><g transform="rotate(-84.8055710922652 85 89)">
+    <rect x="72" y="58.514803592563155" width="26" height="60.970392814873684" rx="13" fill="#FF6B4A"/>
+  </g><line x1="58" y1="88" x2="48" y2="118" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="58" y1="88" x2="52" y2="118" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="48" y1="118" x2="42" y2="138" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="52" y1="118" x2="48" y2="138" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="48" cy="118" r="6" fill="#FF6B4A"/><circle cx="52" cy="118" r="6" fill="#FF6B4A"/><circle cx="42" cy="138" r="5.5" fill="#FF6B4A"/><circle cx="48" cy="138" r="5.5" fill="#FF6B4A"/><circle cx="58" cy="88" r="8" fill="#FF6B4A"/><circle cx="58" cy="88" r="8" fill="#FF6B4A"/><circle cx="118" cy="92" r="9" fill="#FF6B4A"/><circle cx="38" cy="78" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">2. Push-ups</h3></div>
+        <span class="muted">40s</span>
+      </div>
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="110" cy="182" rx="55" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="100" y1="98" x2="78" y2="140" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="98" x2="132" y2="148" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="78" y1="140" x2="70" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="132" y1="148" x2="155" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="78" cy="140" r="8" fill="#FF6B4A"/><circle cx="132" cy="148" r="8" fill="#FF6B4A"/><circle cx="70" cy="178" r="6" fill="#FF6B4A"/><circle cx="155" cy="178" r="6" fill="#FF6B4A"/><g transform="rotate(8.130102354155994 104 70)">
+    <rect x="88" y="43.978470452335046" width="32" height="52.0430590953299" rx="16" fill="#FF6B4A"/>
+  </g><line x1="92" y1="50" x2="80" y2="78" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="124" y1="50" x2="138" y2="72" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="80" y1="78" x2="74" y2="102" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="138" y1="72" x2="148" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="80" cy="78" r="6" fill="#FF6B4A"/><circle cx="138" cy="72" r="6" fill="#FF6B4A"/><circle cx="74" cy="102" r="5.5" fill="#FF6B4A"/><circle cx="148" cy="92" r="5.5" fill="#FF6B4A"/><circle cx="92" cy="50" r="8" fill="#FF6B4A"/><circle cx="124" cy="50" r="8" fill="#FF6B4A"/><circle cx="100" cy="98" r="9" fill="#FF6B4A"/><circle cx="108" cy="26" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">3. Reverse lunges</h3></div>
+        <span class="muted">40s</span>
+      </div>
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="110" cy="146" rx="70" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="120" y1="96" x2="148" y2="102" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="120" y1="96" x2="152" y2="102" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="148" y1="102" x2="168" y2="142" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="152" y1="102" x2="176" y2="142" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="148" cy="102" r="8" fill="#FF6B4A"/><circle cx="152" cy="102" r="8" fill="#FF6B4A"/><circle cx="168" cy="142" r="6" fill="#FF6B4A"/><circle cx="176" cy="142" r="6" fill="#FF6B4A"/><g transform="rotate(-88.36342295838328 85 95)">
+    <rect x="72" y="62.78685982397866" width="26" height="64.42628035204268" rx="13" fill="#FF6B4A"/>
+  </g><line x1="56" y1="96" x2="48" y2="124" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="56" y1="96" x2="52" y2="124" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="48" y1="124" x2="44" y2="142" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="52" y1="124" x2="50" y2="142" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="48" cy="124" r="6" fill="#FF6B4A"/><circle cx="52" cy="124" r="6" fill="#FF6B4A"/><circle cx="44" cy="142" r="5.5" fill="#FF6B4A"/><circle cx="50" cy="142" r="5.5" fill="#FF6B4A"/><circle cx="56" cy="96" r="8" fill="#FF6B4A"/><circle cx="56" cy="96" r="8" fill="#FF6B4A"/><circle cx="120" cy="96" r="9" fill="#FF6B4A"/><circle cx="36" cy="88" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">4. Plank</h3></div>
+        <span class="muted">40s</span>
+      </div>
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="182" rx="48" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="100" y1="108" x2="70" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="100" y1="108" x2="130" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="70" y1="138" x2="62" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="130" y1="138" x2="138" y2="178" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="70" cy="138" r="8" fill="#FF6B4A"/><circle cx="130" cy="138" r="8" fill="#FF6B4A"/><circle cx="62" cy="178" r="6" fill="#FF6B4A"/><circle cx="138" cy="178" r="6" fill="#FF6B4A"/><g transform="rotate(0 100 86)">
+    <rect x="84" y="65.75999999999999" width="32" height="40.480000000000004" rx="16" fill="#FF6B4A"/>
+  </g><line x1="80" y1="72" x2="68" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="120" y1="72" x2="132" y2="92" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="68" y1="92" x2="62" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="132" y1="92" x2="138" y2="112" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="68" cy="92" r="6" fill="#FF6B4A"/><circle cx="132" cy="92" r="6" fill="#FF6B4A"/><circle cx="62" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="138" cy="112" r="5.5" fill="#FF6B4A"/><circle cx="80" cy="72" r="8" fill="#FF6B4A"/><circle cx="120" cy="72" r="8" fill="#FF6B4A"/><circle cx="100" cy="108" r="9" fill="#FF6B4A"/><circle cx="100" cy="48" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">5. Squats</h3></div>
+        <span class="muted">40s</span>
+      </div>
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="110" cy="142" rx="70" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="118" y1="92" x2="145" y2="100" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="118" y1="92" x2="150" y2="100" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="145" y1="100" x2="168" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="150" y1="100" x2="175" y2="138" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="145" cy="100" r="8" fill="#FF6B4A"/><circle cx="150" cy="100" r="8" fill="#FF6B4A"/><circle cx="168" cy="138" r="6" fill="#FF6B4A"/><circle cx="175" cy="138" r="6" fill="#FF6B4A"/><g transform="rotate(-84.8055710922652 85 89)">
+    <rect x="72" y="58.514803592563155" width="26" height="60.970392814873684" rx="13" fill="#FF6B4A"/>
+  </g><line x1="58" y1="88" x2="48" y2="118" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="58" y1="88" x2="52" y2="118" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="48" y1="118" x2="42" y2="138" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="52" y1="118" x2="48" y2="138" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="48" cy="118" r="6" fill="#FF6B4A"/><circle cx="52" cy="118" r="6" fill="#FF6B4A"/><circle cx="42" cy="138" r="5.5" fill="#FF6B4A"/><circle cx="48" cy="138" r="5.5" fill="#FF6B4A"/><circle cx="58" cy="88" r="8" fill="#FF6B4A"/><circle cx="58" cy="88" r="8" fill="#FF6B4A"/><circle cx="118" cy="92" r="9" fill="#FF6B4A"/><circle cx="38" cy="78" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">6. Push-ups</h3></div>
+        <span class="muted">40s</span>
+      </div>
+      <div class="list-item" style="padding:2px 0;border:none;">
+        <div class="thumb" style="width:34px;height:34px;border-radius:10px;"><svg viewBox="0 0 200 200" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><ellipse cx="105" cy="154" rx="65" ry="6" fill="#FF6B4A" opacity="0.18"/><line x1="112" y1="82" x2="142" y2="115" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="112" y1="82" x2="148" y2="115" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="142" y1="115" x2="158" y2="150" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><line x1="148" y1="115" x2="168" y2="150" stroke="#FF6B4A" stroke-width="16" stroke-linecap="round"/><circle cx="142" cy="115" r="8" fill="#FF6B4A"/><circle cx="148" cy="115" r="8" fill="#FF6B4A"/><circle cx="158" cy="150" r="6" fill="#FF6B4A"/><circle cx="168" cy="150" r="6" fill="#FF6B4A"/><g transform="rotate(-114.51964268819077 83.5 95)">
+    <rect x="70.5" y="66.18108260187415" width="26" height="57.63783479625168" rx="13" fill="#FF6B4A"/>
+  </g><line x1="58" y1="110" x2="48" y2="135" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="58" y1="110" x2="52" y2="135" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="48" y1="135" x2="42" y2="150" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><line x1="52" y1="135" x2="48" y2="150" stroke="#FF6B4A" stroke-width="14" stroke-linecap="round"/><circle cx="48" cy="135" r="6" fill="#FF6B4A"/><circle cx="52" cy="135" r="6" fill="#FF6B4A"/><circle cx="42" cy="150" r="5.5" fill="#FF6B4A"/><circle cx="48" cy="150" r="5.5" fill="#FF6B4A"/><circle cx="58" cy="110" r="8" fill="#FF6B4A"/><circle cx="58" cy="110" r="8" fill="#FF6B4A"/><circle cx="112" cy="82" r="9" fill="#FF6B4A"/><circle cx="40" cy="112" r="16" fill="#FF6B4A"/></svg></div>
+        <div class="spacer"><h3 style="font-size:13px;">7. Glute bridges</h3></div>
+        <span class="muted">40s</span>
+      </div>
+  </div>
+  <div style="padding:10px 20px 4px;flex-shrink:0;background:var(--bg);">
+    <button class="btn">Start · ~9 min</button>
+  </div>
+  <div class="nav-bar"><div class="nav-pill"></div></div>
+</div></body></html>

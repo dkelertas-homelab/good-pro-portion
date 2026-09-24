@@ -1,0 +1,233 @@
+{
+  "appName": "Good Pro Portion",
+  "version": 1,
+  "moves": [
+    {
+      "id": "squat",
+      "name": "Squat",
+      "figure": "squat",
+      "howTo": "Feet about shoulder-width. Sit your hips back like you're sitting on a stool. Knees track over toes. Stand up tall.",
+      "mistakes": "Knees caving in · rounding the lower back · heels lifting off the floor",
+      "easier": "Shallower squat, or hold a chair",
+      "harder": "Go lower, pause at the bottom"
+    },
+    {
+      "id": "push_up",
+      "name": "Push-up",
+      "figure": "pushup",
+      "howTo": "Hands under shoulders, body in a straight line. Lower chest toward the floor, then press up. Keep the core braced.",
+      "mistakes": "Hips sagging · flaring elbows wide · shrugging shoulders",
+      "easier": "Incline push-up on a bench or wall",
+      "harder": "Feet elevated, or pause at the bottom"
+    },
+    {
+      "id": "incline_push_up",
+      "name": "Incline push-up",
+      "figure": "inclinePushup",
+      "howTo": "Hands on a sturdy raised surface. Same form as a push-up — straight line from head to heels.",
+      "mistakes": "Elbows flaring · hips piking up · rushing the reps",
+      "easier": "Higher surface (wall or kitchen bench)",
+      "harder": "Lower the surface toward the floor"
+    },
+    {
+      "id": "reverse_lunge",
+      "name": "Reverse lunge",
+      "figure": "reverseLunge",
+      "howTo": "Step one foot back and lower until both knees bend about 90°. Front heel stays planted. Drive up through the front leg.",
+      "mistakes": "Front knee caving in · torso tipping forward · tiny steps",
+      "easier": "Shallower depth, or hold a chair",
+      "harder": "Pause at the bottom, or reverse lunges with a pulse"
+    },
+    {
+      "id": "split_squat",
+      "name": "Split squat",
+      "figure": "splitSquat",
+      "howTo": "Stagger your stance and drop the back knee toward the floor. Keep most weight on the front leg. Switch sides as programmed.",
+      "mistakes": "Leaning too far forward · front heel lifting · rushing",
+      "easier": "Hold a chair, or shorten the range",
+      "harder": "Longer stance, or rear foot elevated"
+    },
+    {
+      "id": "glute_bridge",
+      "name": "Glute bridge",
+      "figure": "gluteBridge",
+      "howTo": "Lie on your back, knees bent, feet flat. Squeeze glutes and lift hips until shoulders, hips and knees line up. Lower with control.",
+      "mistakes": "Arching the lower back · pushing through toes · not squeezing at the top",
+      "easier": "Smaller range of motion",
+      "harder": "Single-leg bridge, or pause at the top"
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "figure": "plank",
+      "howTo": "Forearms or hands under shoulders. Body in a straight line. Brace your core and breathe steadily.",
+      "mistakes": "Hips sagging · bum too high · holding your breath",
+      "easier": "Knees on the floor",
+      "harder": "Lift one foot, or shoulder taps"
+    },
+    {
+      "id": "side_plank",
+      "name": "Side plank",
+      "figure": "sidePlank",
+      "howTo": "On one forearm (or hand), stack feet or stagger them. Lift hips so the body is a straight line. Switch sides as programmed.",
+      "mistakes": "Hips dropping · rolling forward · shrugging the supporting shoulder",
+      "easier": "Bent bottom knee on the floor",
+      "harder": "Top leg raised, or short hip dips"
+    },
+    {
+      "id": "superman",
+      "name": "Superman",
+      "figure": "superman",
+      "howTo": "Lie face-down. Lift arms and legs off the floor at the same time, squeeze the upper back and glutes, then lower softly.",
+      "mistakes": "Yank the neck up · slamming limbs down · holding breath",
+      "easier": "Lift only arms, or only legs",
+      "harder": "Hold the top for a few breaths"
+    },
+    {
+      "id": "dead_bug",
+      "name": "Dead bug",
+      "figure": "deadBug",
+      "howTo": "On your back, arms up, knees over hips. Slowly extend opposite arm and leg toward the floor without arching your back. Switch sides.",
+      "mistakes": "Lower back peeling off the floor · rushing · shoulders shrugging",
+      "easier": "Move only the arms, or only the legs",
+      "harder": "Slow the tempo, hover closer to the floor"
+    },
+    {
+      "id": "shoulder_tap",
+      "name": "Shoulder tap",
+      "figure": "shoulderTap",
+      "howTo": "High plank. Tap one hand to the opposite shoulder without rocking the hips. Alternate sides.",
+      "mistakes": "Wide hip sway · feet too narrow · collapsing through the shoulders",
+      "easier": "Knees down, or wider feet",
+      "harder": "Feet closer together"
+    },
+    {
+      "id": "wall_sit",
+      "name": "Wall sit",
+      "figure": "wallSit",
+      "howTo": "Back flat against a wall, slide down until thighs are about parallel to the floor. Knees over ankles. Hold and breathe.",
+      "mistakes": "Knees past toes · rounding the back · holding your breath",
+      "easier": "Higher sit (less bend)",
+      "harder": "Lower sit, or heel raises"
+    },
+    {
+      "id": "bird_dog",
+      "name": "Bird dog",
+      "figure": "birdDog",
+      "howTo": "On all fours. Reach one arm forward and the opposite leg back. Keep hips level. Return and switch.",
+      "mistakes": "Arching the back · twisting the hips · looking up hard",
+      "easier": "Move only the arm, or only the leg",
+      "harder": "Hold the reach, or add a crunch-in"
+    },
+    {
+      "id": "march_on_the_spot",
+      "name": "March on the spot",
+      "figure": "march",
+      "howTo": "Stand tall and march gently, lifting knees a comfortable height. Swing the arms softly. Keep it quiet and easy.",
+      "mistakes": "Stomping · leaning back · holding breath",
+      "easier": "Smaller steps, slower pace",
+      "harder": "Higher knees (still no jumping)"
+    },
+    {
+      "id": "good_morning",
+      "name": "Good morning",
+      "figure": "goodMorning",
+      "howTo": "Soft knees, hinge at the hips with a flat back until you feel a hamstring stretch, then stand tall. Hands can rest on hips or behind the head.",
+      "mistakes": "Rounding the spine · locking the knees · bending only at the waist",
+      "easier": "Shallower hinge",
+      "harder": "Slower tempo, pause at the bottom"
+    },
+    {
+      "id": "arm_circles",
+      "name": "Arm circles",
+      "figure": "armCircles",
+      "textOnly": true,
+      "howTo": "Arms out to the sides. Draw slow circles forward, then reverse. Keep shoulders relaxed. (Warm-up step — no animation needed.)",
+      "mistakes": "Shrugging · spinning too fast · locking the elbows hard",
+      "easier": "Smaller circles",
+      "harder": "Bigger slow circles"
+    }
+  ],
+  "routines": [
+    {
+      "id": "day_a",
+      "name": "Day A",
+      "subtitle": "Quiet morning · legs, push, core",
+      "approxMinutes": 9,
+      "warmupSeconds": 30,
+      "workSeconds": 40,
+      "restSeconds": 20,
+      "warmup": [
+        {"moveId": "march_on_the_spot"},
+        {"moveId": "arm_circles"},
+        {"moveId": "good_morning"},
+        {"moveId": "squat", "label": "Slow squats"}
+      ],
+      "work": [
+        {"moveId": "squat"},
+        {"moveId": "push_up"},
+        {"moveId": "reverse_lunge"},
+        {"moveId": "plank"},
+        {"moveId": "squat"},
+        {"moveId": "push_up"},
+        {"moveId": "glute_bridge"}
+      ]
+    },
+    {
+      "id": "day_b",
+      "name": "Day B",
+      "subtitle": "Quiet morning · single-leg, back, core",
+      "approxMinutes": 9,
+      "warmupSeconds": 30,
+      "workSeconds": 40,
+      "restSeconds": 20,
+      "warmup": [
+        {"moveId": "march_on_the_spot"},
+        {"moveId": "arm_circles"},
+        {"moveId": "good_morning"},
+        {"moveId": "squat", "label": "Slow squats"}
+      ],
+      "work": [
+        {"moveId": "split_squat", "label": "Split squats (L)"},
+        {"moveId": "superman"},
+        {"moveId": "dead_bug"},
+        {"moveId": "side_plank", "label": "Side plank (20s each side)", "workSeconds": 40, "note": "20s each side"},
+        {"moveId": "split_squat", "label": "Split squats (R)"},
+        {"moveId": "shoulder_tap"},
+        {"moveId": "wall_sit"}
+      ]
+    }
+  ],
+  "meals": [
+    {
+      "id": "fish_veg",
+      "emoji": "🐟",
+      "title": "Steamed fish + 3 veg",
+      "portionGuide": "Palm of fish · fist ×3 veg · thumb oil"
+    },
+    {
+      "id": "eggs_toast",
+      "emoji": "🍳",
+      "title": "Eggs on toast",
+      "portionGuide": "2 eggs (palm) · 1–2 toast · fist greens"
+    },
+    {
+      "id": "salad_chook",
+      "emoji": "🥗",
+      "title": "Salad + roast chicken",
+      "portionGuide": "Woolies salad + ¼–½ chook"
+    },
+    {
+      "id": "rice_bowl",
+      "emoji": "🍚",
+      "title": "Rice bowl + leftovers",
+      "portionGuide": "Cupped rice · palm protein · fist veg"
+    },
+    {
+      "id": "yoghurt_fruit",
+      "emoji": "🥣",
+      "title": "Greek yoghurt + fruit",
+      "portionGuide": "Cupped yoghurt · fist berries · thumb nuts"
+    }
+  ]
+}

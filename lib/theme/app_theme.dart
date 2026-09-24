@@ -19,6 +19,7 @@ ThemeData buildLightTheme() {
   );
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Roboto',
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.lightBg,
     appBarTheme: const AppBarTheme(centerTitle: false, scrolledUnderElevation: 0),
@@ -40,6 +41,7 @@ ThemeData buildDarkTheme() {
   );
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Roboto',
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.darkBg,
     appBarTheme: const AppBarTheme(centerTitle: false, scrolledUnderElevation: 0),

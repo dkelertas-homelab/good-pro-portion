@@ -4,3 +4,6 @@
 -keep class androidx.datastore.** { *; }
 -keep class androidx.preference.** { *; }
 -keep class io.flutter.plugins.sharedpreferences.** { *; }
+
+# Launcher activity — must match applicationId/namespace exactly.
+-keep class space.d11s.niceproportions.MainActivity { *; }

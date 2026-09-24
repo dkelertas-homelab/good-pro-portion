@@ -111,6 +111,14 @@ class _TimerScreenState extends State<TimerScreen> {
     });
   }
 
+  void _goBack() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
+      _remaining = _segments[_index].seconds;
+    });
+  }
+
   void _finish() {
     _ticker?.cancel();
     final elapsed = DateTime.now().difference(_startedAt);
@@ -144,13 +152,17 @@ class _TimerScreenState extends State<TimerScreen> {
     final ringColor = seg.phase == _Phase.rest
         ? const Color(0xFFF59E0B)
         : Theme.of(context).colorScheme.primary;
+    final canGoBack = _index > 0;
+    final exerciseName =
+        seg.phase == _Phase.rest ? 'Catch your breath' : seg.title;
 
     // No ads on the timer screen (by design).
     return Scaffold(
       appBar: AppBar(
-        title: Text(seg.phase == _Phase.rest ? 'Catch your breath' : seg.title),
+        title: Text(phaseLabel),
         leading: IconButton(
           icon: const Icon(Icons.close),
+          tooltip: 'End workout',
           onPressed: () => Navigator.of(context).maybePop(),
         ),
       ),
@@ -172,7 +184,14 @@ class _TimerScreenState extends State<TimerScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(child: FigureView(figureKey: seg.move.figure, size: 180)),
-            const SizedBox(height: 8),
+            Text(
+              exerciseName,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+            const SizedBox(height: 12),
             CountdownRing(
               progress: progress,
               label: '$_remaining',
@@ -204,18 +223,52 @@ class _TimerScreenState extends State<TimerScreen> {
               ),
             const SizedBox(height: 12),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  width: 72,
+                  child: canGoBack
+                      ? Semantics(
+                          label: 'Previous exercise',
+                          button: true,
+                          child: TextButton(
+                            onPressed: _goBack,
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              minimumSize: const Size(48, 40),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text('‹ Prev'),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => setState(() => _paused = !_paused),
-                    child: Text(_paused ? 'Resume' : 'Pause'),
+                  child: Semantics(
+                    label: _paused ? 'Resume workout' : 'Pause workout',
+                    button: true,
+                    child: FilledButton(
+                      onPressed: () => setState(() => _paused = !_paused),
+                      child: Text(_paused ? 'Resume' : 'Pause'),
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _advance,
-                    child: const Text('Skip ›'),
+                SizedBox(
+                  width: 72,
+                  child: Semantics(
+                    label: 'Skip to next exercise',
+                    button: true,
+                    child: TextButton(
+                      onPressed: _advance,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        minimumSize: const Size(48, 40),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      child: const Text('Skip ›'),
+                    ),
                   ),
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme/app_theme.dart';
@@ -29,16 +30,19 @@ class FigureView extends StatelessWidget {
       ),
       padding: padding,
       alignment: Alignment.center,
-      child: SvgPicture.asset(
-        asset,
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
-        placeholderBuilder: (_) => SizedBox(
-          width: size,
-          height: size,
-          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-        ),
+      child: FutureBuilder<String>(
+        future: rootBundle.loadString(asset),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return SizedBox(width: size, height: size);
+          }
+          return SvgPicture.string(
+            snap.data!,
+            width: size,
+            height: size,
+            fit: BoxFit.contain,
+          );
+        },
       ),
     );
   }

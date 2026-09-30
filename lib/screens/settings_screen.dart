@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/settings_store.dart';
 import '../models/content.dart';
+import '../widgets/insets.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.content});
@@ -35,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
         children: [
           Text('TIMER', style: Theme.of(context).textTheme.labelSmall),
           Card(

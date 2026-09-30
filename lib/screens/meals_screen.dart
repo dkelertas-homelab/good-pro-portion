@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/content.dart';
+import '../widgets/insets.dart';
 
 class MealsScreen extends StatelessWidget {
   const MealsScreen({super.key, required this.content});
@@ -11,7 +12,7 @@ class MealsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Meal ideas')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
         children: [
           Text('Eat simple · portion control · not a diet',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(

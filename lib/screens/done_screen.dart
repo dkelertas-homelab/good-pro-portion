@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/content.dart';
+import '../widgets/insets.dart';
 
 class DoneScreen extends StatelessWidget {
   const DoneScreen({
@@ -29,7 +30,7 @@ class DoneScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 12, 20, 24)),
         children: [
           Icon(Icons.check_circle, size: 56, color: Theme.of(context).colorScheme.primary),
           const SizedBox(height: 8),

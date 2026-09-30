@@ -9,11 +9,15 @@ class FigureView extends StatelessWidget {
     required this.figureKey,
     this.size = 180,
     this.padding = const EdgeInsets.all(12),
+    this.mirror = false,
   });
 
   final String figureKey;
   final double size;
   final EdgeInsets padding;
+
+  /// Flip horizontally, used for the left side of one-sided moves.
+  final bool mirror;
 
   String assetFor(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
@@ -33,12 +37,15 @@ class FigureView extends StatelessWidget {
       ),
       padding: padding,
       alignment: Alignment.center,
-      child: SvgPicture.asset(
+      child: Transform.flip(
+        flipX: mirror,
+        child: SvgPicture.asset(
         assetFor(context),
         width: size,
         height: size,
         fit: BoxFit.contain,
         placeholderBuilder: (_) => SizedBox(width: size, height: size),
+        ),
       ),
     );
   }

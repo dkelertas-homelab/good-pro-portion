@@ -67,6 +67,7 @@ class RoutineScreen extends StatelessWidget {
                   return _MoveTile(
                     move: m,
                     label: '${i + 1}. ${s.label ?? m.name}',
+                    mirror: s.mirror,
                     seconds: s.workSeconds ?? routine.workSeconds,
                     onTap: () => _openDetail(context, m),
                   );
@@ -141,8 +142,10 @@ class _MoveTile extends StatelessWidget {
     required this.label,
     required this.seconds,
     required this.onTap,
+    this.mirror = false,
   });
   final Move move;
+  final bool mirror;
   final String label;
   final int seconds;
   final VoidCallback onTap;
@@ -153,7 +156,8 @@ class _MoveTile extends StatelessWidget {
       leading: SizedBox(
         width: 40,
         height: 40,
-        child: FigureView(figureKey: move.figure, size: 34, padding: const EdgeInsets.all(2)),
+        child: FigureView(
+            figureKey: move.figure, size: 34, padding: const EdgeInsets.all(2), mirror: mirror),
       ),
       title: Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
       subtitle: move.textOnly ? const Text('Text-only step') : null,

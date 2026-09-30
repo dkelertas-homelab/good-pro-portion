@@ -30,7 +30,7 @@ Easy to adjust later. New features that need a tip slot into this table — do n
 |------|-----|
 | After workout 1 completes | Offer a home-screen "Start today's workout" shortcut (Android's own pin dialog) |
 | After workout 2 | Offer an exercise-time reminder; only then ask for notification permission (Android 13+). Never at launch |
-| App open 3 | Inline hint that long-pressing the app icon gives quick options (Start Day A, 3-minute mode) |
+| App open 3 | Inline hint that long-pressing the app icon gives quick options (Start Quiet morning A, 3-minute mode) |
 | Around workout 5, or first full week | Offer the weekly-dots home-screen widget |
 | Return after a few days away | Hint about 3-minute mode — framed as welcome back, never as a missed-days reminder |
 | Occasional (not every workout) | One-tap "how did that feel?" rating on the done screen |
@@ -41,7 +41,7 @@ Short, warm, encouraging. Never nagging or guilt-tripping.
 
 | Good | Bad |
 |------|-----|
-| "Nice one — Day A done." | "You broke your streak!" |
+| "Nice one — Quiet morning A done." | "You broke your streak!" |
 | "Welcome back. Fancy the 3-minute version?" | "You've been away for 4 days." |
 | "How did that feel?" | "Did you give it your all?" |
 | "Pin Start today's workout to your home screen?" | "Don't forget to work out every day!" |

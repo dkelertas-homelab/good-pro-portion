@@ -8,7 +8,7 @@ A free Android home-workout app for short, quiet bodyweight sessions — plus si
 
 Flutter app skeleton (Phase 2):
 
-- Bundled content (`assets/content.json`): 15 bodyweight moves, Day A / Day B routines (~9 min, warm-up + 40s/20s work/rest, no cool-down), and 5 meal ideas
+- Bundled content (`assets/content.json`): 15 bodyweight moves, Quiet morning A / B routines (~10 min, warm-up + 40s/20s work/rest, no cool-down), and 5 meal ideas
 - Screens: Home, Routine overview, Exercise detail, Timer (warm-up → work/rest), Done, Meal ideas, Settings
 - Themes: light teal default and dark coral, following the system setting
 - Own flat SVG exercise figures
@@ -34,7 +34,7 @@ flutter test
 flutter build apk --debug
 ```
 
-Sideload the debug APK onto a device to try Day A / Day B.
+Sideload the debug APK onto a device to try Quiet morning A / B.
 
 ```bash
 flutter run

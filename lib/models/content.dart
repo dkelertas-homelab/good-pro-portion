@@ -8,6 +8,7 @@ class Move {
     required this.easier,
     required this.harder,
     this.textOnly = false,
+    this.cue = '',
   });
 
   final String id;
@@ -19,6 +20,9 @@ class Move {
   final String harder;
   final bool textOnly;
 
+  /// One short line shown under the name during the exercise.
+  final String cue;
+
   factory Move.fromJson(Map<String, dynamic> j) => Move(
         id: j['id'] as String,
         name: j['name'] as String,
@@ -28,6 +32,7 @@ class Move {
         easier: j['easier'] as String,
         harder: j['harder'] as String,
         textOnly: j['textOnly'] == true,
+        cue: j['cue'] as String? ?? '',
       );
 }
 
@@ -37,6 +42,8 @@ class RoutineStep {
     this.label,
     this.workSeconds,
     this.note,
+    this.cue,
+    this.mirror = false,
   });
 
   final String moveId;
@@ -44,11 +51,19 @@ class RoutineStep {
   final int? workSeconds;
   final String? note;
 
+  /// Overrides the move's cue, e.g. for one side of a one-sided move.
+  final String? cue;
+
+  /// Flip the figure horizontally (left side of a one-sided move).
+  final bool mirror;
+
   factory RoutineStep.fromJson(Map<String, dynamic> j) => RoutineStep(
         moveId: j['moveId'] as String,
         label: j['label'] as String?,
         workSeconds: j['workSeconds'] as int?,
         note: j['note'] as String?,
+        cue: j['cue'] as String?,
+        mirror: j['mirror'] == true,
       );
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
+import '../widgets/insets.dart';
 
 class ExerciseScreen extends StatelessWidget {
   const ExerciseScreen({super.key, required this.move});
@@ -12,7 +13,7 @@ class ExerciseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(move.name)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
         children: [
           FigureView(figureKey: move.figure, size: 200),
           const SizedBox(height: 16),

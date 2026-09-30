@@ -5,6 +5,7 @@ import '../widgets/figure_view.dart';
 import 'routine_screen.dart';
 import 'meals_screen.dart';
 import 'settings_screen.dart';
+import '../widgets/insets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.content});
@@ -33,7 +34,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
         children: [
           Text("G'day — ready for a quick one?",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),

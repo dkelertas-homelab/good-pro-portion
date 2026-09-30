@@ -67,3 +67,4 @@
 .fig{min-height:200px;padding-top:10px}
 .fig img{height:100%;max-height:100%;width:auto;object-fit:contain}
 .prop{line-height:1.15;max-width:130px}
+.prop{left:auto;right:10px}

@@ -2,14 +2,22 @@
 
 Mockups only, no app changes yet. Rendered from `src/*.html` with headless Chrome (412x915 @2.625x).
 
-- `png/a-dayA-list.png`: Day A overview. Reverse lunge is split into right (right leg steps back) and left, 40s each, with Plank in between for variety (8 work moves)
-- `png/b-exercise-cue.png`: exercise screen with a short cue under the name, plus a coral dashed "NEXT UP" chip
-- `png/c-rest-next.png`: rest screen with a coral "NEXT UP · GET READY" card (ghosted figure, name, how-to); the ring is the rest time left
-- `png/e-warmup-next-preview.png`: warm-up has no rests, so for the last 25% of each move the countdown keeps running and the screen previews the next move
-- `png/d-first-workout-card.png`: "Before you start" card with a "Don't show this again" checkbox
+Round 3: large text for reading from standing with the phone on the floor. Workout screens have a ~46sp name, ~28sp cue and a huge countdown; nothing is below ~16sp. Decorative lines are gone and cues are cut to one short line.
+
+- `png/a-dayA-list.png`: Day A list. Warm-up collapsed to one row; lunges split right/left with Plank between (40s each)
+- `png/b-exercise-cue.png`: exercise screen with big name, one-line cue, big countdown, coral NEXT UP chip
+- `png/c-rest-next.png`: rest screen with the rest countdown and a large coral NEXT UP card ("in 12s")
+- `png/e-warmup-next-preview.png`: last 25% of a warm-up move; countdown keeps running, next move previewed
+- `png/d-first-workout-card.png`: "Before you start" card with "Don't show this again"
+- `png/rest-last-3s.gif`: final 3s of a rest; the NEXT UP card blinks grey each second
 - `png/overview.png`: all five side by side
 
+All figures wear the coral towel headband from the app icon (faded on next-up previews).
+Proposal (marked on screen): the lunge's working/back leg is tinted coral so right vs left is obvious.
+
 Naming: "Reverse lunge (right)" = right leg goes back. "Lunge (right)" (forward) = right leg goes forward. Right side first.
+
+`src/fig/` holds mockup-only copies of the figure SVGs with the headband added; the app's `assets/figures` are untouched.
 
 ## GUIDE.md note (not changed yet)
 

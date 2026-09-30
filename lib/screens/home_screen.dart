@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                   height: 52,
                   child: FigureView(figureKey: fig, size: 44, padding: const EdgeInsets.all(4)),
                 ),
-                title: Text('${r.name} · Quiet morning',
+                title: Text(r.name,
                     style: const TextStyle(fontWeight: FontWeight.w700)),
                 subtitle: Text('~${r.approxMinutes} min · ${r.subtitle.split('·').last.trim()}'),
                 trailing: const Icon(Icons.chevron_right),

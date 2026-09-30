@@ -15,6 +15,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   SettingsStore? _store;
   int _work = 40;
   int _rest = 20;
+  bool _startCard = true;
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _store = s;
         _work = s.workSeconds;
         _rest = s.restSeconds;
+        _startCard = s.showStartCard;
       });
     });
   }
@@ -73,6 +75,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text('TIPS', style: Theme.of(context).textTheme.labelSmall),
+          Card(
+            child: SwitchListTile(
+              title: const Text('"Before you start" card'),
+              subtitle: const Text('A short note when you tap Start'),
+              value: _startCard,
+              onChanged: _store == null
+                  ? null
+                  : (v) {
+                      _store!.setShowStartCard(v);
+                      setState(() => _startCard = v);
+                    },
             ),
           ),
           const SizedBox(height: 14),

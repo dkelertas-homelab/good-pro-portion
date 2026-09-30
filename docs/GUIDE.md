@@ -15,6 +15,9 @@ Every new feature should fit this guide. Keep it short, friendly, and easy to fo
 This is the main rule for anything that wants the user's attention.
 
 - **Nothing on first install / first launch.** The user goes straight into their first workout.
+  One exception: a short, warm "before you start" note may appear when a workout is started,
+  until the user chooses "Don't show this again". It must never block starting, and it is never
+  shown during a workout or rest timer. It can be switched back on in Settings → Tips.
 - **At most one tip or prompt per app session.**
 - **Never during a workout or rest timer.**
 - **Each tip is shown once.** Dismissing means never again (unless they replay it).

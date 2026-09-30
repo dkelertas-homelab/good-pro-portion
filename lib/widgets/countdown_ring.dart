@@ -9,19 +9,21 @@ class CountdownRing extends StatelessWidget {
     required this.label,
     required this.sublabel,
     this.color,
+    this.size = 180,
   });
 
   final double progress; // 0..1 remaining
   final String label;
   final String sublabel;
   final Color? color;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final c = color ?? Theme.of(context).colorScheme.primary;
     return SizedBox(
-      width: 180,
-      height: 180,
+      width: size,
+      height: size,
       child: CustomPaint(
         painter: _RingPainter(progress: progress.clamp(0, 1), color: c),
         child: Center(
@@ -29,11 +31,14 @@ class CountdownRing extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(label,
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall
-                      ?.copyWith(fontWeight: FontWeight.w800)),
-              Text(sublabel, style: Theme.of(context).textTheme.bodyMedium),
+                  style: TextStyle(
+                      fontSize: size * 0.36,
+                      height: 1.0,
+                      fontWeight: FontWeight.w800)),
+              Text(sublabel,
+                  style: TextStyle(
+                      fontSize: (size * 0.11).clamp(16, 22).toDouble(),
+                      fontWeight: FontWeight.w600)),
             ],
           ),
         ),

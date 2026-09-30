@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/settings_store.dart';
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
+import '../widgets/start_card.dart';
 import 'exercise_screen.dart';
 import 'timer_screen.dart';
 
@@ -82,6 +83,10 @@ class RoutineScreen extends StatelessWidget {
                 onPressed: () async {
                   final store = await SettingsStore.open();
                   if (!context.mounted) return;
+                  if (store.showStartCard) {
+                    final go = await showStartCard(context, store);
+                    if (!go || !context.mounted) return;
+                  }
                   await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => TimerScreen(

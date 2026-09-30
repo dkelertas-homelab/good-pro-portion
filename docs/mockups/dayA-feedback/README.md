@@ -2,11 +2,14 @@
 
 Mockups only, no app changes yet. Rendered from `src/*.html` with headless Chrome (412x915 @2.625x).
 
-- `png/a-dayA-list.png`: Day A overview with the reverse lunge split into right and left (8 work moves)
-- `png/b-exercise-cue.png`: exercise screen with a short cue under the name
-- `png/c-rest-next.png`: rest screen showing the next move's name and a short how-to
+- `png/a-dayA-list.png`: Day A overview. Reverse lunge is split into right (right leg steps back) and left, 40s each, with Plank in between for variety (8 work moves)
+- `png/b-exercise-cue.png`: exercise screen with a short cue under the name, plus a coral dashed "NEXT UP" chip
+- `png/c-rest-next.png`: rest screen with a coral "NEXT UP · GET READY" card (ghosted figure, name, how-to); the ring is the rest time left
+- `png/e-warmup-next-preview.png`: warm-up has no rests, so for the last 25% of each move the countdown keeps running and the screen previews the next move
 - `png/d-first-workout-card.png`: "Before you start" card with a "Don't show this again" checkbox
-- `png/overview.png`: all four side by side
+- `png/overview.png`: all five side by side
+
+Naming: "Reverse lunge (right)" = right leg goes back. "Lunge (right)" (forward) = right leg goes forward. Right side first.
 
 ## GUIDE.md note (not changed yet)
 

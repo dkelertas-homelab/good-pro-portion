@@ -39,3 +39,22 @@
 .list .nm{font-size:14px}
 .hl{padding:4px 10px!important}
 .note{background:rgba(15,18,24,.8);border-radius:12px;padding:8px 12px;bottom:110px;opacity:1}
+/* round 2: distinct NEXT UP styling */
+.nu{background:#FFF4F1;border:2px dashed #FF9E92;border-radius:20px;padding:0 0 14px;overflow:hidden}
+.nu-banner{background:var(--coral);color:#fff;font-weight:800;font-size:14px;letter-spacing:1.4px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
+.nu-banner span{font-weight:600;letter-spacing:.3px;font-size:13px;opacity:.95}
+.nu-body{display:flex;gap:12px;padding:12px 14px 0;align-items:flex-start}
+.nu-fig{width:84px;height:84px;border-radius:14px;border:2px dashed #FFB4AA;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#fff}
+.nu-fig img{width:70px;height:70px;opacity:.45;filter:grayscale(.4)}
+.nu-name{font-size:20px;font-weight:800;color:#C2412F;line-height:1.2}
+.nu-cue{font-size:14px;line-height:1.4;color:var(--text-2);margin-top:4px}
+.nu-cue b{color:var(--navy)}
+.chipnu{display:flex;align-items:center;gap:10px;background:#FFF4F1;border:1.5px dashed #FF9E92;border-radius:14px;padding:8px 12px}
+.chipnu .tag{background:var(--coral);color:#fff;font-size:11px;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:6px}
+.chipnu img{width:30px;height:30px;opacity:.45}
+.chipnu .n{font-weight:700;color:#C2412F;font-size:15px}
+.now{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:var(--shadow)}
+.now .thumb{width:52px;height:52px;border-radius:12px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center}
+.now .thumb img{width:46px;height:46px}
+.nowlbl{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--accent-dark)}
+.getready{text-align:center;font-size:15px;font-weight:700;color:#C2412F}

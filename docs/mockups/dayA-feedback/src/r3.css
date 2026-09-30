@@ -68,3 +68,28 @@
 .fig img{height:100%;max-height:100%;width:auto;object-fit:contain}
 .prop{line-height:1.15;max-width:130px}
 .prop{left:auto;right:10px}
+/* round 5: done + home */
+.done-hero{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:6px}
+.done-hero .circ{width:150px;height:150px;border-radius:75px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center}
+.done-hero .circ img{width:130px;height:130px}
+.done-big{font-size:44px;font-weight:900;color:var(--navy);letter-spacing:-.6px;text-align:center;line-height:1.05}
+.done-sub{font-size:22px;color:#3A4450;text-align:center;line-height:1.3}
+.stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.stat{background:#fff;border-radius:14px;padding:8px 14px;font-size:18px;font-weight:700;box-shadow:var(--shadow)}
+.sugg{background:#FFF4F1;border:2.5px solid #FF9E92;border-radius:24px;padding:18px 18px 16px;flex-shrink:0}
+.sugg .q{font-size:26px;font-weight:900;color:var(--coral-dk)}
+.sugg .t{font-size:22px;color:#3A4450;margin:4px 0 12px;line-height:1.3}
+.sugg .t b{color:var(--navy)}
+.btn2{display:flex;align-items:center;justify-content:center;height:62px;border-radius:31px;font-size:21px;font-weight:800;border:2.5px solid #C5CDD8;color:var(--navy);background:#fff;flex-shrink:0}
+.anno{font-size:16px;color:var(--text-2);text-align:center}
+.greet{font-size:32px;font-weight:900;color:var(--navy);letter-spacing:-.4px}
+.grp{display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.grp h3{font-size:20px;font-weight:800;color:var(--navy)}
+.grp span{font-size:16px;color:var(--text-2)}
+.rt{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:8px 12px;box-shadow:var(--shadow)}
+.rt .th{width:52px;height:52px;border-radius:12px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rt .th img{width:46px;height:46px}
+.rt .nm{font-size:21px;font-weight:800;color:var(--navy);line-height:1.15}
+.rt .tg{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap}
+.rt .tg span{font-size:16px;font-weight:600;color:var(--accent-dark);background:var(--accent-soft);padding:1px 8px;border-radius:999px}
+.rt .chev{margin-left:auto;font-size:26px;color:var(--text-3)}

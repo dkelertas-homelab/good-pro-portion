@@ -26,6 +26,21 @@ Round 5: the lunge figure has hands on hips with elbows clearly out (both sides)
 
 `src/build_figs.py` regenerates the mockup figure copies in `src/fig/`.
 
+Round 6: "Day A/B" is renamed to "Quiet morning A/B". Home (g) keeps the current app's pattern:
+each routine (Quiet morning, Lunch, After work) is a card with an A and a B option you pick
+directly. The done screen (f) always suggests the other option of the same routine
+(A suggests B, B suggests A), for all three routines.
+
+## Home sort rule (proposal)
+
+- Routines are sorted by the most recent completed workout, newest first.
+- Ties (same day, or never done) are broken by how many times each routine has been completed, most first.
+- If there is still a tie, fall back to the default order: Quiet morning, Lunch, After work.
+- The top routine gets a "Your usual" tag once it has been done at least 3 times; otherwise no tag.
+- Inside a routine, the option not done last time is marked "Up next". The last one shows "last done …".
+- First launch (nothing done yet) uses the default order with no tags.
+- Everything is stored on the phone (a timestamp and a count per routine option); nothing leaves the device.
+
 ## Draft routines (not in the app yet)
 
 Built only from moves already in `assets/content.json`. Every routine uses the usual 2 min warm-up

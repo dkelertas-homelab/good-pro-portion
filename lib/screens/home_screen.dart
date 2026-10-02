@@ -6,6 +6,7 @@ import 'routine_screen.dart';
 import 'meals_screen.dart';
 import 'settings_screen.dart';
 import '../widgets/insets.dart';
+import '../widgets/version_text.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.content});
@@ -113,6 +114,8 @@ class HomeScreen extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     )),
           ),
+          const SizedBox(height: 16),
+          const VersionText(prefix: 'v'),
         ],
       ),
     );

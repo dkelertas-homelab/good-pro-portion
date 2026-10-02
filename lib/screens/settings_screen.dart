@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/settings_store.dart';
 import '../models/content.dart';
+import '../widgets/version_text.dart';
 import '../widgets/insets.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -151,6 +152,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 20),
+          const VersionText(),
         ],
       ),
     );

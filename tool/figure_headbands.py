@@ -1,5 +1,5 @@
 """Adds the coral headband with two tied tails to every figure in assets/figures,
-and (re)draws the side-on reverse lunge. Safe to re-run: figures that already
+and (re)draws the side-on reverse lunge and the dead bug. Safe to re-run: figures that already
 have a headband are skipped. Run from the repo root: python3 tool/figure_headbands.py
 
 Light figures are teal with a coral band. Dark figures are already coral, so
@@ -49,10 +49,30 @@ def reverse_lunge(p):
     return s
 
 
+def dead_bug(p):
+    """Lying on the back, head left, face up. One arm points straight up and
+    the knee on the other side stays bent at 90 over the hip; the opposite arm
+    reaches back overhead and the opposite leg extends low (both tinted)."""
+    T, C = p['fig'], p['band']
+    sh = (66, 136); hip = (124, 136)
+    s = '<svg viewBox="0 0 200 200" width="200" height="200" xmlns="http://www.w3.org/2000/svg">'
+    s += f'<ellipse cx="100" cy="156" rx="78" ry="6" fill="{T}" opacity="0.18"/>'
+    s += L(*sh, 70, 78, T, 13) + J(70, 78, T, 6)                                # arm straight up
+    s += L(*hip, 126, 92, T) + L(126, 92, 164, 92, T) + J(126, 92, T, 9) + J(164, 92, T, 7)  # tabletop leg
+    s += L(*sh, *hip, T, 26)                                                    # torso on the floor
+    s += J(36, 122, T, 16)                                                      # head, clear of the torso
+    s += L(*sh, 34, 72, C, 13) + J(34, 72, C, 6)                               # opposite arm, reaching back overhead
+    s += L(*hip, 186, 124, C) + J(154, 130, C, 8) + J(186, 124, C, 7)           # opposite leg, extended low
+    s += J(*hip, T, 10) + band(36, 122, 16, -1, C) + '</svg>'
+    return s
+
+
 for path in sorted(glob.glob('assets/figures/*.svg')):
     p = DARK if path.endswith('_dark.svg') else LIGHT
     if re.search(r'/reverseLunge(_dark)?\.svg$', path):
         open(path, 'w').write(reverse_lunge(p)); print(path, 'redrawn'); continue
+    if re.search(r'/deadBug(_dark)?\.svg$', path):
+        open(path, 'w').write(dead_bug(p)); print(path, 'redrawn'); continue
     s = open(path).read()
     if MARK in s:
         continue

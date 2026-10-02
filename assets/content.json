@@ -250,13 +250,16 @@
           "cue": "Right foot back, drop that knee"
         },
         {
-          "moveId": "superman"
+          "moveId": "wall_sit"
         },
         {
           "moveId": "split_squat",
           "label": "Split squat (left)",
           "cue": "Left foot back, drop that knee",
           "mirror": true
+        },
+        {
+          "moveId": "superman"
         },
         {
           "moveId": "side_plank",
@@ -276,9 +279,6 @@
         },
         {
           "moveId": "shoulder_tap"
-        },
-        {
-          "moveId": "wall_sit"
         }
       ]
     }

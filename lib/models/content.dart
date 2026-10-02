@@ -143,6 +143,18 @@ class AppContent {
 
   Move moveById(String id) => moves.firstWhere((m) => m.id == id);
 
+  /// The other half of an A/B pair ("Quiet morning A" <-> "Quiet morning B"),
+  /// or null if the routine isn't part of one.
+  Routine? partnerOf(Routine r) {
+    final m = RegExp(r'^(.*) ([AB])$').firstMatch(r.name);
+    if (m == null) return null;
+    final other = '${m[1]} ${m[2] == 'A' ? 'B' : 'A'}';
+    for (final x in routines) {
+      if (x.name == other) return x;
+    }
+    return null;
+  }
+
   factory AppContent.fromJson(Map<String, dynamic> j) => AppContent(
         appName: j['appName'] as String,
         moves: (j['moves'] as List)

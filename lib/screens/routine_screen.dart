@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../data/settings_store.dart';
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
-import '../widgets/start_card.dart';
 import 'exercise_screen.dart';
-import 'timer_screen.dart';
+import 'start_workout.dart';
 import '../widgets/insets.dart';
 
 class RoutineScreen extends StatelessWidget {
@@ -92,24 +90,7 @@ class RoutineScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomBar(
         child: FilledButton(
-          onPressed: () async {
-            final store = await SettingsStore.open();
-            if (!context.mounted) return;
-            if (store.showStartCard) {
-              final go = await showStartCard(context, store);
-              if (!go || !context.mounted) return;
-            }
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => TimerScreen(
-                  content: content,
-                  routine: routine,
-                  workSeconds: store.workSeconds,
-                  restSeconds: store.restSeconds,
-                ),
-              ),
-            );
-          },
+          onPressed: () => startWorkout(context, content, routine),
           child: Text('Start · ~${routine.approxMinutes} min'),
         ),
       ),

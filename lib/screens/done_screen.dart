@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../models/content.dart';
+import '../theme/app_theme.dart';
 import '../widgets/insets.dart';
+import 'start_workout.dart';
 
 class DoneScreen extends StatelessWidget {
   const DoneScreen({
@@ -24,6 +26,8 @@ class DoneScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meal = content.meals.first;
+    final partner = content.partnerOf(routine);
+    void doneForToday() => Navigator.of(context).popUntil((r) => r.isFirst);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Done'),
@@ -37,10 +41,26 @@ class DoneScreen extends StatelessWidget {
           Text('Nice one!',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
-          Text('${routine.name} sorted.',
+          Text('${routine.name} done. Lovely work showing up today.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium),
+              style: const TextStyle(fontSize: 18, height: 1.3)),
           const SizedBox(height: 16),
+          if (partner != null) ...[
+            _MoreTimeCard(
+              partner: partner,
+              onStart: () => startWorkout(context, content, partner, replace: true),
+            ),
+            const SizedBox(height: 10),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(56),
+                textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              onPressed: doneForToday,
+              child: const Text('Done for today'),
+            ),
+            const SizedBox(height: 18),
+          ],
           Row(
             children: [
               Expanded(child: _Stat(value: _timeLabel, label: 'time')),
@@ -97,11 +117,13 @@ class DoneScreen extends StatelessWidget {
             ),
             child: const Text('Ad placeholder'),
           ),
-          const SizedBox(height: 16),
-          FilledButton(
-            onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
-            child: const Text('Back home'),
-          ),
+          if (partner == null) ...[
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: doneForToday,
+              child: const Text('Back home'),
+            ),
+          ],
         ],
       ),
     );
@@ -127,6 +149,52 @@ class _Stat extends StatelessWidget {
             Text(label, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// "Got more time?" suggestion: the other routine of the same A/B pair.
+class _MoreTimeCard extends StatelessWidget {
+  const _MoreTimeCard({required this.partner, required this.onStart});
+  final Routine partner;
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final letter = partner.name.substring(partner.name.length - 1);
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: dark ? AppColors.coralSoft : const Color(0xFFFFF1EC),
+        border: Border.all(color: AppColors.coral, width: 2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Got more time?',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 6),
+          Text('Why not start ${partner.name}?',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, height: 1.25)),
+          const SizedBox(height: 4),
+          Text('About ${partner.approxMinutes} more minutes',
+              style: TextStyle(
+                  fontSize: 18, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          const SizedBox(height: 14),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.coral,
+              foregroundColor: Colors.white,
+              minimumSize: const Size.fromHeight(60),
+              textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+            ),
+            onPressed: onStart,
+            child: Text('Start $letter'),
+          ),
+        ],
       ),
     );
   }

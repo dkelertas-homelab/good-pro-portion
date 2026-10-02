@@ -44,13 +44,34 @@ android {
 
     buildTypes {
         release {
-            // Use the upload key when android/key.properties is present; otherwise
-            // fall back to debug so local/CI builds without secrets still work.
-            signingConfig = if (keystorePropertiesFile.exists()) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
-            }
+            // Always sign release builds with the upload key. There is deliberately
+            // no debug fallback: a debug-signed release can't be uploaded to Play
+            // and is easy to ship by mistake. Debug builds don't need key.properties.
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
+}
+
+// Fail early, with a clear message, if a release build is requested without
+// the signing config (see android/key.properties in the README).
+gradle.taskGraph.whenReady {
+    val wantsRelease = allTasks.any { it.project == project && it.name.contains("Release") }
+    if (wantsRelease) {
+        val required = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+        val missing = if (keystorePropertiesFile.exists()) {
+            required.filter { keystoreProperties.getProperty(it).isNullOrBlank() }
+        } else {
+            required
+        }
+        if (missing.isNotEmpty()) {
+            throw GradleException(
+                "Release signing is not configured: android/key.properties is missing " +
+                    "or lacks ${missing.joinToString()}. Release builds must be signed " +
+                    "with the upload key; there is no debug fallback."
+            )
+        }
+        if (!file(keystoreProperties.getProperty("storeFile")).exists()) {
+            throw GradleException("Release signing: storeFile in android/key.properties does not exist.")
         }
     }
 }

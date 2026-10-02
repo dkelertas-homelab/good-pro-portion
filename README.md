@@ -52,3 +52,8 @@ License: TBD (private for now)
 ## Status
 
 Phase 2 — tech choice and code skeleton. Default branch for day-to-day work is `dev`; `main` is reserved for releases.
+
+## Release builds
+
+- Release builds need `android/key.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; git-ignored). Without it, `flutter build apk/appbundle --release` fails on purpose; there is no debug-signed fallback. Debug builds don't need it.
+- Upload to a Play testing track with `tool/play_upload.py` (internal, alpha or beta only; draft by default; version taken from `pubspec.yaml`). Run it with `--help` for options.

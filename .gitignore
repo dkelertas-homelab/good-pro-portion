@@ -52,5 +52,7 @@ android/.kotlin/
 
 # Play / signing — never commit
 android/key.properties
+.env
+.env.*
 *.jks
 *.keystore

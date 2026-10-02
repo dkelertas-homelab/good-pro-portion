@@ -200,69 +200,62 @@ class _TimerScreenState extends State<TimerScreen>
           padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
           child: Column(
             children: [
-              if (!showCard) ...[
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, c) => FigureView(
-                      figureKey: seg.move.figure,
-                      mirror: seg.mirror,
-                      size: (c.biggest.shortestSide - 24).clamp(60, 280).toDouble(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _BigName(seg.moveTitle),
-                if (seg.cue.isNotEmpty) _Cue(seg.cue),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    CountdownRing(
-                      size: 150,
-                      progress: progress,
-                      label: '$_remaining',
-                      sublabel: 'seconds',
-                      color: ringColor,
-                    ),
-                    if (next != null) ...[
-                      const SizedBox(width: 14),
-                      Expanded(child: _NextChip(next: next)),
-                    ],
-                  ],
-                ),
-              ] else ...[
-                Row(
-                  children: [
-                    CountdownRing(
-                      size: 140,
-                      progress: progress,
-                      label: '$_remaining',
-                      sublabel: seg.phase == _Phase.rest ? 'rest' : 'seconds',
-                      color: ringColor,
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        seg.phase == _Phase.rest ? 'Rest' : seg.moveTitle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 32, fontWeight: FontWeight.w800, height: 1.1),
+              // One layout for work, rest and the warm-up preview: only the
+              // area above changes. The countdown ring never moves.
+              Expanded(
+                child: showCard
+                    ? AnimatedBuilder(
+                        animation: _blink,
+                        builder: (context, _) => _NextUpCard(
+                          next: next!,
+                          secondsLeft: _remaining,
+                          grey: reduceMotion ? (blinking ? 1 : 0) : _blink.value,
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: LayoutBuilder(
+                              builder: (context, c) => FigureView(
+                                figureKey: seg.move.figure,
+                                mirror: seg.mirror,
+                                size: (c.biggest.shortestSide - 24).clamp(60, 280).toDouble(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          _BigName(seg.moveTitle),
+                          if (seg.cue.isNotEmpty) _Cue(seg.cue),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                Expanded(
-                  child: AnimatedBuilder(
-                    animation: _blink,
-                    builder: (context, _) => _NextUpCard(
-                      next: next!,
-                      secondsLeft: _remaining,
-                      grey: reduceMotion ? (blinking ? 1 : 0) : _blink.value,
-                    ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  CountdownRing(
+                    key: const ValueKey('countdown'),
+                    size: 150,
+                    progress: progress,
+                    label: '$_remaining',
+                    sublabel: seg.phase == _Phase.rest ? 'rest' : 'seconds',
+                    color: ringColor,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: showCard
+                        // The card above already shows what's next, so say
+                        // what the ring is counting down.
+                        ? Text(
+                            seg.phase == _Phase.rest ? 'Rest' : seg.moveTitle,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.w800, height: 1.1),
+                          )
+                        : (next != null ? _NextChip(next: next) : const SizedBox.shrink()),
+                  ),
+                ],
+              ),
               const SizedBox(height: 14),
               _Controls(
                 canGoBack: _index > 0,

@@ -1,5 +1,8 @@
 # Nice Pro Portions
 
+[![CI](https://github.com/dkelertas-homelab/good-pro-portion/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/dkelertas-homelab/good-pro-portion/actions/workflows/ci.yml)
+[![Release](https://github.com/dkelertas-homelab/good-pro-portion/actions/workflows/release.yml/badge.svg)](https://github.com/dkelertas-homelab/good-pro-portion/actions/workflows/release.yml)
+
 A free Android home-workout app for short, quiet bodyweight sessions — plus simple “eat simple” meal ideas with hand-portion guides.
 
 **No subscriptions. No quiz funnels.** Free with ads later; optional one-off “Remove ads” upgrade planned.
@@ -35,6 +38,10 @@ flutter build apk --debug
 ```
 
 Sideload the debug APK onto a device to try Quiet morning A / B.
+
+## CI/CD
+
+GitHub Actions runs the PR checks (format, analyze, test, debug APK artifact) and builds tagged `v*` releases into a GitHub Release with the APK attached. How it works, the Azure DevOps mapping and the one-time signing setup are in [`docs/ci-cd-walkthrough.md`](docs/ci-cd-walkthrough.md).
 
 ```bash
 flutter run

@@ -13,7 +13,10 @@ class ExerciseScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(move.name)),
       body: ListView(
-        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
+        padding: scrollPadding(
+          context,
+          const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        ),
         children: [
           FigureView(figureKey: move.figure, size: 200),
           const SizedBox(height: 16),
@@ -22,16 +25,18 @@ class ExerciseScreen extends StatelessWidget {
           Text(move.howTo, style: Theme.of(context).textTheme.bodyLarge),
           const SizedBox(height: 14),
           Card(
-            color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.45),
+            color: Theme.of(context).colorScheme.errorContainer
+                .withValues(alpha: 0.45),
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('COMMON MISTAKES',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.error,
-                          )),
+                  Text(
+                    'COMMON MISTAKES',
+                    style: Theme.of(context).textTheme.labelSmall
+                        ?.copyWith(color: Theme.of(context).colorScheme.error),
+                  ),
                   const SizedBox(height: 4),
                   Text(move.mistakes),
                 ],
@@ -41,9 +46,13 @@ class ExerciseScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _ModCard(title: 'Easier', body: move.easier)),
+              Expanded(
+                child: _ModCard(title: 'Easier', body: move.easier),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _ModCard(title: 'Harder', body: move.harder)),
+              Expanded(
+                child: _ModCard(title: 'Harder', body: move.harder),
+              ),
             ],
           ),
         ],
@@ -64,7 +73,11 @@ class _ModCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Chip(label: Text(title), visualDensity: VisualDensity.compact, padding: EdgeInsets.zero),
+            Chip(
+              label: Text(title),
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.zero,
+            ),
             const SizedBox(height: 6),
             Text(body, style: Theme.of(context).textTheme.bodySmall),
           ],

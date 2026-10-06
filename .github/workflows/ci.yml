@@ -1,0 +1,58 @@
+# PR checks: the GitHub Actions version of an Azure Pipelines PR build.
+# Runs on every PR into dev/main and on pushes to dev (for the README badge).
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One run per branch/PR; a new push cancels the older run.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pinned to the Flutter the app is built with (see .metadata revision 6a19cca).
+  FLUTTER_VERSION: "3.47.5"
+
+jobs:
+  checks:
+    name: Analyze, format & test
+    runs-on: ubuntu-24.04 # pinned: ubuntu-latest moves to 26.04 on 2026-10-19; keeps goldens stable
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true # Flutter SDK
+          pub-cache: true # ~/.pub-cache
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      - name: dart format
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: flutter analyze
+        run: flutter analyze
+
+      - name: flutter test (incl. goldens)
+        run: flutter test
+
+      - name: Upload golden diffs on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: golden-failures
+          path: test/failures/
+          if-no-files-found: ignore
+          retention-days: 7

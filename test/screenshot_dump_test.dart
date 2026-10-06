@@ -18,7 +18,9 @@ void main() {
   late AppContent content;
 
   setUpAll(() async {
-    content = ContentLoader.parse(File('assets/content.json').readAsStringSync());
+    content = ContentLoader.parse(
+      File('assets/content.json').readAsStringSync(),
+    );
     await loadAppFonts();
     // Preload the SVGs used on the shot screens.
     final keys = <String>{
@@ -29,7 +31,10 @@ void main() {
       ],
     };
     final assets = [
-      for (final k in keys) ...['assets/figures/$k.svg', 'assets/figures/${k}_dark.svg'],
+      for (final k in keys) ...[
+        'assets/figures/$k.svg',
+        'assets/figures/${k}_dark.svg',
+      ],
     ];
     await precacheSvgs(assets);
   });
@@ -53,72 +58,97 @@ void main() {
 
   testWidgets('01-home', (tester) async {
     await prep(tester);
-    await tester.pumpWidget(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(),
-      home: HomeScreen(content: content),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: buildLightTheme(),
+        home: HomeScreen(content: content),
+      ),
+    );
     await tester.pumpAndSettle();
     await settleSvgs(tester);
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/01-home.png'));
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/01-home.png'),
+    );
   });
 
   testWidgets('02-routine', (tester) async {
     await prep(tester);
-    await tester.pumpWidget(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(),
-      home: RoutineScreen(content: content, routine: content.routines.first),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: buildLightTheme(),
+        home: RoutineScreen(content: content, routine: content.routines.first),
+      ),
+    );
     await tester.pumpAndSettle();
     await settleSvgs(tester);
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/02-routine.png'));
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/02-routine.png'),
+    );
   });
 
   testWidgets('04-timer-work', (tester) async {
     await prep(tester);
-    await tester.pumpWidget(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(),
-      home: TimerScreen(
-        content: content,
-        routine: content.routines.first,
-        workSeconds: 40,
-        restSeconds: 20,
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: buildLightTheme(),
+        home: TimerScreen(
+          content: content,
+          routine: content.routines.first,
+          workSeconds: 40,
+          restSeconds: 20,
+        ),
       ),
-    ));
+    );
     // Timer.periodic never settles — pump frames instead.
     await settleSvgs(tester);
     await settleSvgs(tester);
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/04-timer-work.png'));
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/04-timer-work.png'),
+    );
   });
 
   testWidgets('06-done', (tester) async {
     await prep(tester);
-    await tester.pumpWidget(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(),
-      home: DoneScreen(
-        content: content,
-        routine: content.routines.first,
-        elapsed: const Duration(minutes: 8, seconds: 52),
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: buildLightTheme(),
+        home: DoneScreen(
+          content: content,
+          routine: content.routines.first,
+          elapsed: const Duration(minutes: 8, seconds: 52),
+        ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/06-done.png'));
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/06-done.png'),
+    );
   });
 
   testWidgets('01-home-dark', (tester) async {
     await prep(tester);
-    await tester.pumpWidget(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(),
-      darkTheme: buildDarkTheme(),
-      themeMode: ThemeMode.dark,
-      home: HomeScreen(content: content),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: buildLightTheme(),
+        darkTheme: buildDarkTheme(),
+        themeMode: ThemeMode.dark,
+        home: HomeScreen(content: content),
+      ),
+    );
     await tester.pumpAndSettle();
     await settleSvgs(tester);
-    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/01-home-dark.png'));
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/01-home-dark.png'),
+    );
   });
 }

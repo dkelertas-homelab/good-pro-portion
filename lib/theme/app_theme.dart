@@ -22,7 +22,10 @@ ThemeData buildLightTheme() {
     fontFamily: 'Roboto',
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.lightBg,
-    appBarTheme: const AppBarTheme(centerTitle: false, scrolledUnderElevation: 0),
+    appBarTheme: const AppBarTheme(
+      centerTitle: false,
+      scrolledUnderElevation: 0,
+    ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(52),
@@ -44,7 +47,10 @@ ThemeData buildDarkTheme() {
     fontFamily: 'Roboto',
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.darkBg,
-    appBarTheme: const AppBarTheme(centerTitle: false, scrolledUnderElevation: 0),
+    appBarTheme: const AppBarTheme(
+      centerTitle: false,
+      scrolledUnderElevation: 0,
+    ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(52),

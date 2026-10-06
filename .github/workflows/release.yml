@@ -1,7 +1,8 @@
 # Release pipeline: push a v* tag (or run it by hand) -> release APK + AAB -> GitHub Release.
 # On PRs that touch this file or android/** it only builds (a dry run); no release is made.
-# Signing: uses the ANDROID_* repo secrets when all four are set; otherwise the
-# build is debug-signed (fine for sideloading, NOT for Play) and doesn't fail.
+# Signing: uses the ANDROID_* repo secrets when all four are set; otherwise it
+# opts in to a debug-signed build (ALLOW_DEBUG_SIGNING=true; fine for sideloading,
+# NOT for Play) instead of failing. PR dry runs never touch the secrets.
 name: Release
 
 on:
@@ -79,22 +80,24 @@ jobs:
           echo "code=$pub_code" >> "$GITHUB_OUTPUT"
           echo "Building versionName=$name versionCode=$pub_code"
 
-      - name: Decode upload keystore (if secrets are set)
+      - name: Decode upload keystore (if secrets are set; never on PRs)
         id: keystore
         env:
+          IS_PR: ${{ github.event_name == 'pull_request' }}
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          if [[ -n "$ANDROID_KEYSTORE_BASE64" && -n "$ANDROID_KEYSTORE_PASSWORD" && -n "$ANDROID_KEY_ALIAS" && -n "$ANDROID_KEY_PASSWORD" ]]; then
+          if [[ "$IS_PR" != "true" && -n "$ANDROID_KEYSTORE_BASE64" && -n "$ANDROID_KEYSTORE_PASSWORD" && -n "$ANDROID_KEY_ALIAS" && -n "$ANDROID_KEY_PASSWORD" ]]; then
             echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
             echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload-keystore.jks" >> "$GITHUB_ENV"
             echo "signed=true" >> "$GITHUB_OUTPUT"
             echo "Signing with the upload key from repo secrets."
           else
             echo "signed=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Signing secrets not set: building a DEBUG-SIGNED release (OK for sideloading, not for Play)."
+            echo "ALLOW_DEBUG_SIGNING=true" >> "$GITHUB_ENV"
+            echo "::warning::No signing secrets (or a PR dry run): building a DEBUG-SIGNED release (OK for sideloading, not for Play)."
           fi
 
       - run: flutter pub get
@@ -104,9 +107,9 @@ jobs:
 
       - name: Build APK + AAB
         env:
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ steps.keystore.outputs.signed == 'true' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
+          ANDROID_KEY_ALIAS: ${{ steps.keystore.outputs.signed == 'true' && secrets.ANDROID_KEY_ALIAS || '' }}
+          ANDROID_KEY_PASSWORD: ${{ steps.keystore.outputs.signed == 'true' && secrets.ANDROID_KEY_PASSWORD || '' }}
           NAME: ${{ steps.version.outputs.name }}
           CODE: ${{ steps.version.outputs.code }}
         run: |

@@ -20,7 +20,20 @@ fun env(name: String): String? = System.getenv(name)?.takeIf { it.isNotBlank() }
 val envKeystorePath = env("ANDROID_KEYSTORE_PATH")
 val hasEnvSigning = envKeystorePath != null && file(envKeystorePath).exists() &&
     listOf("ANDROID_KEYSTORE_PASSWORD", "ANDROID_KEY_ALIAS", "ANDROID_KEY_PASSWORD").all { env(it) != null }
-val hasReleaseSigning = keystorePropertiesFile.exists() || hasEnvSigning
+
+// key.properties wins when it's present; otherwise the CI env vars.
+val requiredKeys = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+val useKeyProperties = keystorePropertiesFile.exists()
+val hasReleaseSigning = if (useKeyProperties) {
+    requiredKeys.all { !keystoreProperties.getProperty(it).isNullOrBlank() } &&
+        file(keystoreProperties.getProperty("storeFile")).exists()
+} else {
+    hasEnvSigning
+}
+
+// Debug-signed release builds are opt-in only (e.g. CI dry runs without secrets):
+// ALLOW_DEBUG_SIGNING=true. They can't go to Play and are easy to ship by mistake.
+val allowDebugSigning = env("ALLOW_DEBUG_SIGNING") == "true"
 
 android {
     namespace = "space.d11s.niceproportions"
@@ -42,7 +55,7 @@ android {
 
     signingConfigs {
         create("release") {
-            if (keystorePropertiesFile.exists()) {
+            if (useKeyProperties && hasReleaseSigning) {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
                 storeFile = file(keystoreProperties["storeFile"] as String)
@@ -58,13 +71,41 @@ android {
 
     buildTypes {
         release {
-            // Use the upload key from android/key.properties or the CI env vars;
-            // otherwise fall back to debug so local/CI builds without secrets still work.
-            signingConfig = if (hasReleaseSigning) {
-                signingConfigs.getByName("release")
-            } else {
+            // Sign with the upload key (key.properties or the CI env vars). The debug
+            // key is only used when ALLOW_DEBUG_SIGNING=true is set explicitly.
+            signingConfig = if (!hasReleaseSigning && allowDebugSigning) {
                 signingConfigs.getByName("debug")
+            } else {
+                signingConfigs.getByName("release")
             }
+        }
+    }
+}
+
+// Fail early, with a clear message, if a release build is requested without
+// a usable upload key and without the explicit debug opt-in.
+gradle.taskGraph.whenReady {
+    val wantsRelease = allTasks.any { it.project == project && it.name.contains("Release") }
+    if (wantsRelease && !hasReleaseSigning) {
+        if (allowDebugSigning) {
+            logger.warn("ALLOW_DEBUG_SIGNING=true: this release build is DEBUG-SIGNED (not for Play).")
+        } else {
+            val detail = if (useKeyProperties) {
+                val missing = requiredKeys.filter { keystoreProperties.getProperty(it).isNullOrBlank() }
+                if (missing.isNotEmpty()) {
+                    "android/key.properties lacks ${missing.joinToString()}"
+                } else {
+                    "storeFile in android/key.properties does not exist"
+                }
+            } else {
+                "no android/key.properties and no ANDROID_KEYSTORE_PATH/ANDROID_KEYSTORE_PASSWORD/" +
+                    "ANDROID_KEY_ALIAS/ANDROID_KEY_PASSWORD env vars"
+            }
+            throw GradleException(
+                "Release signing is not configured: $detail. Release builds must be signed " +
+                    "with the upload key; set ALLOW_DEBUG_SIGNING=true to build a debug-signed " +
+                    "release on purpose."
+            )
         }
     }
 }

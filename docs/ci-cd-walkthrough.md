@@ -78,7 +78,7 @@ gh secret list -R $R
 
 The `.jks` file itself stays out of git (`.gitignore` covers `*.jks` and `*.keystore`) and lives in my password manager plus an offline backup. Losing the upload key means asking Google for an upload key reset.
 
-How the build uses it: `release.yml` decodes the keystore to `$RUNNER_TEMP`, exports `ANDROID_KEYSTORE_PATH` plus the three passwords and alias, and `android/app/build.gradle.kts` checks `android/key.properties` first, then those env vars, then falls back to debug signing. The keystore is deleted at the end of the job.
+How the build uses it: `release.yml` decodes the keystore to `$RUNNER_TEMP`, exports `ANDROID_KEYSTORE_PATH` plus the three passwords and alias, and `android/app/build.gradle.kts` checks `android/key.properties` first, then those env vars. With neither, a release build fails on purpose unless `ALLOW_DEBUG_SIGNING=true` is set. The release workflow sets that only when the secrets are missing or on PR dry runs (which never get the real key). The keystore is deleted at the end of the job.
 
 ## Required checks
 

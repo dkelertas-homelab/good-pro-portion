@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- allowBackup is off on purpose: the app only stores timer settings and a
+         tip flag, so there's nothing worth backing up, and keeping app data out of
+         Google backup keeps the privacy policy and Play data safety form simple. -->
     <application
+        android:allowBackup="false"
         android:label="Nice Pro Portions ;-)"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

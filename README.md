@@ -59,3 +59,8 @@ No license has been chosen yet, so default copyright applies (all rights reserve
 ## Status
 
 Phase 2 — tech choice and code skeleton. Default branch for day-to-day work is `dev`; `main` is reserved for releases.
+
+## Release builds
+
+- Release builds are signed with the upload key from `android/key.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; git-ignored) or, in CI, from the `ANDROID_KEYSTORE_PATH`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD` env vars. Without either, `flutter build apk/appbundle --release` fails on purpose. To build a debug-signed release deliberately (CI dry runs without secrets), set `ALLOW_DEBUG_SIGNING=true`. Debug builds need none of this.
+- Upload to a Play testing track with `tool/play_upload.py` (internal, alpha or beta only; draft by default; version taken from `pubspec.yaml`). It reads the service-account key from `--key` or the `PLAY_SERVICE_ACCOUNT_KEY` env var; keep that JSON outside the repo. Run it with `--help` for options.

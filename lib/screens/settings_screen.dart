@@ -37,7 +37,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
-        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
+        padding: scrollPadding(
+          context,
+          const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        ),
         children: [
           Text('TIMER', style: Theme.of(context).textTheme.labelSmall),
           Card(
@@ -46,11 +49,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ListTile(
                   title: const Text('Work length'),
                   subtitle: const Text('Used for work intervals'),
-                  trailing: Text('${_work}s',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w700,
-                      )),
+                  trailing: Text(
+                    '${_work}s',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   onTap: () => _pickSeconds(
                     title: 'Work length',
                     current: _work,
@@ -62,11 +67,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 ListTile(
                   title: const Text('Rest length'),
-                  trailing: Text('${_rest}s',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w700,
-                      )),
+                  trailing: Text(
+                    '${_rest}s',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   onTap: () => _pickSeconds(
                     title: 'Rest length',
                     current: _rest,
@@ -108,7 +115,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 const ListTile(
                   title: Text('Also add to my Clock app'),
-                  subtitle: Text('Opens Clock with an alarm pre-filled — coming later'),
+                  subtitle: Text(
+                    'Opens Clock with an alarm pre-filled — coming later',
+                  ),
                   trailing: Icon(Icons.schedule),
                   enabled: false,
                 ),
@@ -122,12 +131,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: ListTile(
               leading: const Text('✨', style: TextStyle(fontSize: 22)),
               title: const Text('Remove ads'),
-              subtitle: const Text('One-off purchase · no subscription (coming later)'),
-              trailing: Text('A\$X.XX',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w700,
-                  )),
+              subtitle: const Text(
+                'One-off purchase · no subscription (coming later)',
+              ),
+              trailing: Text(
+                'A\$X.XX',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               enabled: false,
             ),
           ),

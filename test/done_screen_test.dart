@@ -12,17 +12,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   late AppContent content;
   setUpAll(() {
-    content = ContentLoader.parse(File('assets/content.json').readAsStringSync());
+    content = ContentLoader.parse(
+      File('assets/content.json').readAsStringSync(),
+    );
   });
 
   Future<void> pumpDone(WidgetTester t, Routine r) async {
     t.view.physicalSize = const Size(412, 915);
     t.view.devicePixelRatio = 1;
     addTearDown(t.view.reset);
-    await t.pumpWidget(MaterialApp(
-      theme: buildLightTheme(),
-      home: DoneScreen(content: content, routine: r, elapsed: const Duration(minutes: 9)),
-    ));
+    await t.pumpWidget(
+      MaterialApp(
+        theme: buildLightTheme(),
+        home: DoneScreen(
+          content: content,
+          routine: r,
+          elapsed: const Duration(minutes: 9),
+        ),
+      ),
+    );
     await t.pump();
   }
 
@@ -35,7 +43,10 @@ void main() {
 
   testWidgets('finishing A offers B, and Start B starts it', (t) async {
     SharedPreferences.setMockInitialValues({'show_start_card': false});
-    await pumpDone(t, content.routines.firstWhere((r) => r.name == 'Quiet morning A'));
+    await pumpDone(
+      t,
+      content.routines.firstWhere((r) => r.name == 'Quiet morning A'),
+    );
     expect(find.text('Got more time?'), findsOneWidget);
     expect(find.text('Why not start Quiet morning B?'), findsOneWidget);
     expect(find.text('Done for today'), findsOneWidget);
@@ -48,7 +59,10 @@ void main() {
   });
 
   testWidgets('finishing B offers A', (t) async {
-    await pumpDone(t, content.routines.firstWhere((r) => r.name == 'Quiet morning B'));
+    await pumpDone(
+      t,
+      content.routines.firstWhere((r) => r.name == 'Quiet morning B'),
+    );
     expect(find.text('Why not start Quiet morning A?'), findsOneWidget);
     expect(find.text('Start A'), findsOneWidget);
   });

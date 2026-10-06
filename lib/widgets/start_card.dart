@@ -15,10 +15,16 @@ Future<bool> showStartCard(BuildContext context, SettingsStore store) async {
         icon: const SizedBox(
           width: 72,
           height: 72,
-          child: FigureView(figureKey: 'march', size: 56, padding: EdgeInsets.all(4)),
+          child: FigureView(
+            figureKey: 'march',
+            size: 56,
+            padding: EdgeInsets.all(4),
+          ),
         ),
-        title: const Text('Before you start',
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+        title: const Text(
+          'Before you start',
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -29,16 +35,21 @@ Future<bool> showStartCard(BuildContext context, SettingsStore store) async {
               style: TextStyle(fontSize: 18, height: 1.35),
             ),
             const SizedBox(height: 12),
-            const Text("It's just great you're doing this.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            const Text(
+              "It's just great you're doing this.",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 12),
             CheckboxListTile(
               value: hide,
               onChanged: (v) => setLocal(() => hide = v ?? false),
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
-              title: const Text("Don't show this again", style: TextStyle(fontSize: 18)),
+              title: const Text(
+                "Don't show this again",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
           ],
         ),
@@ -48,7 +59,10 @@ Future<bool> showStartCard(BuildContext context, SettingsStore store) async {
             child: FilledButton(
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(56),
-                textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               onPressed: () => Navigator.of(ctx).pop(true),
               child: const Text("Let's go"),

@@ -10,18 +10,28 @@ import 'package:good_pro_portion/theme/app_theme.dart';
 /// warm-up next-up preview (issue #22).
 void main() {
   testWidgets('countdown ring keeps its position across phases', (t) async {
-    final content = ContentLoader.parse(File('assets/content.json').readAsStringSync());
+    final content = ContentLoader.parse(
+      File('assets/content.json').readAsStringSync(),
+    );
     t.view.physicalSize = const Size(412, 915);
     t.view.devicePixelRatio = 1;
     addTearDown(t.view.reset);
-    await t.pumpWidget(MaterialApp(
-      theme: buildLightTheme(),
-      home: TimerScreen(
-          content: content, routine: content.routines.first, workSeconds: 40, restSeconds: 20),
-    ));
+    await t.pumpWidget(
+      MaterialApp(
+        theme: buildLightTheme(),
+        home: TimerScreen(
+          content: content,
+          routine: content.routines.first,
+          workSeconds: 40,
+          restSeconds: 20,
+        ),
+      ),
+    );
     final ring = find.byKey(const ValueKey('countdown'));
     final warmup = t.getRect(ring);
-    await t.pump(const Duration(seconds: 23)); // last 25% of warm-up: next-up preview
+    await t.pump(
+      const Duration(seconds: 23),
+    ); // last 25% of warm-up: next-up preview
     expect(find.text('NEXT UP · GET READY'), findsOneWidget);
     final preview = t.getRect(ring);
     for (var i = 0; i < 4; i++) {

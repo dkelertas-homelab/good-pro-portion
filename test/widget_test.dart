@@ -6,7 +6,9 @@ import 'package:good_pro_portion/main.dart';
 
 void main() {
   testWidgets('home lists both quiet morning routines', (tester) async {
-    final content = ContentLoader.parse(File('assets/content.json').readAsStringSync());
+    final content = ContentLoader.parse(
+      File('assets/content.json').readAsStringSync(),
+    );
     await tester.pumpWidget(GoodProPortionApp(content: content));
     await tester.pumpAndSettle();
 

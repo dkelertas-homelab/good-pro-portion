@@ -64,7 +64,9 @@ class _TimerScreenState extends State<TimerScreen>
     _segments = _buildSegments();
     _remaining = _segments.first.seconds;
     _blink = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
     _ticker = Timer.periodic(const Duration(seconds: 1), _onTick);
   }
 
@@ -88,7 +90,9 @@ class _TimerScreenState extends State<TimerScreen>
     }
     for (var i = 0; i < r.work.length; i++) {
       final s = r.work[i];
-      out.add(_stepSegment(_Phase.work, s, s.workSeconds ?? widget.workSeconds));
+      out.add(
+        _stepSegment(_Phase.work, s, s.workSeconds ?? widget.workSeconds),
+      );
       if (i < r.work.length - 1) {
         out.add(_stepSegment(_Phase.rest, r.work[i + 1], widget.restSeconds));
       }
@@ -160,7 +164,8 @@ class _TimerScreenState extends State<TimerScreen>
     final next = _upNext;
     final progress = _remaining / seg.seconds;
     // Warm-up has no rests: preview the next move for the last 25%.
-    final preview = seg.phase == _Phase.warmup &&
+    final preview =
+        seg.phase == _Phase.warmup &&
         next != null &&
         _remaining * 4 <= seg.seconds;
     final showCard = seg.phase == _Phase.rest || preview;
@@ -179,15 +184,18 @@ class _TimerScreenState extends State<TimerScreen>
     final warmupCount = widget.routine.warmup.length;
     final header = switch (seg.phase) {
       _Phase.warmup => 'Warm-up ${_index + 1}/$warmupCount',
-      _Phase.work => 'Move ${(_index - warmupCount) ~/ 2 + 1}/${widget.routine.work.length}',
+      _Phase.work =>
+        'Move ${(_index - warmupCount) ~/ 2 + 1}/${widget.routine.work.length}',
       _Phase.rest => 'Rest',
     };
 
     // No ads on the timer screen (by design).
     return Scaffold(
       appBar: AppBar(
-        title: Text(header,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+        title: Text(
+          header,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close),
           tooltip: 'End workout',
@@ -209,7 +217,9 @@ class _TimerScreenState extends State<TimerScreen>
                         builder: (context, _) => _NextUpCard(
                           next: next!,
                           secondsLeft: _remaining,
-                          grey: reduceMotion ? (blinking ? 1 : 0) : _blink.value,
+                          grey: reduceMotion
+                              ? (blinking ? 1 : 0)
+                              : _blink.value,
                         ),
                       )
                     : Column(
@@ -219,7 +229,9 @@ class _TimerScreenState extends State<TimerScreen>
                               builder: (context, c) => FigureView(
                                 figureKey: seg.move.figure,
                                 mirror: seg.mirror,
-                                size: (c.biggest.shortestSide - 24).clamp(60, 280).toDouble(),
+                                size: (c.biggest.shortestSide - 24)
+                                    .clamp(60, 280)
+                                    .toDouble(),
                               ),
                             ),
                           ),
@@ -250,9 +262,14 @@ class _TimerScreenState extends State<TimerScreen>
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.w800, height: 1.1),
+                              fontSize: 30,
+                              fontWeight: FontWeight.w800,
+                              height: 1.1,
+                            ),
                           )
-                        : (next != null ? _NextChip(next: next) : const SizedBox.shrink()),
+                        : (next != null
+                              ? _NextChip(next: next)
+                              : const SizedBox.shrink()),
                   ),
                 ],
               ),
@@ -277,12 +294,16 @@ class _BigName extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) => Text(
-        text,
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w800, height: 1.1),
-      );
+    text,
+    textAlign: TextAlign.center,
+    maxLines: 2,
+    overflow: TextOverflow.ellipsis,
+    style: const TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.w800,
+      height: 1.1,
+    ),
+  );
 }
 
 class _Cue extends StatelessWidget {
@@ -290,20 +311,20 @@ class _Cue extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 6),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 26,
-            height: 1.2,
-            fontWeight: FontWeight.w500,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(top: 6),
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: 26,
+        height: 1.2,
+        fontWeight: FontWeight.w500,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    ),
+  );
 }
 
 /// Small next-up hint during a work move. Coral outline so it never reads
@@ -326,17 +347,26 @@ class _NextChip extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('NEXT UP',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
-                    color: AppColors.coral)),
+            const Text(
+              'NEXT UP',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.2,
+                color: AppColors.coral,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(next.moveTitle,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, height: 1.15)),
+            Text(
+              next.moveTitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                height: 1.15,
+              ),
+            ),
           ],
         ),
       ),
@@ -347,7 +377,11 @@ class _NextChip extends StatelessWidget {
 /// NEXT UP · GET READY card for rests and the end of each warm-up move.
 /// [grey] 0..1 blends the card to grey for the final-seconds blink.
 class _NextUpCard extends StatelessWidget {
-  const _NextUpCard({required this.next, required this.secondsLeft, required this.grey});
+  const _NextUpCard({
+    required this.next,
+    required this.secondsLeft,
+    required this.grey,
+  });
   final _Segment next;
   final int secondsLeft;
   final double grey;
@@ -366,7 +400,10 @@ class _NextUpCard extends StatelessWidget {
       child: CustomPaint(
         foregroundPainter: _DashedBorder(color: accent),
         child: Container(
-          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(22)),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(22),
+          ),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -374,13 +411,16 @@ class _NextUpCard extends StatelessWidget {
                 width: double.infinity,
                 color: accent,
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: const Text('NEXT UP · GET READY',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.2)),
+                child: const Text(
+                  'NEXT UP · GET READY',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.2,
+                  ),
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -392,7 +432,9 @@ class _NextUpCard extends StatelessWidget {
                         figureKey: next.move.figure,
                         mirror: next.mirror,
                         padding: const EdgeInsets.all(6),
-                        size: (c.biggest.shortestSide - 12).clamp(40, 200).toDouble(),
+                        size: (c.biggest.shortestSide - 12)
+                            .clamp(40, 200)
+                            .toDouble(),
                       ),
                     ),
                   ),
@@ -402,25 +444,37 @@ class _NextUpCard extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
                 child: Column(
                   children: [
-                    Text(next.moveTitle,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 34, fontWeight: FontWeight.w800, height: 1.1)),
+                    Text(
+                      next.moveTitle,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w800,
+                        height: 1.1,
+                      ),
+                    ),
                     if (next.cue.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
-                        child: Text(next.cue,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 22, height: 1.2)),
+                        child: Text(
+                          next.cue,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 22, height: 1.2),
+                        ),
                       ),
                     const SizedBox(height: 6),
-                    Text('in ${secondsLeft}s',
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.w900, color: accent)),
+                    Text(
+                      'in ${secondsLeft}s',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                        color: accent,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -442,8 +496,12 @@ class _DashedBorder extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
     final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-          (Offset.zero & size).deflate(1.5), const Radius.circular(22)));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          (Offset.zero & size).deflate(1.5),
+          const Radius.circular(22),
+        ),
+      );
     for (final PathMetric m in path.computeMetrics()) {
       for (double d = 0; d < m.length; d += 18) {
         canvas.drawPath(m.extractPath(d, d + 10), paint);
@@ -486,7 +544,11 @@ class _Controls extends StatelessWidget {
                   label: 'Previous exercise',
                   button: true,
                   excludeSemantics: true,
-                  child: TextButton(onPressed: onBack, style: small, child: const Text('‹ Prev')),
+                  child: TextButton(
+                    onPressed: onBack,
+                    style: small,
+                    child: const Text('‹ Prev'),
+                  ),
                 )
               : const SizedBox.shrink(),
         ),
@@ -498,7 +560,10 @@ class _Controls extends StatelessWidget {
             child: FilledButton(
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(60),
-                textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                textStyle: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               onPressed: onPause,
               child: Text(paused ? 'Resume' : 'Pause'),
@@ -511,7 +576,11 @@ class _Controls extends StatelessWidget {
             label: 'Skip to next exercise',
             button: true,
             excludeSemantics: true,
-            child: TextButton(onPressed: onSkip, style: small, child: const Text('Skip ›')),
+            child: TextButton(
+              onPressed: onSkip,
+              style: small,
+              child: const Text('Skip ›'),
+            ),
           ),
         ),
       ],

@@ -34,27 +34,43 @@ class DoneScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: ListView(
-        padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 12, 20, 24)),
+        padding: scrollPadding(
+          context,
+          const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        ),
         children: [
-          Icon(Icons.check_circle, size: 56, color: Theme.of(context).colorScheme.primary),
+          Icon(
+            Icons.check_circle,
+            size: 56,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           const SizedBox(height: 8),
-          Text('Nice one!',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
-          Text('${routine.name} done. Lovely work showing up today.',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18, height: 1.3)),
+          Text(
+            'Nice one!',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineMedium
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          Text(
+            '${routine.name} done. Lovely work showing up today.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 18, height: 1.3),
+          ),
           const SizedBox(height: 16),
           if (partner != null) ...[
             _MoreTimeCard(
               partner: partner,
-              onStart: () => startWorkout(context, content, partner, replace: true),
+              onStart: () =>
+                  startWorkout(context, content, partner, replace: true),
             ),
             const SizedBox(height: 10),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size.fromHeight(56),
-                textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               onPressed: doneForToday,
               child: const Text('Done for today'),
@@ -63,13 +79,20 @@ class DoneScreen extends StatelessWidget {
           ],
           Row(
             children: [
-              Expanded(child: _Stat(value: _timeLabel, label: 'time')),
+              Expanded(
+                child: _Stat(value: _timeLabel, label: 'time'),
+              ),
               const SizedBox(width: 10),
-              const Expanded(child: _Stat(value: '—', label: 'day streak')),
+              const Expanded(
+                child: _Stat(value: '—', label: 'day streak'),
+              ),
             ],
           ),
           const SizedBox(height: 18),
-          Text('MEAL IDEA · EAT SIMPLE', style: Theme.of(context).textTheme.labelSmall),
+          Text(
+            'MEAL IDEA · EAT SIMPLE',
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
           const SizedBox(height: 6),
           Card(
             child: Padding(
@@ -77,28 +100,42 @@ class DoneScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${meal.emoji}  ${meal.title}',
-                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                  Text(
+                    '${meal.emoji}  ${meal.title}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  Text('Grab-and-go friendly. Not a diet plan.',
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    'Grab-and-go friendly. Not a diet plan.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('PORTION GUIDE', style: Theme.of(context).textTheme.labelSmall),
+                        Text(
+                          'PORTION GUIDE',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
                         const SizedBox(height: 4),
                         Text(meal.portionGuide),
                         const SizedBox(height: 6),
-                        Text('✋ palm · ✊ fist · 🤲 cupped · 👍 thumb',
-                            style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          '✋ palm · ✊ fist · 🤲 cupped · 👍 thumb',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ),
@@ -141,11 +178,13 @@ class _Stat extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
         child: Column(
           children: [
-            Text(value,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w800,
-                    )),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             Text(label, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
@@ -174,22 +213,37 @@ class _MoreTimeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('Got more time?',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+          const Text(
+            'Got more time?',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 6),
-          Text('Why not start ${partner.name}?',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, height: 1.25)),
+          Text(
+            'Why not start ${partner.name}?',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              height: 1.25,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text('About ${partner.approxMinutes} more minutes',
-              style: TextStyle(
-                  fontSize: 18, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          Text(
+            'About ${partner.approxMinutes} more minutes',
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 14),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.coral,
               foregroundColor: Colors.white,
               minimumSize: const Size.fromHeight(60),
-              textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+              textStyle: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             onPressed: onStart,
             child: Text('Start $letter'),

@@ -30,15 +30,21 @@ class CountdownRing extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(label,
-                  style: TextStyle(
-                      fontSize: size * 0.36,
-                      height: 1.0,
-                      fontWeight: FontWeight.w800)),
-              Text(sublabel,
-                  style: TextStyle(
-                      fontSize: (size * 0.11).clamp(16, 22).toDouble(),
-                      fontWeight: FontWeight.w600)),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: size * 0.36,
+                  height: 1.0,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Text(
+                sublabel,
+                style: TextStyle(
+                  fontSize: (size * 0.11).clamp(16, 22).toDouble(),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ),

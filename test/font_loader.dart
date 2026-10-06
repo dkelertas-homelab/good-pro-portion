@@ -12,7 +12,6 @@ Future<void> loadAppFonts() async {
   // MaterialIcons ship with the Flutter SDK; load for goldens so Icons.* aren't boxes.
   final candidates = [
     '${Platform.environment['FLUTTER_ROOT'] ?? ''}/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
-    '/workspace/tools/flutter/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
   ];
   for (final path in candidates) {
     final f = File(path);

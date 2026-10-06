@@ -1,0 +1,171 @@
+# Release pipeline: push a v* tag (or run it by hand) -> release APK + AAB -> GitHub Release.
+# Signing: uses the ANDROID_* repo secrets when all four are set; otherwise the
+# build is debug-signed (fine for sideloading, NOT for Play) and doesn't fail.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version name, e.g. 0.1.4 (blank = tag name or pubspec version)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: "3.47.5"
+
+jobs:
+  build:
+    name: Build release APK + AAB
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    outputs:
+      version: ${{ steps.version.outputs.name }}
+      signed: ${{ steps.keystore.outputs.signed }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          pub-cache: true
+
+      - name: Work out version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          pub=$(sed -nE 's/^version:[[:space:]]*([^[:space:]]+).*/\1/p' pubspec.yaml)
+          pub_name=${pub%%+*}
+          pub_code=${pub##*+}
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            name=${GITHUB_REF_NAME#v}
+          elif [[ -n "$INPUT_VERSION" ]]; then
+            name=${INPUT_VERSION#v}
+          else
+            name=$pub_name
+          fi
+          if ! [[ "$name" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::'$name' isn't a version like 1.2.3 or 1.2.3-beta.1"; exit 1
+          fi
+          if [[ "$name" != "$pub_name" ]]; then
+            echo "::warning::Version $name differs from pubspec.yaml ($pub_name). versionName comes from the tag; versionCode stays $pub_code from pubspec."
+          fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "code=$pub_code" >> "$GITHUB_OUTPUT"
+          echo "Building versionName=$name versionCode=$pub_code"
+
+      - name: Decode upload keystore (if secrets are set)
+        id: keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [[ -n "$ANDROID_KEYSTORE_BASE64" && -n "$ANDROID_KEYSTORE_PASSWORD" && -n "$ANDROID_KEY_ALIAS" && -n "$ANDROID_KEY_PASSWORD" ]]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload-keystore.jks" >> "$GITHUB_ENV"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+            echo "Signing with the upload key from repo secrets."
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Signing secrets not set: building a DEBUG-SIGNED release (OK for sideloading, not for Play)."
+          fi
+
+      - run: flutter pub get
+
+      - name: flutter test (release gate)
+        run: flutter test
+
+      - name: Build APK + AAB
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          NAME: ${{ steps.version.outputs.name }}
+          CODE: ${{ steps.version.outputs.code }}
+        run: |
+          flutter build apk --release --build-name "$NAME" --build-number "$CODE"
+          flutter build appbundle --release --build-name "$NAME" --build-number "$CODE"
+
+      - name: Rename, checksum, show signer
+        env:
+          NAME: ${{ steps.version.outputs.name }}
+          SIGNED: ${{ steps.keystore.outputs.signed }}
+        run: |
+          suffix=$([[ "$SIGNED" == "true" ]] && echo "" || echo "-debug-signed")
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk "dist/good-pro-portion-v${NAME}${suffix}.apk"
+          cp build/app/outputs/bundle/release/app-release.aab "dist/good-pro-portion-v${NAME}${suffix}.aab"
+          (cd dist && sha256sum -- * > SHA256SUMS.txt && cat SHA256SUMS.txt)
+          apksigner=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
+          "$apksigner" verify --print-certs dist/*.apk | grep -E 'DN|SHA-256'
+
+      - name: Remove keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload-keystore.jks"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: good-pro-portion-v${{ steps.version.outputs.name }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  github-release:
+    name: Publish GitHub Release
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # only this job can create the release
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: good-pro-portion-v${{ needs.build.outputs.version }}
+          path: dist
+
+      - name: Release notes (+ drop the AAB if it's debug-signed)
+        env:
+          SIGNED: ${{ needs.build.outputs.signed }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          if [[ "$SIGNED" == "true" ]]; then
+            echo "Signed with the upload key. Install the APK on Android (allow 'Install unknown apps' for the browser or Files app)." > notes.md
+          else
+            rm -f dist/*.aab # Play rejects debug-signed bundles; it stays in the workflow artifact
+            (cd dist && sha256sum -- *.apk > SHA256SUMS.txt)
+            {
+              echo "> **Debug-signed build.** Signing secrets weren't set, so this is signed with a throwaway debug key: fine for sideloading and testing, **not** for Google Play."
+              echo "> It won't install over a copy signed with a different key; uninstall that one first."
+            } > notes.md
+          fi
+          echo "" >> notes.md
+          echo "Built by GitHub Actions from \`${GITHUB_SHA::7}\`. Checksums in SHA256SUMS.txt." >> notes.md
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          name: v${{ needs.build.outputs.version }}${{ needs.build.outputs.signed != 'true' && ' (debug-signed)' || '' }}
+          body_path: notes.md
+          generate_release_notes: true
+          prerelease: ${{ needs.build.outputs.signed != 'true' || contains(needs.build.outputs.version, '-') }}
+          fail_on_unmatched_files: true
+          files: dist/*

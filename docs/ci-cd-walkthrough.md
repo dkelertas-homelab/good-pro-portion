@@ -1,6 +1,6 @@
 # CI/CD walkthrough: Azure DevOps brain, GitHub Actions hands
 
-I build and release this app with **GitHub Actions** on GitHub-hosted runners. Builds used to happen on an AI cloud desktop; now every PR, debug APK and release APK comes from a pipeline in this repo that anyone can read. By day I'm an Azure DevOps engineer, so these notes map each piece back to what I already know from ADO.
+I build and release this app with **GitHub Actions** on GitHub-hosted runners: every PR check, debug APK and release APK comes from a pipeline in this repo that anyone can read. I know Azure DevOps well, so these notes map each piece back to its ADO equivalent.
 
 ## The pipelines
 
@@ -80,9 +80,9 @@ The `.jks` file itself stays out of git (`.gitignore` covers `*.jks` and `*.keys
 
 How the build uses it: `release.yml` decodes the keystore to `$RUNNER_TEMP`, exports `ANDROID_KEYSTORE_PATH` plus the three passwords and alias, and `android/app/build.gradle.kts` checks `android/key.properties` first, then those env vars. With neither, a release build fails on purpose unless `ALLOW_DEBUG_SIGNING=true` is set. The release workflow sets that only when the secrets are missing or on PR dry runs (which never get the real key). The keystore is deleted at the end of the job.
 
-## Required checks (once the repo is public)
+## Required checks
 
-On a free personal account, rulesets and branch protection on a **private** repo return `403 Upgrade to GitHub Pro`, so for now the PR check is a convention rather than enforced. Once the repo is public, run this to require the check on `dev` and block force-pushes and deletion (the ADO "build validation" branch policy):
+On a free personal account, rulesets and branch protection only work on **public** repos (a private repo returns `403 Upgrade to GitHub Pro`). Run this to require the check on `dev` and block force-pushes and deletion (the ADO "build validation" branch policy):
 
 ```bash
 gh api -X POST repos/dkelertas-homelab/good-pro-portion/rulesets --input - <<'JSON'
@@ -103,14 +103,14 @@ JSON
 
 ## Installing a Release APK on my Samsung phone
 
-1. On the phone, open the repo's **Releases** page in Chrome or Samsung Internet (sign in to GitHub while the repo is private).
+1. On the phone, open the repo's **Releases** page in Chrome or Samsung Internet.
 2. Under **Assets**, tap `good-pro-portion-vX.Y.Z….apk` to download it.
 3. Open the download. The first time, Android says installs from this source aren't allowed: tap **Settings** and turn on **Allow from this source** for that browser or My Files.
 4. If **Auto Blocker** is on (Settings → Security and privacy → Auto Blocker), it blocks sideloading. Turn it off for the install and back on afterwards.
 5. If Play Protect warns about an unknown app, tap **More details → Install anyway**.
 6. "App not installed" / "package conflicts" means the copy already on the phone is signed with a different key (debug builds from another machine, for example). Uninstall it first. That wipes local history and settings.
 
-## Links to brush up
+## Further reading
 
 - [GitHub Actions workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
 - [Using secrets in GitHub Actions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)

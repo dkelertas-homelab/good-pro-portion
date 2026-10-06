@@ -1,6 +1,6 @@
 # Nice Pro Portions — product & coding guide
 
-> Shared rules for all of David's apps (git, bugs, secrets, back-end) live in the [app standards](https://github.com/dkelertas-homelab/grokbot/tree/main/standards); this guide only holds rules specific to this app.
+> This guide only holds rules specific to this app. The general standards I use across my apps (git, bugs, secrets, back-end) are kept privately.
 
 Every new feature should fit this guide. Keep it short, friendly, and easy to follow.
 

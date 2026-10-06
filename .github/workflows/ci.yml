@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false # nothing pushes back; don't leave the token in .git/config
 
       - uses: subosito/flutter-action@v2
         with:
@@ -64,6 +66,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false # nothing pushes back; don't leave the token in .git/config
 
       - uses: actions/setup-java@v6
         with:

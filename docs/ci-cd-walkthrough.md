@@ -82,15 +82,15 @@ How the build uses it: `release.yml` decodes the keystore to `$RUNNER_TEMP`, exp
 
 ## Required checks
 
-On a free personal account, rulesets and branch protection only work on **public** repos (a private repo returns `403 Upgrade to GitHub Pro`). Run this to require the check on `dev` and block force-pushes and deletion (the ADO "build validation" branch policy):
+On a free personal account, rulesets and branch protection only work on **public** repos (a private repo returns `403 Upgrade to GitHub Pro`). Since going public, the default branch and `dev` have a ruleset that requires a PR plus both CI checks and blocks force-pushes and deletion, which is the ADO "build validation" branch policy. No approvals are required because I'm the only reviewer. This is the command I used:
 
 ```bash
 gh api -X POST repos/dkelertas-homelab/good-pro-portion/rulesets --input - <<'JSON'
 {
-  "name": "dev: require CI",
+  "name": "default + dev: require PR and CI",
   "target": "branch",
   "enforcement": "active",
-  "conditions": { "ref_name": { "include": ["refs/heads/dev"], "exclude": [] } },
+  "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH", "refs/heads/dev"], "exclude": [] } },
   "rules": [
     { "type": "deletion" },
     { "type": "non_fast_forward" },

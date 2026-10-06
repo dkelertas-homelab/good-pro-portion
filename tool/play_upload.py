@@ -9,10 +9,12 @@ Guard rails:
 - the Play edit is deleted if anything fails, so nothing half-done is left.
 
 The service-account key is read from a file path and never printed. It
-should only have "release to testing tracks" for this app.
+should only have "release to testing tracks" for this app. Pass the path with
+--key or set PLAY_SERVICE_ACCOUNT_KEY; keep the JSON outside the repo.
 
 Usage:
-  python3 tool/play_upload.py --key /home/box/secrets/<app>/play-publisher.json \
+  export PLAY_SERVICE_ACCOUNT_KEY=/path/outside/the/repo/play-publisher.json
+  python3 tool/play_upload.py \
       --aab build/app/outputs/bundle/release/app-release.aab \
       --notes "What changed" [--track internal] [--status draft|completed] \
       [--pubspec pubspec.yaml] [--package space.d11s.niceproportions] [--dry-run]
@@ -20,6 +22,7 @@ Usage:
 Needs: pip install google-api-python-client google-auth
 """
 import argparse
+import os
 import re
 import sys
 
@@ -37,7 +40,8 @@ def pubspec_version(path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--key", required=True, help="service-account JSON key file")
+    ap.add_argument("--key", default=os.environ.get("PLAY_SERVICE_ACCOUNT_KEY"),
+                    help="service-account JSON key file (default: $PLAY_SERVICE_ACCOUNT_KEY)")
     ap.add_argument("--aab", required=True)
     ap.add_argument("--notes", required=True, help="release notes (default listing language)")
     ap.add_argument("--track", default="internal", choices=ALLOWED_TRACKS)
@@ -47,6 +51,8 @@ def main():
     ap.add_argument("--dry-run", action="store_true",
                     help="check access and the track, then discard the edit without uploading")
     a = ap.parse_args()
+    if not a.key:
+        ap.error("no service-account key: pass --key or set PLAY_SERVICE_ACCOUNT_KEY")
 
     from google.oauth2 import service_account
     from googleapiclient.discovery import build

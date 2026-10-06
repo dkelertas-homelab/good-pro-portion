@@ -37,15 +37,15 @@ flutter test
 flutter build apk --debug
 ```
 
-Sideload the debug APK onto a device to try Quiet morning A / B.
-
-## CI/CD
-
-GitHub Actions runs the PR checks (format, analyze, test, debug APK artifact) and builds tagged `v*` releases into a GitHub Release with the APK attached. How it works, the Azure DevOps mapping and the one-time signing setup are in [`docs/ci-cd-walkthrough.md`](docs/ci-cd-walkthrough.md).
+Sideload the debug APK onto a device to try Quiet morning A / B, or run it straight on a connected device or emulator:
 
 ```bash
 flutter run
 ```
+
+## CI/CD
+
+GitHub Actions runs the PR checks (format, analyze, test, debug APK artifact) and builds tagged `v*` releases into a GitHub Release with the APK attached. How it works, the Azure DevOps mapping and the one-time signing setup are in [`docs/ci-cd-walkthrough.md`](docs/ci-cd-walkthrough.md).
 
 ## Package
 
@@ -54,7 +54,7 @@ flutter run
 
 ## License
 
-License: TBD (private for now)
+No license has been chosen yet, so default copyright applies (all rights reserved) until one is added.
 
 ## Status
 

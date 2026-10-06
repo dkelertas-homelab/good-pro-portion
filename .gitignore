@@ -52,5 +52,15 @@ android/.kotlin/
 
 # Play / signing — never commit
 android/key.properties
+key.properties
 *.jks
 *.keystore
+*.p12
+*.pfx
+
+# Credentials and local env — never commit
+.env
+.env.*
+*service-account*.json
+*service_account*.json
+play-publisher*.json

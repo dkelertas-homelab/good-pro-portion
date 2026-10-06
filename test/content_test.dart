@@ -28,7 +28,10 @@ void main() {
     // One-sided moves: right first, then left, never back to back.
     for (final r in [dayA, dayB]) {
       for (var i = 1; i < r.work.length; i++) {
-        expect(r.work[i].moveId == r.work[i - 1].moveId && r.work[i].mirror, isFalse);
+        expect(
+          r.work[i].moveId == r.work[i - 1].moveId && r.work[i].mirror,
+          isFalse,
+        );
       }
     }
     expect(content.moves.every((m) => m.cue.isNotEmpty), isTrue);

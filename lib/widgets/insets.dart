@@ -25,10 +25,7 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Padding(
-        padding: scrollPadding(context, padding),
-        child: child,
-      ),
+      child: Padding(padding: scrollPadding(context, padding), child: child),
     );
   }
 }

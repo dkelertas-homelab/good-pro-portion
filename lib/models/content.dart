@@ -24,16 +24,16 @@ class Move {
   final String cue;
 
   factory Move.fromJson(Map<String, dynamic> j) => Move(
-        id: j['id'] as String,
-        name: j['name'] as String,
-        figure: j['figure'] as String,
-        howTo: j['howTo'] as String,
-        mistakes: j['mistakes'] as String,
-        easier: j['easier'] as String,
-        harder: j['harder'] as String,
-        textOnly: j['textOnly'] == true,
-        cue: j['cue'] as String? ?? '',
-      );
+    id: j['id'] as String,
+    name: j['name'] as String,
+    figure: j['figure'] as String,
+    howTo: j['howTo'] as String,
+    mistakes: j['mistakes'] as String,
+    easier: j['easier'] as String,
+    harder: j['harder'] as String,
+    textOnly: j['textOnly'] == true,
+    cue: j['cue'] as String? ?? '',
+  );
 }
 
 class RoutineStep {
@@ -58,13 +58,13 @@ class RoutineStep {
   final bool mirror;
 
   factory RoutineStep.fromJson(Map<String, dynamic> j) => RoutineStep(
-        moveId: j['moveId'] as String,
-        label: j['label'] as String?,
-        workSeconds: j['workSeconds'] as int?,
-        note: j['note'] as String?,
-        cue: j['cue'] as String?,
-        mirror: j['mirror'] == true,
-      );
+    moveId: j['moveId'] as String,
+    label: j['label'] as String?,
+    workSeconds: j['workSeconds'] as int?,
+    note: j['note'] as String?,
+    cue: j['cue'] as String?,
+    mirror: j['mirror'] == true,
+  );
 }
 
 class Routine {
@@ -91,20 +91,20 @@ class Routine {
   final List<RoutineStep> work;
 
   factory Routine.fromJson(Map<String, dynamic> j) => Routine(
-        id: j['id'] as String,
-        name: j['name'] as String,
-        subtitle: j['subtitle'] as String,
-        approxMinutes: j['approxMinutes'] as int,
-        warmupSeconds: j['warmupSeconds'] as int,
-        workSeconds: j['workSeconds'] as int,
-        restSeconds: j['restSeconds'] as int,
-        warmup: (j['warmup'] as List)
-            .map((e) => RoutineStep.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        work: (j['work'] as List)
-            .map((e) => RoutineStep.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    id: j['id'] as String,
+    name: j['name'] as String,
+    subtitle: j['subtitle'] as String,
+    approxMinutes: j['approxMinutes'] as int,
+    warmupSeconds: j['warmupSeconds'] as int,
+    workSeconds: j['workSeconds'] as int,
+    restSeconds: j['restSeconds'] as int,
+    warmup: (j['warmup'] as List)
+        .map((e) => RoutineStep.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    work: (j['work'] as List)
+        .map((e) => RoutineStep.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }
 
 class MealIdea {
@@ -121,11 +121,11 @@ class MealIdea {
   final String portionGuide;
 
   factory MealIdea.fromJson(Map<String, dynamic> j) => MealIdea(
-        id: j['id'] as String,
-        emoji: j['emoji'] as String,
-        title: j['title'] as String,
-        portionGuide: j['portionGuide'] as String,
-      );
+    id: j['id'] as String,
+    emoji: j['emoji'] as String,
+    title: j['title'] as String,
+    portionGuide: j['portionGuide'] as String,
+  );
 }
 
 class AppContent {
@@ -143,16 +143,28 @@ class AppContent {
 
   Move moveById(String id) => moves.firstWhere((m) => m.id == id);
 
+  /// The other half of an A/B pair ("Quiet morning A" <-> "Quiet morning B"),
+  /// or null if the routine isn't part of one.
+  Routine? partnerOf(Routine r) {
+    final m = RegExp(r'^(.*) ([AB])$').firstMatch(r.name);
+    if (m == null) return null;
+    final other = '${m[1]} ${m[2] == 'A' ? 'B' : 'A'}';
+    for (final x in routines) {
+      if (x.name == other) return x;
+    }
+    return null;
+  }
+
   factory AppContent.fromJson(Map<String, dynamic> j) => AppContent(
-        appName: j['appName'] as String,
-        moves: (j['moves'] as List)
-            .map((e) => Move.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        routines: (j['routines'] as List)
-            .map((e) => Routine.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        meals: (j['meals'] as List)
-            .map((e) => MealIdea.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    appName: j['appName'] as String,
+    moves: (j['moves'] as List)
+        .map((e) => Move.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    routines: (j['routines'] as List)
+        .map((e) => Routine.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    meals: (j['meals'] as List)
+        .map((e) => MealIdea.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }

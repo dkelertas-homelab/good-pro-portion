@@ -11,10 +11,12 @@ Future<void> main() async {
   // Android 15+ forces edge-to-edge; opt in everywhere so layouts behave the
   // same on older versions (insets handled in widgets/insets.dart).
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarContrastEnforced: false,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarContrastEnforced: false,
+    ),
+  );
 
   Object? loadError;
   AppContent? content;

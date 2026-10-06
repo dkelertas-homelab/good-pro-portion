@@ -19,7 +19,9 @@ void main() {
   late AppContent content;
 
   setUpAll(() {
-    content = ContentLoader.parse(File('assets/content.json').readAsStringSync());
+    content = ContentLoader.parse(
+      File('assets/content.json').readAsStringSync(),
+    );
     SharedPreferences.setMockInitialValues({});
   });
 
@@ -38,13 +40,26 @@ void main() {
     await t.pumpAndSettle();
   }
 
-  testWidgets('routine: last move clears the Start bar, bar sits flush', (t) async {
-    await pumpScreen(t, RoutineScreen(content: content, routine: content.routines.first));
+  testWidgets('routine: last move clears the Start bar, bar sits flush', (
+    t,
+  ) async {
+    await pumpScreen(
+      t,
+      RoutineScreen(content: content, routine: content.routines.first),
+    );
     await scrollToEnd(t);
     final bar = t.getRect(find.byType(BottomBar));
-    expect(bar.bottom, 640, reason: 'bar reaches the screen edge (no blank band)');
+    expect(
+      bar.bottom,
+      640,
+      reason: 'bar reaches the screen edge (no blank band)',
+    );
     final button = t.getRect(find.byType(FilledButton));
-    expect(button.bottom, lessThanOrEqualTo(640 - navInset), reason: 'button above the nav bar');
+    expect(
+      button.bottom,
+      lessThanOrEqualTo(640 - navInset),
+      reason: 'button above the nav bar',
+    );
     final last = t.getRect(find.text('8. Glute bridge'));
     expect(last.bottom, lessThanOrEqualTo(bar.top));
   });
@@ -52,12 +67,18 @@ void main() {
   testWidgets('home: last item clears the nav bar', (t) async {
     await pumpScreen(t, HomeScreen(content: content));
     await scrollToEnd(t);
-    expect(t.getRect(find.text('Ad placeholder')).bottom, lessThanOrEqualTo(640 - navInset));
+    expect(
+      t.getRect(find.text('Ad placeholder')).bottom,
+      lessThanOrEqualTo(640 - navInset),
+    );
   });
 
   testWidgets('settings: last item clears the nav bar', (t) async {
     await pumpScreen(t, SettingsScreen(content: content));
     await scrollToEnd(t);
-    expect(t.getRect(find.text('Health disclaimer')).bottom, lessThanOrEqualTo(640 - navInset));
+    expect(
+      t.getRect(find.text('Health disclaimer')).bottom,
+      lessThanOrEqualTo(640 - navInset),
+    );
   });
 }

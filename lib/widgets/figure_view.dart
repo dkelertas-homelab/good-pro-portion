@@ -40,11 +40,11 @@ class FigureView extends StatelessWidget {
       child: Transform.flip(
         flipX: mirror,
         child: SvgPicture.asset(
-        assetFor(context),
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
-        placeholderBuilder: (_) => SizedBox(width: size, height: size),
+          assetFor(context),
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+          placeholderBuilder: (_) => SizedBox(width: size, height: size),
         ),
       ),
     );

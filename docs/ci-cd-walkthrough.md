@@ -80,6 +80,27 @@ The `.jks` file itself stays out of git (`.gitignore` covers `*.jks` and `*.keys
 
 How the build uses it: `release.yml` decodes the keystore to `$RUNNER_TEMP`, exports `ANDROID_KEYSTORE_PATH` plus the three passwords and alias, and `android/app/build.gradle.kts` checks `android/key.properties` first, then those env vars, then falls back to debug signing. The keystore is deleted at the end of the job.
 
+## Required checks (once the repo is public)
+
+On a free personal account, rulesets and branch protection on a **private** repo return `403 Upgrade to GitHub Pro`, so for now the PR check is a convention rather than enforced. Once the repo is public, run this to require the check on `dev` and block force-pushes and deletion (the ADO "build validation" branch policy):
+
+```bash
+gh api -X POST repos/dkelertas-homelab/good-pro-portion/rulesets --input - <<'JSON'
+{
+  "name": "dev: require CI",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": { "ref_name": { "include": ["refs/heads/dev"], "exclude": [] } },
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "pull_request", "parameters": { "required_approving_review_count": 0, "dismiss_stale_reviews_on_push": false, "require_code_owner_review": false, "require_last_push_approval": false, "required_review_thread_resolution": false } },
+    { "type": "required_status_checks", "parameters": { "strict_required_status_checks_policy": false, "required_status_checks": [ { "context": "Analyze, format & test" }, { "context": "Build debug APK" } ] } }
+  ]
+}
+JSON
+```
+
 ## Installing a Release APK on my Samsung phone
 
 1. On the phone, open the repo's **Releases** page in Chrome or Samsung Internet (sign in to GitHub while the repo is private).

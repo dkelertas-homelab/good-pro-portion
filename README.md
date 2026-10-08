@@ -54,7 +54,7 @@ GitHub Actions runs the PR checks (format, analyze, test, debug APK artifact) an
 
 ## License
 
-No license has been chosen yet, so default copyright applies (all rights reserved) until one is added.
+All rights reserved.
 
 ## Status
 

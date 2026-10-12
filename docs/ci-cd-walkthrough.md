@@ -19,7 +19,7 @@ Flutter is pinned to **3.47.5** (the revision in `.metadata`) and the runner to 
 | `azure-pipelines.yml` | `.github/workflows/*.yml`, one file per pipeline |
 | Stages / jobs / `dependsOn` | Jobs plus `needs:` (`debug-apk` needs `checks`) |
 | Tasks (`Gradle@3`, `PublishPipelineArtifact@1`) | Actions (`subosito/flutter-action`, `actions/upload-artifact`) and `run:` steps |
-| Library variable groups / secure files | Repo **secrets**. GitHub has no secure files, so the keystore goes in as a base64 secret and gets decoded on the runner |
+| Library variable groups / secure files | **Environment secrets** (the `release` environment, gated like an ADO environment approval). GitHub has no secure files, so the keystore goes in as a base64 secret and gets decoded on the runner |
 | Pipeline artifacts | `actions/upload-artifact` (download from the run page) |
 | Release pipeline + stages | Tag-triggered `release.yml` + **GitHub Releases** |
 | Agent pools (Microsoft-hosted) | Hosted runners (`runs-on: ubuntu-24.04`) |
@@ -56,7 +56,7 @@ The versionName comes from the tag and the versionCode from the `+N` in `pubspec
 
 ## One-time setup: release signing secrets
 
-Until these four secrets exist, releases are **debug-signed**: fine for sideloading, rejected by Google Play, and marked as a pre-release.
+The four secrets live in the `release` environment, not at repo level. That environment only accepts `v*` tags and waits for my approval, so a tag build pauses until I approve it in the Actions tab; nothing else can read the upload key. Until the secrets exist, releases are **debug-signed**: fine for sideloading, rejected by Google Play, and marked as a pre-release.
 
 **If I already have an upload key** (the `android/key.properties` I use for Play uploads), I reuse it. Play only accepts bundles signed with the registered upload key. A new key is only for when there isn't one yet:
 
@@ -65,15 +65,15 @@ keytool -genkeypair -v -keystore upload-keystore.jks -storetype JKS \
   -keyalg RSA -keysize 2048 -validity 10000 -alias upload
 ```
 
-Then load it into the repo secrets. `gh secret set` prompts for the value when there's no `--body`, so passwords stay out of shell history:
+Then load it into the `release` environment's secrets. `gh secret set` prompts for the value when there's no `--body`, so passwords stay out of shell history:
 
 ```bash
 R=dkelertas-homelab/good-pro-portion
-base64 -w0 upload-keystore.jks | gh secret set ANDROID_KEYSTORE_BASE64 -R $R   # macOS: base64 -i upload-keystore.jks
-gh secret set ANDROID_KEYSTORE_PASSWORD -R $R
-gh secret set ANDROID_KEY_ALIAS -R $R          # e.g. upload
-gh secret set ANDROID_KEY_PASSWORD -R $R
-gh secret list -R $R
+base64 -w0 upload-keystore.jks | gh secret set ANDROID_KEYSTORE_BASE64 -R $R --env release   # macOS: base64 -i upload-keystore.jks
+gh secret set ANDROID_KEYSTORE_PASSWORD -R $R --env release
+gh secret set ANDROID_KEY_ALIAS -R $R --env release          # e.g. upload
+gh secret set ANDROID_KEY_PASSWORD -R $R --env release
+gh secret list -R $R --env release
 ```
 
 The `.jks` file itself stays out of git (`.gitignore` covers `*.jks` and `*.keystore`) and lives in my password manager plus an offline backup. Losing the upload key means asking Google for an upload key reset.

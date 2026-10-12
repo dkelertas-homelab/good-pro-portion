@@ -1,8 +1,10 @@
 # Release pipeline: push a v* tag (or run it by hand) -> release APK + AAB -> GitHub Release.
 # On PRs that touch this file or android/** it only builds (a dry run); no release is made.
-# Signing: uses the ANDROID_* repo secrets when all four are set; otherwise it
-# opts in to a debug-signed build (ALLOW_DEBUG_SIGNING=true; fine for sideloading,
-# NOT for Play) instead of failing. PR dry runs never touch the secrets.
+# Signing: the ANDROID_* secrets live in the `release` environment, which only
+# v* tags can use and which waits for my approval before the job starts. Every
+# other run (PR dry runs, forks, manual runs on a branch) has no access to them
+# and opts in to a debug-signed build (ALLOW_DEBUG_SIGNING=true; fine for
+# sideloading, NOT for Play) instead of failing.
 name: Release
 
 on:
@@ -36,6 +38,10 @@ jobs:
     name: Build release APK + AAB
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    # Tag builds sign with the upload key, so they go through the `release`
+    # environment (v* tags only, required reviewer). Anything else gets no
+    # environment and therefore no signing secrets.
+    environment: ${{ github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/v') && 'release' || '' }}
     outputs:
       version: ${{ steps.version.outputs.name }}
       signed: ${{ steps.keystore.outputs.signed }}
@@ -95,11 +101,11 @@ jobs:
             echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
             echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload-keystore.jks" >> "$GITHUB_ENV"
             echo "signed=true" >> "$GITHUB_OUTPUT"
-            echo "Signing with the upload key from repo secrets."
+            echo "Signing with the upload key from the release environment."
           else
             echo "signed=false" >> "$GITHUB_OUTPUT"
             echo "ALLOW_DEBUG_SIGNING=true" >> "$GITHUB_ENV"
-            echo "::warning::No signing secrets (or a PR dry run): building a DEBUG-SIGNED release (OK for sideloading, not for Play)."
+            echo "::warning::No signing secrets (not a v* tag run, or a PR dry run): building a DEBUG-SIGNED release (OK for sideloading, not for Play)."
           fi
 
       - run: flutter pub get

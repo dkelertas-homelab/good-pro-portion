@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/settings_store.dart';
 import '../models/content.dart';
+import '../monetisation/remove_ads_card.dart';
 import '../widgets/version_text.dart';
 import '../widgets/insets.dart';
 
@@ -126,24 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 14),
           Text('UPGRADE', style: Theme.of(context).textTheme.labelSmall),
-          // TODO(Phase 7): Play Billing one-off Remove ads IAP.
-          Card(
-            child: ListTile(
-              leading: const Text('✨', style: TextStyle(fontSize: 22)),
-              title: const Text('Remove ads'),
-              subtitle: const Text(
-                'One-off purchase · no subscription (coming later)',
-              ),
-              trailing: Text(
-                'A\$X.XX',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              enabled: false,
-            ),
-          ),
+          const RemoveAdsCard(),
           const SizedBox(height: 14),
           Text('LEGAL', style: Theme.of(context).textTheme.labelSmall),
           Card(

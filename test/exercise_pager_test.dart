@@ -8,6 +8,7 @@ import 'package:good_pro_portion/screens/exercise_screen.dart';
 import 'package:good_pro_portion/screens/routine_screen.dart';
 import 'package:good_pro_portion/theme/app_theme.dart';
 import 'package:good_pro_portion/widgets/figure_view.dart';
+import 'package:good_pro_portion/widgets/swap_sides_badge.dart';
 
 /// Issue #25: swipe between exercise instruction screens.
 void main() {
@@ -53,6 +54,7 @@ void main() {
     await t.fling(find.byType(PageView), const Offset(-400, 0), 1500);
     await settle(t);
     expect(title(t), 'Reverse lunge (right)');
+    expect(find.byType(SwapSidesBadge), findsNothing);
 
     await t.fling(find.byType(PageView), const Offset(400, 0), 1500);
     await settle(t);
@@ -60,14 +62,16 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
-  testWidgets('Previous and Next buttons, mirrored left side', (t) async {
+  testWidgets('Previous and Next buttons, swap sides on the left side', (
+    t,
+  ) async {
     final r = content.routines.first;
     final entries = [
       for (final s in r.work)
         ExerciseEntry(
           move: content.moveById(s.moveId),
           label: s.label,
-          mirror: s.mirror,
+          swapSides: s.swapSides,
         ),
     ];
     final left = r.work.indexWhere((s) => s.label == 'Reverse lunge (left)');
@@ -79,8 +83,17 @@ void main() {
     );
     await settle(t);
     expect(title(t), 'Reverse lunge (left)');
-    final fig = t.widget<FigureView>(find.byType(FigureView));
-    expect(fig.mirror, isTrue);
+    expect(find.byType(SwapSidesBadge), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(FigureView),
+        matching: find.byWidgetPredicate(
+          (w) => w is Transform && w.transform.storage[0] < 0,
+        ),
+      ),
+      findsNothing,
+      reason: 'figures are never mirrored',
+    );
 
     await t.tap(find.text('Next'));
     await settle(t);

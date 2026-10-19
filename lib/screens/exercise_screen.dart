@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
 import '../widgets/insets.dart';
+import '../widgets/swap_sides_badge.dart';
 
 /// One page in the exercise pager: a move as it appears in a routine.
 class ExerciseEntry {
-  const ExerciseEntry({required this.move, String? label, this.mirror = false})
-    : label = label ?? '';
+  const ExerciseEntry({
+    required this.move,
+    String? label,
+    this.swapSides = false,
+  }) : label = label ?? '';
 
   final Move move;
   final String label;
 
-  /// Left side of a one-sided move.
-  final bool mirror;
+  /// Second side of a one-sided move: show "Swap sides" (the figure is
+  /// drawn for the right side only and is never mirrored).
+  final bool swapSides;
 
   String get title => label.isEmpty ? move.name : label;
 }
@@ -135,13 +140,10 @@ class _ExerciseDetail extends StatelessWidget {
     return ListView(
       padding: scrollPadding(context, const EdgeInsets.fromLTRB(20, 8, 20, 24)),
       children: [
-        FigureView(
-          figureKey: move.figure,
-          size: 200,
-          mirror: entry.mirror,
-          animate: true,
-        ),
+        FigureView(figureKey: move.figure, size: 200, animate: true),
         const SizedBox(height: 16),
+        if (entry.swapSides)
+          const Align(alignment: Alignment.centerLeft, child: SwapSidesBadge()),
         Text('HOW TO', style: Theme.of(context).textTheme.labelSmall),
         const SizedBox(height: 4),
         Text(move.howTo, style: Theme.of(context).textTheme.bodyLarge),

@@ -105,7 +105,7 @@ class RoutineScreen extends StatelessWidget {
         ExerciseEntry(
           move: content.moveById(s.moveId),
           label: s.label,
-          mirror: s.mirror,
+          swapSides: s.swapSides,
         ),
     ];
     Navigator.of(context).push(

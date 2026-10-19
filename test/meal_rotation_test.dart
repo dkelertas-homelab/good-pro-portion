@@ -18,6 +18,9 @@ void main() {
       meals.where((m) => m.title.startsWith('Snack:')).length,
       inInclusiveRange(8, 12),
     );
+    expect(meals.where((m) => m.title.startsWith('Pantry tip')), hasLength(1));
+    // Quick meals only (David: no curries, nothing over ~15 min).
+    expect(meals.any((m) => m.title.toLowerCase().contains('curry')), isFalse);
   });
 
   test(

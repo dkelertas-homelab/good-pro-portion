@@ -288,7 +288,7 @@
       "id": "fish_veg",
       "emoji": "🐟",
       "title": "Steamed fish + 3 veg",
-      "portionGuide": "Palm of fish · fist ×3 veg · thumb oil"
+      "portionGuide": "Palm fish · fist ×3 veg · lemon herb mix · 12 min steam"
     },
     {
       "id": "eggs_toast",
@@ -300,7 +300,7 @@
       "id": "salad_chook",
       "emoji": "🥗",
       "title": "Salad + roast chicken",
-      "portionGuide": "Woolies salad + ¼–½ chook"
+      "portionGuide": "Bag salad + ¼–½ cooked chook"
     },
     {
       "id": "rice_bowl",
@@ -323,8 +323,8 @@
     {
       "id": "weetbix_milk",
       "emoji": "🥛",
-      "title": "Weet-Bix + milk + fruit",
-      "portionGuide": "2 Weet-Bix · cup of milk · fist of fruit"
+      "title": "Wheat biscuits + milk + fruit",
+      "portionGuide": "2 wheat biscuits · cup of milk · fist of fruit"
     },
     {
       "id": "baked_beans_toast",
@@ -357,46 +357,46 @@
       "portionGuide": "2–3 eggs · fist spinach + capsicum"
     },
     {
-      "id": "mince_veg",
-      "emoji": "🥘",
-      "title": "Mince + frozen veg",
-      "portionGuide": "Palm lean mince · fist ×2 frozen veg · cupped rice"
+      "id": "taco_mince",
+      "emoji": "🌮",
+      "title": "Taco mince lettuce cups",
+      "portionGuide": "Palm lean mince + taco mix · fist lettuce + tomato · 12 min"
     },
     {
-      "id": "stirfry_chicken",
-      "emoji": "🥢",
-      "title": "Chicken stir-fry",
-      "portionGuide": "Palm chicken · fist ×2 stir-fry veg · cupped noodles"
+      "id": "moroccan_chicken_tray",
+      "emoji": "🍗",
+      "title": "Moroccan chicken tray bake",
+      "portionGuide": "Palm chicken thigh · fist ×2 veg · Moroccan mix · 5 min prep, oven does the rest"
     },
     {
       "id": "salmon_tray",
       "emoji": "🍠",
-      "title": "Salmon + sweet potato tray bake",
-      "portionGuide": "Palm salmon · cupped sweet potato · fist greens"
+      "title": "Lemon herb salmon tray bake",
+      "portionGuide": "Palm salmon · cupped sweet potato · fist greens · lemon herb mix"
     },
     {
       "id": "pasta_tuna",
       "emoji": "🍝",
       "title": "Tuna tomato pasta",
-      "portionGuide": "Cupped pasta · palm tuna · fist veg in sauce"
+      "portionGuide": "Cupped pasta · palm tuna · fist veg in sauce · Italian mix · 12 min"
     },
     {
       "id": "burrito_bowl",
-      "emoji": "🌮",
-      "title": "Beans + rice burrito bowl",
-      "portionGuide": "Cupped rice · palm beans · fist salsa + lettuce"
+      "emoji": "🌯",
+      "title": "Quick bean burrito bowl",
+      "portionGuide": "Microwave rice cup · palm tinned beans + taco mix · fist salsa · 10 min"
     },
     {
-      "id": "chook_veg_pasta",
-      "emoji": "🍗",
-      "title": "Roast chook + steamed veg",
-      "portionGuide": "Palm chook · fist ×2 veg · cupped potato"
+      "id": "pantry_tip",
+      "emoji": "🧂",
+      "title": "Pantry tip: keep 3–4 seasoning mixes",
+      "portionGuide": "Taco, Moroccan, lemon herb, Italian: one shake turns plain meat + veg into dinner"
     },
     {
-      "id": "lentil_curry",
-      "emoji": "🍛",
-      "title": "Lentil curry + rice",
-      "portionGuide": "Cupped lentils · cupped rice · fist spinach"
+      "id": "chickpea_tray",
+      "emoji": "🥕",
+      "title": "Moroccan chickpea veg tray bake",
+      "portionGuide": "Tin chickpeas · fist ×2 chopped veg · Moroccan mix · 5 min prep"
     },
     {
       "id": "sausage_veg",

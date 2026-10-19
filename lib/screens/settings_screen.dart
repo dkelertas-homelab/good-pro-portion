@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+import '../widgets/sound_settings.dart';
+
 import '../data/settings_store.dart';
 import '../models/content.dart';
 import '../widgets/version_text.dart';
@@ -35,7 +38,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        actions: const [SoundButton()],
+      ),
       body: ListView(
         padding: scrollPadding(
           context,
@@ -86,6 +92,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 14),
+          Text('SOUND', style: Theme.of(context).textTheme.labelSmall),
+          const Card(child: SoundSettings()),
           const SizedBox(height: 14),
           Text('TIPS', style: Theme.of(context).textTheme.labelSmall),
           Card(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
 import 'routine_screen.dart';
@@ -18,6 +20,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(content.appName),
         actions: [
+          const SoundButton(),
           IconButton(
             tooltip: 'Meal ideas',
             icon: const Icon(Icons.restaurant_outlined),

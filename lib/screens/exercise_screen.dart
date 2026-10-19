@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
 import '../widgets/insets.dart';
@@ -11,7 +13,7 @@ class ExerciseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(move.name)),
+      appBar: AppBar(title: Text(move.name), actions: const [SoundButton()]),
       body: ListView(
         padding: scrollPadding(
           context,

@@ -12,6 +12,15 @@ Every new feature should fit this guide. Keep it short, friendly, and easy to fo
 - **Body shapes are neutral.** Slim / average / larger are user-picked and treated the same — just different parameters, never judgment.
 - **Stick figures by default.** Drawn in code, parameterised so one animation works for every body shape. About five key poses per move, blended smoothly so the move is easy to recognise mid-set.
 
+## Figures and the workout screen
+
+- Figures are drawn by `tool/figures.py` (run it from the repo root after changing a pose). It writes the stills, the animation frames in `assets/figures/frames/` and `lib/widgets/figure_frames.dart`.
+- Each move is 2–4 key poses stepped on a timer. Reduce-motion shows the still pose only.
+- Side-on figures face right; the app mirrors them for the left side. Facing right, the near limbs are the right limbs and the far limbs are a softer shade.
+- Coral headband with tied tails at the back of the head, so the head direction is always clear.
+- One-sided moves tint the right leg. "Reverse lunge (right)" and "Split squat (right)": the right leg steps back. A forward "Lunge (right)": the right leg steps forward. Both knees visibly bent at the bottom.
+- The workout screen gets read with the phone on the floor: no text under 16sp (`test/timer_readability_test.dart`).
+
 ## Tips and prompts
 
 This is the main rule for anything that wants the user's attention.

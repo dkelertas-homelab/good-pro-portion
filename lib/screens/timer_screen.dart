@@ -229,6 +229,7 @@ class _TimerScreenState extends State<TimerScreen>
                               builder: (context, c) => FigureView(
                                 figureKey: seg.move.figure,
                                 mirror: seg.mirror,
+                                animate: !_paused,
                                 size: (c.biggest.shortestSide - 24)
                                     .clamp(60, 280)
                                     .toDouble(),

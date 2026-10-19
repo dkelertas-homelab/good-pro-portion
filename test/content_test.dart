@@ -18,7 +18,7 @@ void main() {
     expect(dayA.work.length, 8);
     expect(dayA.work[2].label, 'Reverse lunge (right)');
     expect(dayA.work[4].label, 'Reverse lunge (left)');
-    expect(dayA.work[4].mirror, isTrue);
+    expect(dayA.work[4].swapSides, isTrue);
     expect(dayA.workSeconds, 40);
     expect(dayA.restSeconds, 20);
 
@@ -29,7 +29,7 @@ void main() {
     for (final r in [dayA, dayB]) {
       for (var i = 1; i < r.work.length; i++) {
         expect(
-          r.work[i].moveId == r.work[i - 1].moveId && r.work[i].mirror,
+          r.work[i].moveId == r.work[i - 1].moveId && r.work[i].swapSides,
           isFalse,
         );
       }

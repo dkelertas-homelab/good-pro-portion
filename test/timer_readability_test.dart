@@ -61,6 +61,12 @@ void main() {
     await t.tap(find.text('Skip ›'));
     await t.pump();
     check('rest');
+    // Through to the swap-sides rest and the left side.
+    for (var i = 0; i < 6; i++) {
+      await t.tap(find.text('Skip ›'));
+      await t.pump();
+      check('step ${i + 6}');
+    }
     await t.pumpWidget(const SizedBox());
   });
 }

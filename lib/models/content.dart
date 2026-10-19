@@ -43,7 +43,7 @@ class RoutineStep {
     this.workSeconds,
     this.note,
     this.cue,
-    this.mirror = false,
+    this.swapSides = false,
   });
 
   final String moveId;
@@ -54,8 +54,9 @@ class RoutineStep {
   /// Overrides the move's cue, e.g. for one side of a one-sided move.
   final String? cue;
 
-  /// Flip the figure horizontally (left side of a one-sided move).
-  final bool mirror;
+  /// Second side of a one-sided move. Figures are drawn for the right side
+  /// only, so the app says "Swap sides" here instead of mirroring.
+  final bool swapSides;
 
   factory RoutineStep.fromJson(Map<String, dynamic> j) => RoutineStep(
     moveId: j['moveId'] as String,
@@ -63,7 +64,7 @@ class RoutineStep {
     workSeconds: j['workSeconds'] as int?,
     note: j['note'] as String?,
     cue: j['cue'] as String?,
-    mirror: j['mirror'] == true,
+    swapSides: j['swapSides'] == true,
   );
 }
 

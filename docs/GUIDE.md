@@ -15,10 +15,14 @@ Every new feature should fit this guide. Keep it short, friendly, and easy to fo
 ## Figures and the workout screen
 
 - Figures are drawn by `tool/figures.py` (run it from the repo root after changing a pose). It writes the stills, the animation frames in `assets/figures/frames/` and `lib/widgets/figure_frames.dart`.
-- Each move is 2–4 key poses stepped on a timer. Reduce-motion shows the still pose only.
-- Side-on figures face right; the app mirrors them for the left side. Facing right, the near limbs are the right limbs and the far limbs are a softer shade.
+- Each animation shows how the move **ends**: start, middle, end position. The end pose is held, then it loops back to the start. Never add a frame of the move halfway back.
+  - Default 3 frames. Holds (plank, side plank, wall sit): 2 frames, the pose then the pose with a guide line. Use 4 only when there's a genuinely separate end pose (arm circles).
+  - Reduce-motion shows the still pose only.
+- Side-on figures face right. Facing right, the near limbs are the right limbs and the far limbs are a softer shade.
+- One-sided moves are drawn for the **right side only**, and the figure is never mirrored. The second side's step has `"swapSides": true` in `content.json`, and the timer shows a **SWAP SIDES** badge there and on the rest before it.
+- Alternating moves (dead bug, bird dog, shoulder tap, march) show one side, and the moving limbs are tinted.
 - Coral headband with tied tails at the back of the head, so the head direction is always clear.
-- One-sided moves tint the right leg. "Reverse lunge (right)" and "Split squat (right)": the right leg steps back. A forward "Lunge (right)": the right leg steps forward. Both knees visibly bent at the bottom.
+- One-sided moves tint the right leg. "Reverse lunge (right)" and "Split squat (right)": the right leg steps back. A forward "Lunge (right)": the right leg steps forward. Both knees are visibly bent at the bottom.
 - The workout screen gets read with the phone on the floor: no text under 16sp (`test/timer_readability_test.dart`).
 
 ## Tips and prompts

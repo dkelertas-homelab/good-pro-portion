@@ -8,6 +8,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        volumeControlStream = android.media.AudioManager.STREAM_MUSIC
         audio = AudioCues(applicationContext, flutterEngine.dartExecutor.binaryMessenger)
     }
 

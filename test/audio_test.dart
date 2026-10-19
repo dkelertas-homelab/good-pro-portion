@@ -276,4 +276,25 @@ void main() {
       expect(fake.events.last, 'stopMusic');
     });
   });
+
+  test('music switch flipped mid-workout starts and stops music', () async {
+    final s = await freshSound();
+    s.startWorkoutMusic();
+    expect(fake.events.where((e) => e.startsWith('music@')), isEmpty);
+    await s.setMusic(true);
+    expect(fake.events.where((e) => e.startsWith('music@')), hasLength(1));
+    await s.setMusic(false);
+    expect(fake.events.last, 'stopMusic');
+    s.stopWorkoutMusic();
+    await s.setMusic(true);
+    expect(fake.events.where((e) => e.startsWith('music@')), hasLength(1));
+  });
+
+  test('cues play on the media stream, not the system stream', () {
+    final kt = File(
+      'android/app/src/main/kotlin/space/d11s/niceproportions/AudioCues.kt',
+    ).readAsStringSync();
+    expect(kt.contains('USAGE_ASSISTANCE_SONIFICATION'), isFalse);
+    expect(kt.contains('USAGE_MEDIA'), isTrue);
+  });
 }

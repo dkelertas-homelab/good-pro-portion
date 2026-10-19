@@ -27,8 +27,10 @@ class AudioCues(private val context: Context, messenger: BinaryMessenger) :
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private val main = Handler(Looper.getMainLooper())
 
+    // Cues ride the media stream (the volume the side buttons change in an
+    // app). SONIFICATION went to the system stream, which many phones keep at 0.
     private val cueAttrs = AudioAttributes.Builder()
-        .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+        .setUsage(AudioAttributes.USAGE_MEDIA)
         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
         .build()
     private val musicAttrs = AudioAttributes.Builder()

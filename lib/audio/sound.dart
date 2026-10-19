@@ -88,6 +88,8 @@ class Sound {
   final music = ValueNotifier<bool>(false);
   SharedPreferences? _prefs;
   bool _musicPlaying = false;
+  bool _inWorkout = false;
+  bool _paused = false;
 
   Future<void> init({SharedPreferences? prefs}) async {
     _prefs = prefs ?? await SharedPreferences.getInstance();
@@ -113,6 +115,15 @@ class Sound {
   Future<void> setMusic(bool on) async {
     music.value = on;
     await _prefs?.setBool(_kMusic, on);
+    // Flipping the switch mid-workout takes effect straight away.
+    if (!_inWorkout) return;
+    if (on && !_musicPlaying) {
+      _startMusicNow();
+      if (_paused) backend.pauseMusic();
+    } else if (!on && _musicPlaying) {
+      _musicPlaying = false;
+      backend.stopMusic();
+    }
   }
 
   void play(Cue cue) {
@@ -123,20 +134,30 @@ class Sound {
 
   /// Workout start: only if the music switch is on.
   void startWorkoutMusic() {
+    _inWorkout = true;
+    _paused = false;
     if (!music.value) return;
+    _startMusicNow();
+  }
+
+  void _startMusicNow() {
     _musicPlaying = true;
     backend.startMusic(musicAsset, level.value.volume * musicShare);
   }
 
   void pauseWorkoutMusic() {
+    _paused = true;
     if (_musicPlaying) backend.pauseMusic();
   }
 
   void resumeWorkoutMusic() {
+    _paused = false;
     if (_musicPlaying) backend.resumeMusic();
   }
 
   void stopWorkoutMusic() {
+    _inWorkout = false;
+    _paused = false;
     if (!_musicPlaying) return;
     _musicPlaying = false;
     backend.stopMusic();

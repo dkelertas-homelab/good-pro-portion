@@ -35,5 +35,20 @@ void main() {
       }
     }
     expect(content.moves.every((m) => m.cue.isNotEmpty), isTrue);
+
+    // Reverse lunge and split squat must read as different moves.
+    expect(content.moveById('reverse_lunge').cue, 'Step back, drop, step in.');
+    expect(
+      content.moveById('split_squat').cue,
+      'Feet stay planted, staggered. Straight down and up.',
+    );
+    for (final r in [dayA, dayB]) {
+      for (final s in r.work.where((s) => s.moveId == 'split_squat')) {
+        expect(s.cue, contains('Feet stay planted'));
+      }
+      for (final s in r.work.where((s) => s.moveId == 'reverse_lunge')) {
+        expect(s.cue, contains('step back, drop, step in'));
+      }
+    }
   });
 }

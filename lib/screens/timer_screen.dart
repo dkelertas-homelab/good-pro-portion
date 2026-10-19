@@ -1,3 +1,5 @@
+import '../data/meal_rotation.dart';
+
 import 'dart:async';
 import 'dart:ui' show PathMetric;
 
@@ -128,15 +130,21 @@ class _TimerScreenState extends State<TimerScreen>
     });
   }
 
-  void _finish() {
+  Future<void> _finish() async {
     _ticker?.cancel();
     final elapsed = DateTime.now().difference(_startedAt);
+    MealIdea? meal;
+    try {
+      meal = await (await MealRotation.open()).next(widget.content.meals);
+    } catch (_) {}
+    if (!mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => DoneScreen(
           content: widget.content,
           routine: widget.routine,
           elapsed: elapsed,
+          meal: meal,
         ),
       ),
     );

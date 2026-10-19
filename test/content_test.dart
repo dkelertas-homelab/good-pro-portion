@@ -10,7 +10,7 @@ void main() {
 
     expect(content.appName, 'Nice Pro Portions ;-)');
     expect(content.moves.length, greaterThanOrEqualTo(15));
-    expect(content.meals.length, 5);
+    expect(content.meals.length, 30);
 
     final dayA = content.routines.firstWhere((r) => r.id == 'day_a');
     expect(dayA.warmup.length, 4);

@@ -24,7 +24,34 @@ void main() {
     expect(adsEnabled, isFalse);
   });
 
-  test('only Google sample ad IDs are in the code', () {
+  test('debug uses sample IDs; the live unit is release-only', () {
+    expect(
+      bannerUnitId(AdPlacement.homeBanner, release: false),
+      TestAdIds.banner,
+    );
+    expect(TestAdIds.banner, 'ca-app-pub-3940256099942544/6300978111');
+    expect(
+      bannerUnitId(AdPlacement.homeBanner, release: true),
+      LiveAdIds.homeBanner,
+    );
+    expect(bannerUnitId(AdPlacement.doneBanner, release: true), isNull);
+    // Tests run in debug mode, so the default must be the sample unit.
+    expect(bannerUnitId(AdPlacement.homeBanner), TestAdIds.banner);
+  });
+
+  test('manifest app ID: sample for debug, live for release only', () {
+    final gradle = File('android/app/build.gradle.kts').readAsStringSync();
+    final manifest = File('android/app/src/main/AndroidManifest.xml')
+        .readAsStringSync();
+    expect(manifest, contains('com.google.android.gms.ads.APPLICATION_ID'));
+    expect(manifest, contains(r'${admobAppId}'));
+    final release = gradle.indexOf('release {', gradle.indexOf('buildTypes'));
+    final live = gradle.indexOf(LiveAdIds.androidAppId);
+    expect(live, greaterThan(release), reason: 'live app ID outside release');
+    expect(gradle.indexOf(TestAdIds.androidAppId), lessThan(release));
+  });
+
+  test('only sample ad IDs in lib/, apart from LiveAdIds', () {
     const sample = 'ca-app-pub-3940256099942544';
     for (final id in [
       TestAdIds.androidAppId,
@@ -41,6 +68,10 @@ void main() {
       for (final m in RegExp(
         r'ca-app-pub-(\d+)',
       ).allMatches(f.readAsStringSync())) {
+        if (f.path.endsWith('ads_config.dart') &&
+            m.group(1) == '4030959040832472') {
+          continue;
+        }
         expect(m.group(1), '3940256099942544', reason: f.path);
       }
     }
@@ -76,18 +107,27 @@ void main() {
     expect(find.text('Ad placeholder'), findsOneWidget);
   });
 
-  testWidgets('switched on: test slot until Remove ads is bought', (t) async {
+  testWidgets('switched on: banner after consent, until Remove ads is bought', (
+    t,
+  ) async {
     final svc = StubPurchaseService();
     await svc.init();
+    final consent = ValueNotifier(false);
+    final units = <String>[];
     await t.pumpWidget(
       wrap(
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             AdSlot(
-              placement: AdPlacement.doneBanner,
+              placement: AdPlacement.homeBanner,
               enabled: true,
               service: svc,
+              canRequestAds: consent,
+              adBuilder: (_, id) {
+                units.add(id);
+                return Text('Test ad $id');
+              },
             ),
             RemoveAdsCard(enabled: true, service: svc),
           ],
@@ -95,7 +135,15 @@ void main() {
       ),
     );
     await t.pump();
+    expect(
+      find.textContaining('Test ad'),
+      findsNothing,
+      reason: 'no consent yet',
+    );
+    consent.value = true;
+    await t.pump();
     expect(find.textContaining('Test ad'), findsOneWidget);
+    expect(units.last, TestAdIds.banner);
     expect(find.text('Restore purchase'), findsOneWidget);
 
     await t.tap(find.widgetWithText(FilledButton, 'Test'));

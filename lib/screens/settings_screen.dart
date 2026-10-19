@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../data/settings_store.dart';
 import '../models/content.dart';
+import '../monetisation/ads_config.dart';
+import '../monetisation/ads_service.dart';
 import '../monetisation/remove_ads_card.dart';
 import '../widgets/version_text.dart';
 import '../widgets/insets.dart';
@@ -128,6 +130,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 14),
           Text('UPGRADE', style: Theme.of(context).textTheme.labelSmall),
           const RemoveAdsCard(),
+          if (adsEnabled)
+            ValueListenableBuilder<bool>(
+              valueListenable: AdsService.instance.privacyOptionsRequired,
+              builder: (context, required, _) => !required
+                  ? const SizedBox.shrink()
+                  : Card(
+                      child: ListTile(
+                        title: const Text('Ad privacy options'),
+                        subtitle: const Text('Change your ad consent choice'),
+                        trailing: const Icon(Icons.privacy_tip_outlined),
+                        onTap: AdsService.instance.showPrivacyOptions,
+                      ),
+                    ),
+            ),
           const SizedBox(height: 14),
           Text('LEGAL', style: Theme.of(context).textTheme.labelSmall),
           Card(

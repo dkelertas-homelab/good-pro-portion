@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'data/content_loader.dart';
+import 'monetisation/ads_config.dart';
+import 'monetisation/ads_service.dart';
+import 'monetisation/purchases.dart';
 import 'models/content.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
@@ -25,6 +28,13 @@ Future<void> main() async {
   } catch (e, st) {
     loadError = e;
     debugPrint('ContentLoader failed: $e\n$st');
+  }
+
+  if (adsEnabled) {
+    // Remove ads state first so owners never see a banner flash, then
+    // consent + SDK in the background (doesn't block the first frame).
+    await purchases.init();
+    AdsService.instance.init();
   }
 
   runApp(

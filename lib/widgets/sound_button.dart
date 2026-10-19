@@ -17,6 +17,7 @@ class SoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = sound ?? Sound.instance;
+    if (!s.enabled) return const SizedBox.shrink();
     return ValueListenableBuilder<SoundLevel>(
       valueListenable: s.level,
       builder: (context, level, _) => IconButton(

@@ -64,3 +64,4 @@ key.properties
 *service-account*.json
 *service_account*.json
 play-publisher*.json
+test/failures/

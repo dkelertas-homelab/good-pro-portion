@@ -65,7 +65,20 @@ class PlatformSoundBackend implements SoundBackend {
 /// App-wide sound settings and playback. Settings are saved on the phone.
 /// Defaults: cues Soft, music off.
 class Sound {
-  Sound({SoundBackend? backend}) : backend = backend ?? PlatformSoundBackend();
+  Sound({SoundBackend? backend, bool? enabled})
+    : backend = backend ?? PlatformSoundBackend(),
+      enabled = enabled ?? audioEnabled;
+
+  /// Compile-time switch for the sound button, music toggle and cues.
+  /// Release (prod) builds: off unless built with --dart-define=AUDIO_ENABLED=true.
+  /// Debug/staging builds (the CI debug APK): on unless AUDIO_ENABLED=false.
+  static const audioEnabled = bool.fromEnvironment(
+    'AUDIO_ENABLED',
+    defaultValue: !kReleaseMode,
+  );
+
+  /// When false the app is silent and hides every sound control.
+  final bool enabled;
 
   static Sound instance = Sound();
 
@@ -92,6 +105,7 @@ class Sound {
   bool _paused = false;
 
   Future<void> init({SharedPreferences? prefs}) async {
+    if (!enabled) return;
     _prefs = prefs ?? await SharedPreferences.getInstance();
     final saved = _prefs!.getString(_kLevel);
     level.value = SoundLevel.values.firstWhere(
@@ -127,6 +141,7 @@ class Sound {
   }
 
   void play(Cue cue) {
+    if (!enabled) return;
     final v = level.value.volume;
     if (v <= 0) return;
     backend.play(cue.name, v);
@@ -134,6 +149,7 @@ class Sound {
 
   /// Workout start: only if the music switch is on.
   void startWorkoutMusic() {
+    if (!enabled) return;
     _inWorkout = true;
     _paused = false;
     if (!music.value) return;

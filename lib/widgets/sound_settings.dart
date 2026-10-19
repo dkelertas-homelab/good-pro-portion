@@ -14,6 +14,7 @@ class SoundSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = sound ?? Sound.instance;
+    if (!s.enabled) return const SizedBox.shrink();
     return Column(
       children: [
         ListTile(

@@ -50,7 +50,7 @@ void main() {
   Future<Sound> freshSound([Map<String, Object> saved = const {}]) async {
     SharedPreferences.setMockInitialValues(saved);
     fake = FakeBackend();
-    final s = Sound(backend: fake);
+    final s = Sound(backend: fake, enabled: true);
     await s.init(prefs: await SharedPreferences.getInstance());
     Sound.instance = s;
     return s;
@@ -74,7 +74,7 @@ void main() {
     test('cycles On → Soft → Mute → On and saves it', () async {
       SharedPreferences.setMockInitialValues({'sound_level': 'on'});
       final prefs = await SharedPreferences.getInstance();
-      final s = Sound(backend: FakeBackend());
+      final s = Sound(backend: FakeBackend(), enabled: true);
       await s.init(prefs: prefs);
       expect(s.level.value, SoundLevel.on);
       await s.cycleLevel();
@@ -85,7 +85,7 @@ void main() {
       await s.cycleLevel();
       expect(s.level.value, SoundLevel.on);
 
-      final again = Sound(backend: FakeBackend());
+      final again = Sound(backend: FakeBackend(), enabled: true);
       await again.init(prefs: prefs);
       expect(again.level.value, SoundLevel.on);
     });
@@ -93,7 +93,7 @@ void main() {
     test('music switch is saved', () async {
       final s = await freshSound();
       await s.setMusic(true);
-      final again = Sound(backend: FakeBackend());
+      final again = Sound(backend: FakeBackend(), enabled: true);
       await again.init(prefs: await SharedPreferences.getInstance());
       expect(again.music.value, isTrue);
     });
@@ -296,5 +296,28 @@ void main() {
     ).readAsStringSync();
     expect(kt.contains('USAGE_ASSISTANCE_SONIFICATION'), isFalse);
     expect(kt.contains('USAGE_MEDIA'), isTrue);
+  });
+
+  test('AUDIO_ENABLED off: silent, no controls', () async {
+    final s = Sound(backend: FakeBackend(), enabled: false);
+    s.play(Cue.blip);
+    s.startWorkoutMusic();
+    expect((s.backend as FakeBackend).events, isEmpty);
+  });
+
+  testWidgets('AUDIO_ENABLED off hides the sound button and settings', (
+    tester,
+  ) async {
+    final s = Sound(backend: FakeBackend(), enabled: false);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(actions: [SoundButton(sound: s)]),
+          body: SoundSettings(sound: s),
+        ),
+      ),
+    );
+    expect(find.byType(IconButton), findsNothing);
+    expect(find.byType(SwitchListTile), findsNothing);
   });
 }

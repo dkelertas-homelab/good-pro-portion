@@ -207,7 +207,7 @@
           "moveId": "reverse_lunge",
           "label": "Reverse lunge (left)",
           "cue": "Left foot back, knees 90°",
-          "mirror": true
+          "swapSides": true
         },
         {
           "moveId": "push_up"
@@ -256,7 +256,7 @@
           "moveId": "split_squat",
           "label": "Split squat (left)",
           "cue": "Left foot back, drop that knee",
-          "mirror": true
+          "swapSides": true
         },
         {
           "moveId": "superman"
@@ -275,7 +275,7 @@
           "label": "Side plank (left)",
           "cue": "On your left forearm, hips up",
           "workSeconds": 20,
-          "mirror": true
+          "swapSides": true
         },
         {
           "moveId": "shoulder_tap"

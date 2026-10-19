@@ -7,6 +7,7 @@ import '../models/content.dart';
 import '../theme/app_theme.dart';
 import '../widgets/countdown_ring.dart';
 import '../widgets/figure_view.dart';
+import '../widgets/swap_sides_badge.dart';
 import 'done_screen.dart';
 
 enum _Phase { warmup, work, rest }
@@ -18,14 +19,14 @@ class _Segment {
     required this.seconds,
     required this.cue,
     this.label,
-    this.mirror = false,
+    this.swapSides = false,
   });
   final _Phase phase;
   final Move move; // for rest: the move coming up next
   final int seconds;
   final String cue;
   final String? label;
-  final bool mirror;
+  final bool swapSides;
   String get moveTitle => label ?? move.name;
 }
 
@@ -78,7 +79,7 @@ class _TimerScreenState extends State<TimerScreen>
       seconds: seconds,
       cue: s.cue ?? m.cue,
       label: s.label,
-      mirror: s.mirror,
+      swapSides: s.swapSides,
     );
   }
 
@@ -228,7 +229,6 @@ class _TimerScreenState extends State<TimerScreen>
                             child: LayoutBuilder(
                               builder: (context, c) => FigureView(
                                 figureKey: seg.move.figure,
-                                mirror: seg.mirror,
                                 animate: !_paused,
                                 size: (c.biggest.shortestSide - 24)
                                     .clamp(60, 280)
@@ -237,6 +237,7 @@ class _TimerScreenState extends State<TimerScreen>
                             ),
                           ),
                           const SizedBox(height: 10),
+                          if (seg.swapSides) const SwapSidesBadge(),
                           _BigName(seg.moveTitle),
                           if (seg.cue.isNotEmpty) _Cue(seg.cue),
                         ],
@@ -336,7 +337,9 @@ class _NextChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Next up: ${next.moveTitle}',
+      label: next.swapSides
+          ? 'Next up: swap sides, ${next.moveTitle}'
+          : 'Next up: ${next.moveTitle}',
       excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -348,9 +351,9 @@ class _NextChip extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'NEXT UP',
-              style: TextStyle(
+            Text(
+              next.swapSides ? 'NEXT UP · SWAP SIDES' : 'NEXT UP',
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.2,
@@ -396,7 +399,9 @@ class _NextUpCard extends StatelessWidget {
     final accent = Color.lerp(AppColors.coral, const Color(0xFF6B7280), grey)!;
     return Semantics(
       liveRegion: true,
-      label: 'Next up: ${next.moveTitle}, in $secondsLeft seconds. ${next.cue}',
+      label:
+          'Next up: ${next.swapSides ? 'swap sides, ' : ''}${next.moveTitle}, '
+          'in $secondsLeft seconds. ${next.cue}',
       excludeSemantics: true,
       child: CustomPaint(
         foregroundPainter: _DashedBorder(color: accent),
@@ -431,7 +436,6 @@ class _NextUpCard extends StatelessWidget {
                     child: LayoutBuilder(
                       builder: (context, c) => FigureView(
                         figureKey: next.move.figure,
-                        mirror: next.mirror,
                         padding: const EdgeInsets.all(6),
                         size: (c.biggest.shortestSide - 12)
                             .clamp(40, 200)
@@ -445,6 +449,7 @@ class _NextUpCard extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
                 child: Column(
                   children: [
+                    if (next.swapSides) const SwapSidesBadge(),
                     Text(
                       next.moveTitle,
                       textAlign: TextAlign.center,

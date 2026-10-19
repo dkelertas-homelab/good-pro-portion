@@ -18,16 +18,12 @@ class FigureView extends StatefulWidget {
     required this.figureKey,
     this.size = 180,
     this.padding = const EdgeInsets.all(12),
-    this.mirror = false,
     this.animate = false,
   });
 
   final String figureKey;
   final double size;
   final EdgeInsets padding;
-
-  /// Flip horizontally, used for the left side of one-sided moves.
-  final bool mirror;
 
   /// Step through the move's frames on a timer.
   final bool animate;
@@ -145,7 +141,7 @@ class _FigureViewState extends State<FigureView> {
       ),
       padding: widget.padding,
       alignment: Alignment.center,
-      child: Transform.flip(flipX: widget.mirror, child: child),
+      child: child,
     );
   }
 }

@@ -18,6 +18,31 @@ void main() {
   );
 
   group('frame data', () {
+    test('start, middle, end: no return frames', () {
+      const holds = {'plank', 'sidePlank', 'wallSit'};
+      for (final e in figureFrames.entries) {
+        final seq = e.value;
+        final frames = [for (final f in seq) f.frame];
+        expect(
+          frames.toSet().length,
+          frames.length,
+          reason: '${e.key} repeats a frame (a return frame)',
+        );
+        if (holds.contains(e.key)) {
+          expect(seq.length, 2, reason: '${e.key} is a hold');
+        } else if (e.key == 'armCircles') {
+          expect(seq.length, 4, reason: 'four points round the circle');
+        } else {
+          expect(seq.length, 3, reason: '${e.key}: start, middle, end');
+          expect(
+            seq.last.ms,
+            greaterThan(seq.first.ms),
+            reason: '${e.key} holds the end position',
+          );
+        }
+      }
+    });
+
     test('every move has a 2-4 step animation', () {
       for (final m in content.moves) {
         final frames = figureFrames[m.figure];

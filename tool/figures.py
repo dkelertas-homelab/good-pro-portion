@@ -6,12 +6,16 @@ Writes, from the repo root (python3 tool/figures.py):
   lib/widgets/figure_frames.dart                     frame order and timing
 
 Conventions
-- 200x200 viewBox, floor shadow at y=182, side-on figures face right. The app
-  mirrors the drawing for the left side of one-sided moves.
+- 200x200 viewBox, floor shadow at y=182, side-on figures face right.
+- Each move is start, middle, end (the end pose is held, then it loops back
+  to the start). No return frames. Holds are 2 frames; arm circles 4.
+- One-sided moves are drawn for the right side only. The app tells the user
+  to swap sides; it never mirrors the figure.
 - Facing right, the near limbs are the figure's RIGHT limbs. Far limbs are a
   softer shade so the two legs never blur together.
 - One-sided moves tint the working right leg (reverse lunge, split squat: the
-  right leg is the one that steps back). Alternating moves tint the moving limbs.
+  right leg is the one that steps back). Alternating moves show the right arm
+  (and the left leg where it pairs) and tint the moving limbs.
 - Coral headband with two tied tails at the back of the head, so you can always
   tell which way the head faces.
 - Holds (plank, side plank, wall sit) alternate the pose with a guide line.
@@ -263,6 +267,11 @@ def fit_for(poses):
 
 # ---------- moves ----------
 
+# Start, middle, then hold the end position; the loop jumps back to the start.
+# No return frames: the end pose is what the user should aim for.
+SEQ3 = [(0, 500), (1, 350), (2, 1000)]
+
+
 def toe_fwd():
     return (1, 0.15)
 
@@ -278,7 +287,7 @@ def squat():
         p.arm_fk('far', sh, arm - 4, arm + 2)
         p.arm_fk('near', sh, arm, arm + 6)
         frames.append(p)
-    return frames, [(0, 700), (1, 350), (2, 700), (1, 350)], 2
+    return frames, SEQ3, 2
 
 
 def _press_up(ankle, hand, sh_y, length=126, bench=None):
@@ -308,7 +317,7 @@ def push_up():
     an = (30, 166)
     hx, top = _top_hand(an, 174)
     frames = [_press_up(an, (hx, 174), y) for y in (top, top + 18, top + 34)]
-    return frames, [(0, 600), (1, 350), (2, 600), (1, 350)], 0
+    return frames, SEQ3, 0  # still: top of the push-up reads best in lists
 
 
 def incline_push_up():
@@ -322,7 +331,7 @@ def incline_push_up():
     for p in frames:
         p.props.append(('rect', hand[0] - 14, hand_y + 18, 8, 180 - hand_y - 18))
         p.props.append(('rect', hand[0] + 22, hand_y + 18, 8, 180 - hand_y - 18))
-    return frames, [(0, 600), (1, 350), (2, 600), (1, 350)], 0
+    return frames, SEQ3, 0  # still: top of the push-up reads best in lists
 
 
 def _hands_on_hips(p, hip, sh):
@@ -344,7 +353,7 @@ def reverse_lunge():
         p.leg('near', hip, back, add(hip, (-10, 60)), btoe, tint=True)
         _hands_on_hips(p, hip, sh)
         frames.append(p)
-    return frames, [(0, 600), (1, 400), (2, 700), (1, 400)], 2
+    return frames, SEQ3, 2
 
 
 def split_squat():
@@ -358,7 +367,7 @@ def split_squat():
         p.leg('near', hip, (50, 166), add(hip, (-10, 60)), (0.6, 0.8), tint=True)
         _hands_on_hips(p, hip, sh)
         frames.append(p)
-    return frames, [(0, 600), (1, 400), (2, 700), (1, 400)], 2
+    return frames, SEQ3, 2
 
 
 def glute_bridge():
@@ -373,7 +382,7 @@ def glute_bridge():
             hand = (sh[0] + UPPER + FORE + off, 172)
             p.limbs.append((layer, 'arm', [sh, add(sh, sub(hand, sh), 0.5), hand], False, None))
         frames.append(p)
-    return frames, [(0, 600), (1, 350), (2, 800), (1, 350)], 2
+    return frames, SEQ3, 2
 
 
 def plank():
@@ -436,39 +445,37 @@ def superman():
             hand = add(sh, (math.cos(ar), -math.sin(ar)), UPPER + FORE)
             p.limbs.append((layer, 'arm', [sh, add(sh, sub(hand, sh), 0.5), add(hand, (off, 0))], False, None))
         frames.append(p)
-    return frames, [(0, 600), (1, 350), (2, 800), (1, 350)], 2
+    return frames, SEQ3, 2
 
 
 def dead_bug():
+    """Right arm reaches back overhead while the left leg straightens low."""
     sh, hip = (64, 166), (112, 166)
     frames = []
-    for mode in (0, 1, 2):
+    for t in (0, 0.5, 1):
         p = Pose()
         p.body(hip, sh, face=(0, -1))
         for layer in ('far', 'near'):
             off = -4 if layer == 'far' else 0
-            ext_leg = (mode == 1 and layer == 'far') or (mode == 2 and layer == 'near')
-            ext_arm = (mode == 1 and layer == 'near') or (mode == 2 and layer == 'far')
-            if ext_leg:
-                a = add(hip, (math.cos(math.radians(14)), -math.sin(math.radians(14))), THIGH + SHIN)
-                p.limbs.append((layer, 'leg', [hip, add(hip, sub(a, hip), 0.5), a], True, (0.3, -1)))
-            else:
-                k = (hip[0] + off, hip[1] - THIGH)
-                p.limbs.append((layer, 'leg', [hip, k, (k[0] + SHIN, k[1])], False, (0.3, -1)))
-            if ext_arm:
-                hand = add(sh, (-math.cos(math.radians(34)), -math.sin(math.radians(34))), UPPER + FORE)
-                p.limbs.append((layer, 'arm', [sh, add(sh, sub(hand, sh), 0.5), hand], True, None))
-            else:
-                hand = (sh[0] + off + 2, sh[1] - UPPER - FORE)
-                p.limbs.append((layer, 'arm', [sh, add(sh, sub(hand, sh), 0.5), hand], False, None))
+            moving_leg, moving_arm = layer == 'far', layer == 'near'
+            lt = t if moving_leg else 0
+            ta, sa = math.radians(90 + (14 - 90) * lt), math.radians(14 * lt)
+            k = add((hip[0] + off, hip[1]), (math.cos(ta), -math.sin(ta)), THIGH)
+            a = add(k, (math.cos(sa), -math.sin(sa)), SHIN)
+            p.limbs.append((layer, 'leg', [hip, k, a], moving_leg and t > 0, (0.3, -1)))
+            at = t if moving_arm else 0
+            aa = math.radians(90 + (146 - 90) * at)
+            hand = add((sh[0] + off + 2 * (1 - at), sh[1]), (math.cos(aa), -math.sin(aa)), UPPER + FORE)
+            p.limbs.append((layer, 'arm', [sh, add(sh, sub(hand, sh), 0.5), hand], moving_arm and t > 0, None))
         frames.append(p)
-    return frames, [(0, 600), (1, 800), (0, 600), (2, 800)], 1
+    return frames, SEQ3, 2
 
 
 def shoulder_tap():
+    """High plank; the right hand lifts and taps the left shoulder."""
     an, hand = (26, 166), (148, 174)
     frames = []
-    for mode in (0, 1, 2):
+    for t in (0, 0.5, 1):
         p = Pose()
         sh_y = 118
         dx = math.sqrt(130 ** 2 - (an[1] - sh_y) ** 2)
@@ -478,13 +485,14 @@ def shoulder_tap():
         p.body(hip, sh, head_tilt=4)
         for layer, off in (('far', -5), ('near', 0)):
             p.leg(layer, hip, (an[0] + off, an[1]), add(hip, (0, 30)), (0.55, 0.85))
-            tap = (mode == 1 and layer == 'near') or (mode == 2 and layer == 'far')
-            if tap:
-                p.arm(layer, sh, add(sh, (-4, 8)), add(sh, (10, 40)), tint=True)
+            if layer == 'near' and t > 0:
+                floor, tap = (hand[0], hand[1]), add(sh, (-4, 8))
+                target = (floor[0] + (tap[0] - floor[0]) * t, floor[1] + (tap[1] - floor[1]) * t - 14 * (1 - t))
+                p.arm(layer, sh, target, add(sh, (10, 40)), tint=True)
             else:
                 p.arm(layer, sh, (hand[0] + off, hand[1]), add(sh, (-40, -20)))
         frames.append(p)
-    return frames, [(0, 500), (1, 600), (0, 500), (2, 600)], 1
+    return frames, SEQ3, 2
 
 
 def wall_sit():
@@ -507,52 +515,51 @@ def wall_sit():
 
 
 def bird_dog():
+    """On all fours; the right arm reaches forward and the left leg back."""
     sh, hip = (140, 118), (93, 128)
     frames = []
-    for mode in (0, 1, 2):
+    for t in (0, 0.5, 1):
         p = Pose()
         p.body(hip, sh, head_tilt=6)
         for layer, off in (('far', -5), ('near', 0)):
-            leg_ext = (mode == 1 and layer == 'far') or (mode == 2 and layer == 'near')
-            arm_ext = (mode == 1 and layer == 'near') or (mode == 2 and layer == 'far')
-            if leg_ext:
-                a = add(hip, (-1, -0.06), THIGH + SHIN)
-                p.limbs.append((layer, 'leg', [hip, add(hip, sub(a, hip), 0.5), a], True, (-0.2, 1)))
+            if layer == 'far' and t > 0:
+                ta, sa = math.radians(-90 + (-183 + 90) * t), math.radians(180 - 3 * t)
+                k = add(hip, (math.cos(ta), -math.sin(ta)), THIGH)
+                a = add(k, (math.cos(sa), -math.sin(sa)), SHIN)
+                p.limbs.append((layer, 'leg', [hip, k, a], True, (-0.2, 1)))
             else:
                 k = (hip[0] + off, 168)
                 p.limbs.append((layer, 'leg', [hip, k, (k[0] - SHIN, 170)], False, (-1, 0.1)))
-            if arm_ext:
-                h = add(sh, (1, -0.08), UPPER + FORE)
+            if layer == 'near' and t > 0:
+                aa = math.radians(-90 + 94 * t)
+                h = add(sh, (math.cos(aa), -math.sin(aa)), UPPER + FORE)
                 p.limbs.append((layer, 'arm', [sh, add(sh, sub(h, sh), 0.5), h], True, None))
             else:
                 p.arm(layer, sh, (sh[0] + off + 2, 174), add(sh, (-30, 28)))
         frames.append(p)
-    return frames, [(0, 600), (1, 800), (0, 600), (2, 800)], 1
+    return frames, SEQ3, 2
 
 
 def march():
+    """Right knee comes up while the left arm swings forward."""
     frames = []
-    for mode in (0, 1, 2):
+    for t in (0, 0.5, 1):
         p = Pose()
         hip = (100, 94)
         sh = standing_torso(hip, 2)
         p.body(hip, sh)
         for layer in ('far', 'near'):
-            up = (mode == 1 and layer == 'near') or (mode == 2 and layer == 'far')
-            fwd_arm = (mode == 1 and layer == 'far') or (mode == 2 and layer == 'near')
             off = -4 if layer == 'far' else 0
-            if up:
-                p.leg_fk(layer, hip, 78, -6, (1, 0.5))
+            if layer == 'near' and t > 0:
+                p.leg_fk(layer, hip, 78 * t, -6 * t - 24 * math.sin(math.pi * t), (1, 0.5))
             else:
                 p.leg(layer, hip, (100 + off, ANKLE_Y), (200, 60), toe_fwd())
-            if mode == 0:
-                p.arm_fk(layer, sh, 6 + off, 16)
-            elif fwd_arm:
-                p.arm_fk(layer, sh, 45, 120)
+            if layer == 'far':
+                p.arm_fk(layer, sh, 2 + 43 * t, 16 + 104 * t)
             else:
-                p.arm_fk(layer, sh, -32, 20)
+                p.arm_fk(layer, sh, 6 - 38 * t, 16 + 4 * t)
         frames.append(p)
-    return frames, [(1, 600), (0, 300), (2, 600), (0, 300)], 1
+    return frames, SEQ3, 2
 
 
 def good_morning():
@@ -568,7 +575,7 @@ def good_morning():
             hand = add(add(sh, down, 12 + (4 if layer == 'far' else 0)), face, 15)
             p.arm(layer, sh, hand, add(add(sh, down, 30), face, 10))
         frames.append(p)
-    return frames, [(0, 700), (1, 400), (2, 700), (1, 400)], 2
+    return frames, SEQ3, 2
 
 
 def arm_circles():
@@ -590,7 +597,7 @@ def arm_circles():
             p.guides.append([(100 + side * 62 + side * 13 * math.cos(math.radians(a)),
                               50 + 13 * math.sin(math.radians(a))) for a in range(0, 361, 20)])
         frames.append(p)
-    return frames, [(0, 250), (1, 250), (2, 250), (3, 250)], 0
+    return frames, [(0, 300), (1, 300), (2, 300), (3, 300)], 0
 
 
 MOVES = {

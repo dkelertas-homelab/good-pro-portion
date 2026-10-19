@@ -23,6 +23,9 @@ Every new feature should fit this guide. Keep it short, friendly, and easy to fo
 - Alternating moves (dead bug, bird dog, shoulder tap, march) show one side, and the moving limbs are tinted.
 - Coral headband with tied tails at the back of the head, so the head direction is always clear.
 - One-sided moves tint the right leg. "Reverse lunge (right)" and "Split squat (right)": the right leg steps back. A forward "Lunge (right)": the right leg steps forward. Both knees are visibly bent at the bottom.
+- Reverse lunge and split squat must look different:
+  - **Reverse lunge:** feet together, then the right foot steps back (in the air) with knees starting to bend, then the bottom. The front foot never moves. Cue: "Step back, drop, step in."
+  - **Split squat:** both feet stay planted in the same staggered stance (right foot back) in every frame: tall, halfway down, bottom. Floor dashes mark the planted feet. Cue: "Feet stay planted, staggered. Straight down and up."
 - The workout screen gets read with the phone on the floor: no text under 16sp (`test/timer_readability_test.dart`).
 
 ## Tips and prompts

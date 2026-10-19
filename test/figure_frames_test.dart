@@ -59,6 +59,34 @@ void main() {
       }
     });
 
+    test('split squat feet stay put; reverse lunge steps back', () {
+      List<String> feet(String key, int frame) {
+        final svg = File(FigureView.frameAsset(key, frame, dark: false))
+            .readAsStringSync();
+        // Planted-feet floor dashes only appear on the split squat.
+        return RegExp(r'y1="186.0"[^>]*')
+            .allMatches(svg)
+            .map((m) => m.group(0)!)
+            .toList();
+      }
+
+      final split0 = feet('splitSquat', 0);
+      expect(split0, isNotEmpty, reason: 'split squat marks planted feet');
+      expect(feet('splitSquat', 1), split0);
+      expect(feet('splitSquat', 2), split0);
+      for (var f = 0; f < 3; f++) {
+        expect(feet('reverseLunge', f), isEmpty);
+      }
+      expect(
+        File(FigureView.frameAsset('reverseLunge', 0, dark: false))
+            .readAsStringSync(),
+        isNot(
+          File(FigureView.frameAsset('splitSquat', 0, dark: false))
+              .readAsStringSync(),
+        ),
+      );
+    });
+
     test('every frame and still exists in light and dark', () {
       for (final e in figureFrames.entries) {
         for (final dark in [false, true]) {

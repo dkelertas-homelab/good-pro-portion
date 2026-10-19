@@ -340,32 +340,40 @@ def _hands_on_hips(p, hip, sh):
 
 
 def reverse_lunge():
-    """Right (near, tinted) leg steps back; left (far) leg stays in front."""
-    specs = [((100, 94), (102, ANKLE_Y), (100, ANKLE_Y), toe_fwd()),
-             ((96, 112), (110, ANKLE_Y), (66, 166), (0.6, 0.8)),
-             ((90, 132), (124, ANKLE_Y), (46, 168), (0.6, 0.8))]
+    """Feet together, the right (near, tinted) foot steps back, then the bottom.
+
+    The left (front) foot never moves; the body travels back with the step.
+    """
+    front = (104, ANKLE_Y)
+    specs = [((102, 94), (100, ANKLE_Y), toe_fwd(), (200, 60)),   # standing, feet together
+             ((96, 110), (58, 158), (0.45, 0.9), (94, 160)),        # right foot in the air, stepping back
+             ((66, 132), (24, 168), (0.6, 0.8), (60, 190))]        # bottom: both knees about 90
     frames = []
-    for hip, front, back, btoe in specs:
+    for hip, back, btoe, bhint in specs:
         p = Pose()
-        sh = standing_torso(hip, 4)
+        sh = standing_torso(hip, 3)
         p.body(hip, sh)
-        p.leg('far', hip, front, add(hip, (60, 0)), toe_fwd())
-        p.leg('near', hip, back, add(hip, (-10, 60)), btoe, tint=True)
+        p.leg('far', hip, front, add(hip, (60, -10)), toe_fwd())
+        p.leg('near', hip, back, bhint, btoe, tint=True)
         _hands_on_hips(p, hip, sh)
         frames.append(p)
     return frames, SEQ3, 2
 
 
 def split_squat():
-    """Staggered stance, right (near, tinted) foot back. Only the hips move."""
+    """Staggered stance, right (near, tinted) foot back. The feet never move:
+    tall, halfway, bottom. Dashes on the floor mark the planted feet."""
+    front, back = (132, ANKLE_Y), (54, 166)
     frames = []
-    for hip in ((90, 102), (89, 118), (88, 134)):
+    for hip in ((93, 100), (92, 117), (91, 134)):
         p = Pose()
-        sh = standing_torso(hip, 4)
+        sh = standing_torso(hip, 3)
         p.body(hip, sh)
-        p.leg('far', hip, (128, ANKLE_Y), add(hip, (60, 0)), toe_fwd())
-        p.leg('near', hip, (50, 166), add(hip, (-10, 60)), (0.6, 0.8), tint=True)
+        p.leg('far', hip, front, add(hip, (60, -10)), toe_fwd())
+        p.leg('near', hip, back, add(hip, (-10, 60)), (0.6, 0.8), tint=True)
         _hands_on_hips(p, hip, sh)
+        p.guides.append([(front[0] - 10, 186), (front[0] + 22, 186)])
+        p.guides.append([(back[0] - 6, 186), (back[0] + 22, 186)])
         frames.append(p)
     return frames, SEQ3, 2
 

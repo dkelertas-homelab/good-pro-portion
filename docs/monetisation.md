@@ -26,7 +26,7 @@ To try it: `flutter run --dart-define=ADS_ENABLED=true` (debug, sample ads).
 
 ## app-ads.txt
 
-Host this at `https://d11s.space/app-ads.txt` (site root), and set `d11s.space` as the developer website on the Play store listing:
+File: `docs/app-ads.txt`. Host it at `https://d11s.space/app-ads.txt` (site root), and set `d11s.space` as the developer website on the Play store listing:
 
 ```
 google.com, pub-4030959040832472, DIRECT, f08c47fec0942fa0
@@ -42,5 +42,5 @@ google.com, pub-4030959040832472, DIRECT, f08c47fec0942fa0
    - App content → Ads: "Yes, my app contains ads".
    - Data safety: the Mobile Ads SDK collects device or other IDs (advertising ID), approximate location, app interactions and diagnostics, shared with Google for advertising and analytics; data is encrypted in transit. Update the form before shipping an ads build.
    - Create the one-off product `remove_ads` and set the price.
-4. Privacy policy page on d11s.space that covers AdMob ads and consent.
+4. Privacy policy page on d11s.space that covers AdMob ads and consent: draft text in `docs/privacy-policy-ads.md`.
 5. Code, later: `in_app_purchase` and a Play Billing `PurchaseService`; then build release with `ADS_ENABLED=true` once David OKs it.

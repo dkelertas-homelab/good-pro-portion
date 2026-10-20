@@ -36,21 +36,21 @@
       "id": "reverse_lunge",
       "name": "Reverse lunge",
       "figure": "reverseLunge",
-      "howTo": "Step one foot back and lower until both knees bend about 90°. Front heel stays planted. Drive up through the front leg.",
+      "howTo": "Start with feet together. Step one foot back, drop until both knees bend about 90°, then push through the front heel and step back in.",
       "mistakes": "Front knee caving in · torso tipping forward · tiny steps",
       "easier": "Shallower depth, or hold a chair",
       "harder": "Pause at the bottom, or reverse lunges with a pulse",
-      "cue": "Step back, both knees 90°"
+      "cue": "Step back, drop, step in."
     },
     {
       "id": "split_squat",
       "name": "Split squat",
       "figure": "splitSquat",
-      "howTo": "Stagger your stance and drop the back knee toward the floor. Keep most weight on the front leg. Switch sides as programmed.",
+      "howTo": "Feet stay planted, staggered: one foot forward, one back. Lower straight down until the back knee nearly touches the floor, then straight back up. The feet never move. Switch sides as programmed.",
       "mistakes": "Leaning too far forward · front heel lifting · rushing",
       "easier": "Hold a chair, or shorten the range",
       "harder": "Longer stance, or rear foot elevated",
-      "cue": "Drop the back knee, front heel down"
+      "cue": "Feet stay planted, staggered. Straight down and up."
     },
     {
       "id": "glute_bridge",
@@ -198,7 +198,7 @@
         {
           "moveId": "reverse_lunge",
           "label": "Reverse lunge (right)",
-          "cue": "Right foot back, knees 90°"
+          "cue": "Right foot: step back, drop, step in."
         },
         {
           "moveId": "plank"
@@ -206,8 +206,8 @@
         {
           "moveId": "reverse_lunge",
           "label": "Reverse lunge (left)",
-          "cue": "Left foot back, knees 90°",
-          "mirror": true
+          "cue": "Left foot: step back, drop, step in.",
+          "swapSides": true
         },
         {
           "moveId": "push_up"
@@ -247,7 +247,7 @@
         {
           "moveId": "split_squat",
           "label": "Split squat (right)",
-          "cue": "Right foot back, drop that knee"
+          "cue": "Feet stay planted, staggered. Straight down and up."
         },
         {
           "moveId": "wall_sit"
@@ -255,8 +255,8 @@
         {
           "moveId": "split_squat",
           "label": "Split squat (left)",
-          "cue": "Left foot back, drop that knee",
-          "mirror": true
+          "cue": "Feet stay planted, staggered. Straight down and up.",
+          "swapSides": true
         },
         {
           "moveId": "superman"
@@ -275,7 +275,7 @@
           "label": "Side plank (left)",
           "cue": "On your left forearm, hips up",
           "workSeconds": 20,
-          "mirror": true
+          "swapSides": true
         },
         {
           "moveId": "shoulder_tap"

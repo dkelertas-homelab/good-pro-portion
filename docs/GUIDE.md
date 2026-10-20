@@ -12,6 +12,22 @@ Every new feature should fit this guide. Keep it short, friendly, and easy to fo
 - **Body shapes are neutral.** Slim / average / larger are user-picked and treated the same — just different parameters, never judgment.
 - **Stick figures by default.** Drawn in code, parameterised so one animation works for every body shape. About five key poses per move, blended smoothly so the move is easy to recognise mid-set.
 
+## Figures and the workout screen
+
+- Figures are drawn by `tool/figures.py` (run it from the repo root after changing a pose). It writes the stills, the animation frames in `assets/figures/frames/` and `lib/widgets/figure_frames.dart`.
+- Each animation shows how the move **ends**: start, middle, end position. The end pose is held, then it loops back to the start. Never add a frame of the move halfway back.
+  - Default 3 frames. Holds (plank, side plank, wall sit): 2 frames, the pose then the pose with a guide line. Use 4 only when there's a genuinely separate end pose (arm circles).
+  - Reduce-motion shows the still pose only.
+- Side-on figures face right. Facing right, the near limbs are the right limbs and the far limbs are a softer shade.
+- One-sided moves are drawn for the **right side only**, and the figure is never mirrored. The second side's step has `"swapSides": true` in `content.json`, and the timer shows a **SWAP SIDES** badge there and on the rest before it.
+- Alternating moves (dead bug, bird dog, shoulder tap, march) show one side, and the moving limbs are tinted.
+- Coral headband with tied tails at the back of the head, so the head direction is always clear.
+- One-sided moves tint the right leg. "Reverse lunge (right)" and "Split squat (right)": the right leg steps back. A forward "Lunge (right)": the right leg steps forward. Both knees are visibly bent at the bottom.
+- Reverse lunge and split squat must look different:
+  - **Reverse lunge:** feet together, then the right foot steps back (in the air) with knees starting to bend, then the bottom. The front foot never moves. Cue: "Step back, drop, step in."
+  - **Split squat:** both feet stay planted in the same staggered stance (right foot back) in every frame: tall, halfway down, bottom. Floor dashes mark the planted feet. Cue: "Feet stay planted, staggered. Straight down and up."
+- The workout screen gets read with the phone on the floor: no text under 16sp (`test/timer_readability_test.dart`).
+
 ## Tips and prompts
 
 This is the main rule for anything that wants the user's attention.

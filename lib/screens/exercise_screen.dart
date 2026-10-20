@@ -18,7 +18,7 @@ class ExerciseScreen extends StatelessWidget {
           const EdgeInsets.fromLTRB(20, 8, 20, 24),
         ),
         children: [
-          FigureView(figureKey: move.figure, size: 200),
+          FigureView(figureKey: move.figure, size: 200, animate: true),
           const SizedBox(height: 16),
           Text('HOW TO', style: Theme.of(context).textTheme.labelSmall),
           const SizedBox(height: 4),

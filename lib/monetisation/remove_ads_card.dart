@@ -53,66 +53,80 @@ class _RemoveAdsCardState extends State<RemoveAdsCard> {
         ),
       );
     }
-    return ValueListenableBuilder<bool>(
-      valueListenable: _svc.adFree,
-      builder: (context, adFree, _) => Card(
-        child: Column(
-          children: [
-            ListTile(
-              leading: const Text('✨', style: TextStyle(fontSize: 22)),
-              title: const Text('Remove ads'),
-              subtitle: Text(
-                adFree
-                    ? 'Thanks! Ads are off on this phone.'
-                    : 'One-off purchase · no subscription',
-              ),
-              trailing: adFree
-                  ? Icon(Icons.check_circle, color: primary)
-                  : FilledButton(
-                      // The app theme makes buttons full-width; not here.
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size(88, 48),
-                      ),
-                      onPressed: _busy
-                          ? null
-                          : () => _run(() async {
-                              final r = await _svc.buyRemoveAds();
-                              if (!context.mounted) return;
-                              if (r == PurchaseOutcome.failed) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "That didn't go through. Nothing was charged.",
-                                    ),
-                                  ),
-                                );
-                              }
-                            }),
-                      child: Text(_svc.priceLabel ?? 'Buy'),
-                    ),
+    return ListenableBuilder(
+      listenable: Listenable.merge([_svc.adFree, _svc.available]),
+      builder: (context, _) => _card(context, primary),
+    );
+  }
+
+  static const _messages = {
+    PurchaseOutcome.failed: "That didn't go through. Nothing was charged.",
+    PurchaseOutcome.pending:
+        'Payment pending. Ads switch off once Google Play confirms it.',
+    PurchaseOutcome.unavailable:
+        "Remove ads isn't available right now. Try again later.",
+  };
+
+  Widget _card(BuildContext context, Color primary) {
+    final adFree = _svc.adFree.value;
+    final available = _svc.available.value;
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Text('✨', style: TextStyle(fontSize: 22)),
+            title: const Text('Remove ads'),
+            subtitle: Text(
+              adFree
+                  ? 'Thanks! Ads are off on this phone.'
+                  : available
+                  ? 'One-off purchase · no subscription'
+                  : 'Not available right now',
             ),
-            if (!adFree)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: _busy
-                      ? null
-                      : () => _run(() async {
-                          final owned = await _svc.restore();
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                owned ? 'Restored. Ads are off.' : 'No earlier purchase found on this account.',
-                              ),
+            trailing: adFree
+                ? Icon(Icons.check_circle, color: primary)
+                : !available
+                ? null
+                : FilledButton(
+                    // The app theme makes buttons full-width; not here.
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(88, 48),
+                    ),
+                    onPressed: _busy
+                        ? null
+                        : () => _run(() async {
+                            final r = await _svc.buyRemoveAds();
+                            if (!context.mounted) return;
+                            final msg = _messages[r];
+                            if (msg != null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(msg)));
+                            }
+                          }),
+                    child: Text(_svc.priceLabel ?? 'Buy'),
+                  ),
+          ),
+          if (!adFree)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: _busy
+                    ? null
+                    : () => _run(() async {
+                        final owned = await _svc.restore();
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              owned ? 'Restored. Ads are off.' : 'No earlier purchase found on this account.',
                             ),
-                          );
-                        }),
-                  child: const Text('Restore purchase'),
-                ),
+                          ),
+                        );
+                      }),
+                child: const Text('Restore purchase'),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

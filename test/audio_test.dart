@@ -259,9 +259,7 @@ void main() {
       await t.pumpWidget(const SizedBox());
     });
 
-    testWidgets('Back, Pause and Resume are silent, then and after', (
-      t,
-    ) async {
+    testWidgets('Back, Pause and Resume are silent, then and after', (t) async {
       await freshSound();
       await pumpTimer(t);
       await t.tap(find.text('Skip ›'));

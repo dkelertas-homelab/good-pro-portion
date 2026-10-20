@@ -5,10 +5,19 @@ import 'package:flutter/material.dart';
 import '../models/content.dart';
 import '../widgets/insets.dart';
 
-enum CooldownStage { intro, slide, breathe, settle, prompt }
+enum CooldownStage {
+  heading,
+  headingMove,
+  intro,
+  slide,
+  breathe,
+  settle,
+  prompt,
+}
 
 /// A slow, unhurried cooldown (about three minutes):
-/// 1. the mindfulness cue sits centred on screen for a few breaths' worth;
+/// 0. the exercise heading sits centred, then glides up to the top;
+/// 1. the mindfulness cue fades in centred and sits on screen for a few breaths' worth;
 /// 2. it glides down to the bottom as the breathing circle fades in;
 /// 3. slow breathing — the circle grows over each breath in and shrinks over
 ///    each breath out, exactly as long as that phase; holds keep its size;
@@ -19,6 +28,8 @@ class CooldownScreen extends StatefulWidget {
     super.key,
     required this.set,
     required this.onFinished,
+    this.headingSeconds = 4,
+    this.headingMoveSeconds = 3,
     this.introSeconds = 8,
     this.slideSeconds = 4,
     this.settleSeconds = 4,
@@ -28,6 +39,8 @@ class CooldownScreen extends StatefulWidget {
 
   /// Called once, by Skip or Finish.
   final VoidCallback onFinished;
+  final int headingSeconds;
+  final int headingMoveSeconds;
   final int introSeconds;
   final int slideSeconds;
   final int settleSeconds;
@@ -35,10 +48,12 @@ class CooldownScreen extends StatefulWidget {
   /// Seconds before the prompt appears (the prompt then waits for Finish).
   static int secondsToPrompt(
     CooldownSet s, {
+    int heading = 4,
+    int headingMove = 3,
     int intro = 8,
     int slide = 4,
     int settle = 4,
-  }) => intro + slide + s.breathingSeconds + settle;
+  }) => heading + headingMove + intro + slide + s.breathingSeconds + settle;
 
   @override
   State<CooldownScreen> createState() => _CooldownScreenState();
@@ -56,6 +71,12 @@ class _CooldownScreenState extends State<CooldownScreen>
     upperBound: 1.0,
   );
 
+  /// 0 = heading centred; 1 = heading at the top.
+  late final AnimationController _heading = AnimationController(vsync: this);
+
+  /// Cue fade-in once the heading has moved up.
+  late final AnimationController _cueIn = AnimationController(vsync: this);
+
   /// 0 = cue centred, circle hidden; 1 = cue at bottom, circle shown.
   late final AnimationController _layout = AnimationController(vsync: this);
 
@@ -63,7 +84,7 @@ class _CooldownScreenState extends State<CooldownScreen>
   late final AnimationController _outro = AnimationController(vsync: this);
 
   Timer? _timer;
-  CooldownStage _stage = CooldownStage.intro;
+  CooldownStage _stage = CooldownStage.heading;
   int _round = 0;
   int _step = 0;
   int _left = 0;
@@ -78,7 +99,7 @@ class _CooldownScreenState extends State<CooldownScreen>
   @override
   void initState() {
     super.initState();
-    _left = widget.introSeconds;
+    _left = widget.headingSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
   }
 
@@ -108,6 +129,18 @@ class _CooldownScreenState extends State<CooldownScreen>
       _left--;
       if (_left > 0) return;
       switch (_stage) {
+        case CooldownStage.heading:
+          _stage = CooldownStage.headingMove;
+          _left = widget.headingMoveSeconds;
+          _heading.animateTo(
+            1,
+            duration: _d(widget.headingMoveSeconds),
+            curve: Curves.easeInOutCubic,
+          );
+        case CooldownStage.headingMove:
+          _stage = CooldownStage.intro;
+          _left = widget.introSeconds;
+          _cueIn.animateTo(1, duration: _d(2), curve: Curves.easeInOut);
         case CooldownStage.intro:
           _stage = CooldownStage.slide;
           _left = widget.slideSeconds;
@@ -157,6 +190,8 @@ class _CooldownScreenState extends State<CooldownScreen>
     _timer?.cancel();
     _circle.dispose();
     _layout.dispose();
+    _heading.dispose();
+    _cueIn.dispose();
     _outro.dispose();
     super.dispose();
   }
@@ -190,25 +225,42 @@ class _CooldownScreenState extends State<CooldownScreen>
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
           child: Column(
             children: [
-              Text(
-                _set.title,
-                key: const ValueKey('cooldown-title'),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
               Expanded(
                 child: AnimatedBuilder(
-                  animation: Listenable.merge([_layout, _outro, _circle]),
+                  animation: Listenable.merge([
+                    _layout,
+                    _outro,
+                    _circle,
+                    _heading,
+                    _cueIn,
+                  ]),
                   builder: (context, _) {
                     final t = _layout.value;
                     final o = _outro.value;
                     return Stack(
                       children: [
+                        // Heading: centred, then glides up to the top.
+                        Align(
+                          alignment: Alignment(0, -_heading.value),
+                          child: Text(
+                            _set.title,
+                            key: const ValueKey('cooldown-title'),
+                            textAlign: TextAlign.center,
+                            style: TextStyle.lerp(
+                              theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                              theme.textTheme.titleMedium?.copyWith(
+                                fontSize: 18,
+                                color: scheme.onSurfaceVariant,
+                              ),
+                              _heading.value,
+                            ),
+                          ),
+                        ),
                         // Breathing circle + phase label, fading/growing in.
                         Positioned.fill(
+                          top: 40,
                           bottom: 120,
                           child: Opacity(
                             opacity: (t * (1 - o)).clamp(0.0, 1.0),
@@ -220,7 +272,7 @@ class _CooldownScreenState extends State<CooldownScreen>
                           key: const ValueKey('cooldown-cue-align'),
                           alignment: Alignment(0, t),
                           child: Opacity(
-                            opacity: (1 - o).clamp(0.0, 1.0),
+                            opacity: (_cueIn.value * (1 - o)).clamp(0.0, 1.0),
                             child: cue,
                           ),
                         ),

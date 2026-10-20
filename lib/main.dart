@@ -7,6 +7,7 @@ import 'monetisation/ads_config.dart';
 import 'monetisation/ads_service.dart';
 import 'monetisation/purchases.dart';
 import 'models/content.dart';
+import 'data/settings_store.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 
@@ -37,6 +38,12 @@ Future<void> main() async {
     debugPrint('ContentLoader failed: $e\n$st');
   }
 
+  try {
+    SettingsStore.darkMode.value = (await SettingsStore.open()).darkModeEnabled;
+  } catch (e) {
+    debugPrint('Settings load failed: $e');
+  }
+
   if (adsEnabled) {
     // Remove ads state first so owners never see a banner flash, then
     // consent + SDK in the background (doesn't block the first frame).
@@ -58,13 +65,16 @@ class GoodProPortionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: content.appName,
-      debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(),
-      darkTheme: buildDarkTheme(),
-      themeMode: ThemeMode.system,
-      home: HomeScreen(content: content),
+    return ValueListenableBuilder<bool>(
+      valueListenable: SettingsStore.darkMode,
+      builder: (context, dark, _) => MaterialApp(
+        title: content.appName,
+        debugShowCheckedModeBanner: false,
+        theme: buildLightTheme(),
+        darkTheme: buildDarkTheme(),
+        themeMode: dark ? ThemeMode.dark : ThemeMode.light,
+        home: HomeScreen(content: content),
+      ),
     );
   }
 }

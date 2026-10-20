@@ -32,31 +32,29 @@ void main() {
     );
   }
 
-  // K1: intro 8s, slide 4s, then in 5s / out 7s.
+  // K1: heading 4s + move 3s, cue 8s + slide 4s, then in 5s / out 7s.
   for (final (name, dark, ms) in [
-    ('intro-centred', false, 3000),
-    ('mid-slide', false, 10000),
-    ('breathe-in-large', false, 16900),
-    ('breathe-out-small', false, 23900),
-    ('prompt-dark', true, 140000),
+    ('heading-centred', true, 2000),
+    ('heading-top-cue-centred', true, 11000),
+    ('cue-bottom-circle', true, 23900),
   ]) {
-    testWidgets('cooldown2-$name', skip: dir == null, (t) async {
+    testWidgets('cooldown3-$name', skip: dir == null, (t) async {
       await setUp(t, dark, 0);
       for (var i = 0; i < ms ~/ 100; i++) {
         await t.pump(const Duration(milliseconds: 100));
       }
       await expectLater(
         find.byType(MaterialApp),
-        matchesGoldenFile(Uri.file('$dir/cooldown2-$name.png')),
+        matchesGoldenFile(Uri.file('$dir/cooldown3-$name.png')),
       );
       await t.pumpWidget(const SizedBox());
     });
   }
 
-  // GIF frames (assembled outside the test), 0–36s at 2.5 fps.
-  testWidgets('cooldown2 gif frames', skip: gifDir == null, (t) async {
-    await setUp(t, false, 0);
-    for (var f = 0; f <= 90; f++) {
+  // GIF frames (assembled outside the test), 0–44s at 2.5 fps (intro + first two breaths).
+  testWidgets('cooldown3 gif frames', skip: gifDir == null, (t) async {
+    await setUp(t, true, 0);
+    for (var f = 0; f <= 110; f++) {
       await expectLater(
         find.byType(MaterialApp),
         matchesGoldenFile(

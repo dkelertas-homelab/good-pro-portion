@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsStore {
@@ -8,6 +9,17 @@ class SettingsStore {
   static const _kRest = 'rest_seconds';
   static const _kStartCard = 'show_start_card';
   static const _kCooldown = 'cooldown_enabled';
+  static const _kDark = 'dark_mode';
+
+  /// App-wide dark mode, listened to by the MaterialApp. Dark by default.
+  static final darkMode = ValueNotifier<bool>(true);
+
+  /// Dark unless the user switched to light in Settings.
+  bool get darkModeEnabled => _prefs.getBool(_kDark) ?? true;
+  Future<void> setDarkMode(bool v) {
+    darkMode.value = v;
+    return _prefs.setBool(_kDark, v);
+  }
 
   int get workSeconds => _prefs.getInt(_kWork) ?? 40;
   int get restSeconds => _prefs.getInt(_kRest) ?? 20;

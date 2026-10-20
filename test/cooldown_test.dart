@@ -27,7 +27,7 @@ void main() {
       for (final s in sets) {
         expect(s.breathingSeconds, inInclusiveRange(100, 130), reason: s.id);
         expect(s.rounds, greaterThanOrEqualTo(6), reason: s.id);
-        expect(CooldownScreen.secondsToPrompt(s), inInclusiveRange(120, 150));
+        expect(CooldownScreen.secondsToPrompt(s), inInclusiveRange(130, 160));
         expect(s.cue, isNotEmpty);
         expect(s.prompt, endsWith('?'));
       }
@@ -90,8 +90,6 @@ void main() {
 
   double circle(WidgetTester t) =>
       t.getSize(find.byKey(const ValueKey('breath-circle'))).width;
-  double cueY(WidgetTester t) =>
-      t.getCenter(find.byKey(const ValueKey('cooldown-cue'))).dy;
 
   testWidgets('Skip is there from the start and finishes once', (t) async {
     var done = 0;
@@ -104,24 +102,46 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
-  testWidgets('cue starts centred, then slides to the bottom', (t) async {
-    await t.pumpWidget(screen(sets.first, () {}));
+  double y(WidgetTester t, String k) => t.getCenter(find.byKey(ValueKey(k))).dy;
+  double opacityOf(WidgetTester t, String text) => t
+      .widget<Opacity>(
+        find
+            .ancestor(of: find.text(text), matching: find.byType(Opacity))
+            .first,
+      )
+      .opacity;
+
+  testWidgets('heading centred, glides up; then cue centred, slides down', (
+    t,
+  ) async {
+    final k1 = sets.first;
+    await t.pumpWidget(screen(k1, () {}));
     final mid = t.getSize(find.byType(Scaffold)).height / 2;
-    final start = cueY(t);
-    expect((start - mid).abs(), lessThan(80));
-    await t.pump(const Duration(seconds: 7));
-    expect(cueY(t), closeTo(start, 0.5)); // still centred during intro
-    await t.pump(const Duration(seconds: 1)); // slide begins
+    final h0 = y(t, 'cooldown-title');
+    expect((h0 - mid).abs(), lessThan(80));
+    expect(opacityOf(t, k1.cue), 0); // cue not shown yet
+    await t.pump(const Duration(seconds: 3));
+    expect(y(t, 'cooldown-title'), closeTo(h0, 0.5)); // holds centred
+    await t.pump(const Duration(seconds: 1)); // move begins
+    await t.pump(const Duration(milliseconds: 1500));
+    final hMid = y(t, 'cooldown-title');
+    expect(hMid, lessThan(h0 - 20));
+    await t.pump(const Duration(milliseconds: 1500)); // t=7, move done
+    await t.pump(const Duration(seconds: 3));
+    expect(y(t, 'cooldown-title'), lessThan(hMid));
+    expect(opacityOf(t, k1.cue), 1);
+    final c0 = y(t, 'cooldown-cue');
+    expect((c0 - mid).abs(), lessThan(80));
+    await t.pump(const Duration(seconds: 5)); // t=15, slide begins
     await t.pump(const Duration(seconds: 2));
-    final half = cueY(t);
-    expect(half, greaterThan(start + 20));
+    final half = y(t, 'cooldown-cue');
+    expect(half, greaterThan(c0 + 20));
     await t.pump(const Duration(seconds: 2));
     await t.pump(const Duration(milliseconds: 100));
-    expect(cueY(t), greaterThan(half));
+    expect(y(t, 'cooldown-cue'), greaterThan(half));
     expect(find.text('Breathe in'), findsOneWidget);
-    // Cue stays visible at the bottom while breathing.
     await t.pump(const Duration(seconds: 30));
-    expect(find.text(sets.first.cue), findsOneWidget);
+    expect(opacityOf(t, k1.cue), 1); // stays at the bottom while breathing
     await t.pumpWidget(const SizedBox());
   });
 
@@ -129,7 +149,7 @@ void main() {
       'and holds still', (t) async {
     final k2 = sets[1]; // box: in 4, hold 4, out 4, hold 4
     await t.pumpWidget(screen(k2, () {}));
-    await t.pump(const Duration(seconds: 12)); // intro 8 + slide 4
+    await t.pump(const Duration(seconds: 19)); // heading 7 + intro 8 + slide 4
     await t.pump(const Duration(milliseconds: 1));
     final s0 = circle(t);
     await t.pump(const Duration(seconds: 2));
@@ -161,7 +181,7 @@ void main() {
         ),
       ),
     );
-    await t.pump(const Duration(seconds: 13));
+    await t.pump(const Duration(seconds: 20));
     final a = circle(t);
     await t.pump(const Duration(seconds: 3));
     expect(circle(t), a);

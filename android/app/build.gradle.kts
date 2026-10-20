@@ -51,6 +51,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // AdMob app ID (AndroidManifest meta-data). Google's sample ID for
+        // debug/profile so test builds never touch the live account; the real
+        // one for release only. Must stay set even with ads off, or the SDK
+        // crashes at start-up.
+        manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
     }
 
     signingConfigs {
@@ -71,6 +76,7 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-4030959040832472~2202340044"
             // Sign with the upload key (key.properties or the CI env vars). The debug
             // key is only used when ALLOW_DEBUG_SIGNING=true is set explicitly.
             signingConfig = if (!hasReleaseSigning && allowDebugSigning) {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../monetisation/ad_slot.dart';
+import '../monetisation/ads_config.dart';
+
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
 import 'routine_screen.dart';
@@ -128,24 +131,8 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // TODO(Phase 6): AdMob banner — never on the timer screen.
-          Container(
-            height: 56,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Theme.of(context).dividerColor,
-                style: BorderStyle.solid,
-              ),
-            ),
-            child: Text(
-              'Ad placeholder',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
+          // Never on the timer screen (docs/GUIDE.md, Ads and purchase).
+          const AdSlot(placement: AdPlacement.homeBanner),
           const SizedBox(height: 16),
           const VersionText(prefix: 'v'),
         ],

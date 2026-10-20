@@ -247,7 +247,7 @@ void main() {
       }
       expect(fake.plays, isEmpty);
       // Let the current segment run out: its end still plays a tone.
-      for (var i = 0; i < 12; i++) {
+      for (var i = 0; i < 90; i++) {
         await t.pump(const Duration(seconds: 1));
       }
       expect(

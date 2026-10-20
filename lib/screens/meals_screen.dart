@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+
 import '../models/content.dart';
 import '../widgets/insets.dart';
 
@@ -10,7 +12,10 @@ class MealsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Meal ideas')),
+      appBar: AppBar(
+        title: const Text('Meal ideas'),
+        actions: const [SoundButton()],
+      ),
       body: ListView(
         padding: scrollPadding(
           context,

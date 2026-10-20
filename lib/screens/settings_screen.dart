@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+import '../widgets/sound_settings.dart';
+
 import '../data/settings_store.dart';
 import '../models/content.dart';
+import '../monetisation/ads_config.dart';
+import '../monetisation/ads_service.dart';
+import '../monetisation/remove_ads_card.dart';
 import '../widgets/version_text.dart';
 import '../widgets/insets.dart';
 
@@ -35,7 +41,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        actions: const [SoundButton()],
+      ),
       body: ListView(
         padding: scrollPadding(
           context,
@@ -87,6 +96,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const SizedBox(height: 14),
+          Text('SOUND', style: Theme.of(context).textTheme.labelSmall),
+          const Card(child: SoundSettings()),
+          const SizedBox(height: 14),
           Text('TIPS', style: Theme.of(context).textTheme.labelSmall),
           Card(
             child: SwitchListTile(
@@ -126,24 +138,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 14),
           Text('UPGRADE', style: Theme.of(context).textTheme.labelSmall),
-          // TODO(Phase 7): Play Billing one-off Remove ads IAP.
-          Card(
-            child: ListTile(
-              leading: const Text('✨', style: TextStyle(fontSize: 22)),
-              title: const Text('Remove ads'),
-              subtitle: const Text(
-                'One-off purchase · no subscription (coming later)',
-              ),
-              trailing: Text(
-                'A\$X.XX',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              enabled: false,
+          const RemoveAdsCard(),
+          if (adsEnabled)
+            ValueListenableBuilder<bool>(
+              valueListenable: AdsService.instance.privacyOptionsRequired,
+              builder: (context, required, _) => !required
+                  ? const SizedBox.shrink()
+                  : Card(
+                      child: ListTile(
+                        title: const Text('Ad privacy options'),
+                        subtitle: const Text('Change your ad consent choice'),
+                        trailing: const Icon(Icons.privacy_tip_outlined),
+                        onTap: AdsService.instance.showPrivacyOptions,
+                      ),
+                    ),
             ),
-          ),
           const SizedBox(height: 14),
           Text('LEGAL', style: Theme.of(context).textTheme.labelSmall),
           Card(

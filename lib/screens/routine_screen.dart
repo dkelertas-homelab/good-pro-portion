@@ -57,13 +57,14 @@ class RoutineScreen extends StatelessWidget {
                   title: 'Warm-up · 2 min',
                   trailing: '${routine.warmupSeconds}s each',
                 ),
-                ...routine.warmup.map((s) {
+                ...routine.warmup.asMap().entries.map((e) {
+                  final s = e.value;
                   final m = content.moveById(s.moveId);
                   return _MoveTile(
                     move: m,
                     label: s.label ?? m.name,
                     seconds: routine.warmupSeconds,
-                    onTap: () => _openDetail(context, m),
+                    onTap: () => _openDetail(context, e.key),
                   );
                 }),
                 const SizedBox(height: 8),
@@ -79,7 +80,8 @@ class RoutineScreen extends StatelessWidget {
                     move: m,
                     label: '${i + 1}. ${s.label ?? m.name}',
                     seconds: s.workSeconds ?? routine.workSeconds,
-                    onTap: () => _openDetail(context, m),
+                    onTap: () =>
+                        _openDetail(context, routine.warmup.length + i),
                   );
                 }),
               ],
@@ -96,9 +98,22 @@ class RoutineScreen extends StatelessWidget {
     );
   }
 
-  void _openDetail(BuildContext context, Move m) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => ExerciseScreen(move: m)));
+  /// Opens the move at [index] in warm-up + work order; swipe for the rest.
+  void _openDetail(BuildContext context, int index) {
+    final entries = [
+      for (final s in [...routine.warmup, ...routine.work])
+        ExerciseEntry(
+          move: content.moveById(s.moveId),
+          label: s.label,
+          swapSides: s.swapSides,
+        ),
+    ];
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            ExerciseScreen.pager(entries: entries, initialIndex: index),
+      ),
+    );
   }
 }
 

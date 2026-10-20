@@ -1,12 +1,27 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum PurchaseOutcome { purchased, cancelled, failed }
+import 'play_billing.dart';
+
+enum PurchaseOutcome {
+  purchased,
+  cancelled,
+  failed,
+
+  /// Payment is pending (e.g. cash at a shop); ads go once Play confirms.
+  pending,
+
+  /// Billing or the product isn't available (no Play, not set up yet).
+  unavailable,
+}
 
 /// The one-off "Remove ads" purchase. No subscriptions.
 abstract class PurchaseService {
   /// True once the user owns Remove ads. Ads hide while this is true.
   ValueListenable<bool> get adFree;
+
+  /// True when the product can be bought right now.
+  ValueListenable<bool> get available;
 
   /// Price as the store formats it, or null if unknown.
   String? get priceLabel;
@@ -18,8 +33,8 @@ abstract class PurchaseService {
   Future<bool> restore();
 }
 
-/// Stand-in until Play Billing is wired up: "buying" just sets a local flag,
-/// so the flows can be tried on a test build without a store product.
+/// Local stand-in: "buying" just sets a flag. Used by tests and available for
+/// trying the flows without a Play product.
 class StubPurchaseService implements PurchaseService {
   StubPurchaseService([this._prefs]);
 
@@ -29,6 +44,11 @@ class StubPurchaseService implements PurchaseService {
 
   @override
   ValueListenable<bool> get adFree => _adFree;
+
+  final _available = ValueNotifier<bool>(true);
+
+  @override
+  ValueListenable<bool> get available => _available;
 
   @override
   String? get priceLabel => 'Test';
@@ -61,6 +81,6 @@ class StubPurchaseService implements PurchaseService {
   }
 }
 
-/// The app-wide purchase service. Only used when ads are enabled
-/// (see ads_config.dart). Swap for the Play Billing one when it's wired up.
-final PurchaseService purchases = StubPurchaseService();
+/// The app-wide purchase service (Google Play Billing). Only used when ads
+/// are enabled (see ads_config.dart).
+final PurchaseService purchases = PlayPurchaseService();

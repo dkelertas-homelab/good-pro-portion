@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/sound_button.dart';
+import '../monetisation/ad_slot.dart';
+import '../monetisation/ads_config.dart';
 
 import '../models/content.dart';
 import '../theme/app_theme.dart';
@@ -147,16 +149,7 @@ class DoneScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          // TODO(Phase 6): optional post-workout ad slot.
-          Container(
-            height: 56,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Theme.of(context).dividerColor),
-            ),
-            child: const Text('Ad placeholder'),
-          ),
+          const AdSlot(placement: AdPlacement.doneBanner),
           if (partner == null) ...[
             const SizedBox(height: 16),
             FilledButton(

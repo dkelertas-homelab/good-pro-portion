@@ -12,7 +12,9 @@ void main() {
   ).readAsStringSync();
   final code = src
       .split('\n')
-      .where((l) => !l.trimLeft().startsWith('*') && !l.trimLeft().startsWith('//'))
+      .where(
+        (l) => !l.trimLeft().startsWith('*') && !l.trimLeft().startsWith('//'),
+      )
       .join('\n');
 
   test('native audio never gates on ringer mode / silent / DND', () {
@@ -23,6 +25,9 @@ void main() {
 
   test('cues and music use the media stream', () {
     expect(code.contains('USAGE_ASSISTANCE_SONIFICATION'), isFalse);
-    expect(RegExp('USAGE_MEDIA').allMatches(code).length, greaterThanOrEqualTo(2));
+    expect(
+      RegExp('USAGE_MEDIA').allMatches(code).length,
+      greaterThanOrEqualTo(2),
+    );
   });
 }

@@ -77,7 +77,7 @@ class _TimerScreenState extends State<TimerScreen>
     );
     _ticker = Timer.periodic(const Duration(seconds: 1), _onTick);
     _sound.startWorkoutMusic();
-    _cueStart();
+    // No tone here: opening the timer follows a Start press.
   }
 
   Sound get _sound => Sound.instance;
@@ -133,8 +133,8 @@ class _TimerScreenState extends State<TimerScreen>
     }
   }
 
-  /// [cue] is false for a manual Skip: David found the tap beeps annoying.
-  /// Timer-driven move changes still play their tone.
+  /// [cue] is false for manual Skip/Back: no beeps on or after any press.
+  /// Only timer-driven move changes play their tone.
   void _advance({bool cue = true}) {
     if (_index >= _segments.length - 1) {
       _finish();
@@ -153,7 +153,6 @@ class _TimerScreenState extends State<TimerScreen>
       _index -= 1;
       _remaining = _segments[_index].seconds;
     });
-    _cueStart();
   }
 
   Future<void> _finish() async {

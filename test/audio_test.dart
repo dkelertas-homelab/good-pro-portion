@@ -209,7 +209,7 @@ void main() {
     testWidgets('start tone, blips on 3-2-1, then a rest tone', (t) async {
       await freshSound();
       await pumpTimer(t);
-      expect(fake.plays, ['moveStart@0.3']);
+      expect(fake.plays, isEmpty, reason: 'no tone after the Start press');
       await skipToWork(t);
       fake.events.clear();
       // 10 s move: nothing until 3 s are left, then three blips.
@@ -257,6 +257,41 @@ void main() {
         isNotEmpty,
       );
       await t.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('Back, Pause and Resume are silent, then and after', (
+      t,
+    ) async {
+      await freshSound();
+      await pumpTimer(t);
+      await t.tap(find.text('Skip ›'));
+      await t.pump();
+      await t.tap(find.text('Skip ›'));
+      await t.pump();
+      fake.events.clear();
+      await t.tap(find.text('‹ Prev'));
+      await t.pump();
+      await t.tap(find.text('Pause'));
+      await t.pump();
+      await t.tap(find.text('Resume'));
+      await t.pump();
+      // The moments right after the presses: still nothing (segments are
+      // far longer than 2 s, so no timer cue is due yet).
+      await t.pump(const Duration(seconds: 1));
+      await t.pump(const Duration(seconds: 1));
+      expect(fake.plays, isEmpty);
+      await t.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('buttons and tiles have touch click sounds off', (t) async {
+      for (final th in [buildLightTheme(), buildDarkTheme()]) {
+        expect(th.textButtonTheme.style!.enableFeedback, isFalse);
+        expect(th.filledButtonTheme.style!.enableFeedback, isFalse);
+        expect(th.elevatedButtonTheme.style!.enableFeedback, isFalse);
+        expect(th.outlinedButtonTheme.style!.enableFeedback, isFalse);
+        expect(th.iconButtonTheme.style!.enableFeedback, isFalse);
+        expect(th.listTileTheme.enableFeedback, isFalse);
+      }
     });
 
     testWidgets('no blips while paused', (t) async {

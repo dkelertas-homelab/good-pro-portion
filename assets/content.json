@@ -36,21 +36,21 @@
       "id": "reverse_lunge",
       "name": "Reverse lunge",
       "figure": "reverseLunge",
-      "howTo": "Step one foot back and lower until both knees bend about 90°. Front heel stays planted. Drive up through the front leg.",
+      "howTo": "Start with feet together. Step one foot back, drop until both knees bend about 90°, then push through the front heel and step back in.",
       "mistakes": "Front knee caving in · torso tipping forward · tiny steps",
       "easier": "Shallower depth, or hold a chair",
       "harder": "Pause at the bottom, or reverse lunges with a pulse",
-      "cue": "Step back, both knees 90°"
+      "cue": "Step back, drop, step in."
     },
     {
       "id": "split_squat",
       "name": "Split squat",
       "figure": "splitSquat",
-      "howTo": "Stagger your stance and drop the back knee toward the floor. Keep most weight on the front leg. Switch sides as programmed.",
+      "howTo": "Feet stay planted, staggered: one foot forward, one back. Lower straight down until the back knee nearly touches the floor, then straight back up. The feet never move. Switch sides as programmed.",
       "mistakes": "Leaning too far forward · front heel lifting · rushing",
       "easier": "Hold a chair, or shorten the range",
       "harder": "Longer stance, or rear foot elevated",
-      "cue": "Drop the back knee, front heel down"
+      "cue": "Feet stay planted, staggered. Straight down and up."
     },
     {
       "id": "glute_bridge",
@@ -198,7 +198,7 @@
         {
           "moveId": "reverse_lunge",
           "label": "Reverse lunge (right)",
-          "cue": "Right foot back, knees 90°"
+          "cue": "Right foot: step back, drop, step in."
         },
         {
           "moveId": "plank"
@@ -206,8 +206,8 @@
         {
           "moveId": "reverse_lunge",
           "label": "Reverse lunge (left)",
-          "cue": "Left foot back, knees 90°",
-          "mirror": true
+          "cue": "Left foot: step back, drop, step in.",
+          "swapSides": true
         },
         {
           "moveId": "push_up"
@@ -247,7 +247,7 @@
         {
           "moveId": "split_squat",
           "label": "Split squat (right)",
-          "cue": "Right foot back, drop that knee"
+          "cue": "Feet stay planted, staggered. Straight down and up."
         },
         {
           "moveId": "wall_sit"
@@ -255,8 +255,8 @@
         {
           "moveId": "split_squat",
           "label": "Split squat (left)",
-          "cue": "Left foot back, drop that knee",
-          "mirror": true
+          "cue": "Feet stay planted, staggered. Straight down and up.",
+          "swapSides": true
         },
         {
           "moveId": "superman"
@@ -275,7 +275,7 @@
           "label": "Side plank (left)",
           "cue": "On your left forearm, hips up",
           "workSeconds": 20,
-          "mirror": true
+          "swapSides": true
         },
         {
           "moveId": "shoulder_tap"
@@ -288,7 +288,7 @@
       "id": "fish_veg",
       "emoji": "🐟",
       "title": "Steamed fish + 3 veg",
-      "portionGuide": "Palm of fish · fist ×3 veg · thumb oil"
+      "portionGuide": "Palm fish · fist ×3 veg · lemon herb mix · 12 min steam"
     },
     {
       "id": "eggs_toast",
@@ -300,7 +300,7 @@
       "id": "salad_chook",
       "emoji": "🥗",
       "title": "Salad + roast chicken",
-      "portionGuide": "Woolies salad + ¼–½ chook"
+      "portionGuide": "Bag salad + ¼–½ cooked chook"
     },
     {
       "id": "rice_bowl",
@@ -313,6 +313,156 @@
       "emoji": "🥣",
       "title": "Greek yoghurt + fruit",
       "portionGuide": "Cupped yoghurt · fist berries · thumb nuts"
+    },
+    {
+      "id": "oats_banana",
+      "emoji": "🥣",
+      "title": "Porridge + banana",
+      "portionGuide": "Cupped oats · ½ banana · thumb peanut butter"
+    },
+    {
+      "id": "weetbix_milk",
+      "emoji": "🥛",
+      "title": "Wheat biscuits + milk + fruit",
+      "portionGuide": "2 wheat biscuits · cup of milk · fist of fruit"
+    },
+    {
+      "id": "baked_beans_toast",
+      "emoji": "🫘",
+      "title": "Baked beans on toast",
+      "portionGuide": "½ can beans · 1–2 toast · fist tomato"
+    },
+    {
+      "id": "tuna_wrap",
+      "emoji": "🌯",
+      "title": "Tuna + salad wrap",
+      "portionGuide": "1 wrap · palm tuna · fist salad"
+    },
+    {
+      "id": "chicken_sandwich",
+      "emoji": "🥪",
+      "title": "Wholemeal chicken sandwich",
+      "portionGuide": "2 slices · palm chook · fist salad"
+    },
+    {
+      "id": "soup_tin",
+      "emoji": "🍲",
+      "title": "Veg soup + toast",
+      "portionGuide": "Big mug soup · 1 toast · thumb cheese"
+    },
+    {
+      "id": "omelette_veg",
+      "emoji": "🍳",
+      "title": "Veggie omelette",
+      "portionGuide": "2–3 eggs · fist spinach + capsicum"
+    },
+    {
+      "id": "taco_mince",
+      "emoji": "🌮",
+      "title": "Taco mince lettuce cups",
+      "portionGuide": "Palm lean mince + taco mix · fist lettuce + tomato · 12 min"
+    },
+    {
+      "id": "moroccan_chicken_tray",
+      "emoji": "🍗",
+      "title": "Moroccan chicken tray bake",
+      "portionGuide": "Palm chicken thigh · fist ×2 veg · Moroccan mix · 5 min prep, oven does the rest"
+    },
+    {
+      "id": "salmon_tray",
+      "emoji": "🍠",
+      "title": "Lemon herb salmon tray bake",
+      "portionGuide": "Palm salmon · cupped sweet potato · fist greens · lemon herb mix"
+    },
+    {
+      "id": "pasta_tuna",
+      "emoji": "🍝",
+      "title": "Tuna tomato pasta",
+      "portionGuide": "Cupped pasta · palm tuna · fist veg in sauce · Italian mix · 12 min"
+    },
+    {
+      "id": "burrito_bowl",
+      "emoji": "🌯",
+      "title": "Quick bean burrito bowl",
+      "portionGuide": "Microwave rice cup · palm tinned beans + taco mix · fist salsa · 10 min"
+    },
+    {
+      "id": "pantry_tip",
+      "emoji": "🧂",
+      "title": "Pantry tip: keep 3–4 seasoning mixes",
+      "portionGuide": "Taco, Moroccan, lemon herb, Italian: one shake turns plain meat + veg into dinner"
+    },
+    {
+      "id": "chickpea_tray",
+      "emoji": "🥕",
+      "title": "Moroccan chickpea veg tray bake",
+      "portionGuide": "Tin chickpeas · fist ×2 chopped veg · Moroccan mix · 5 min prep"
+    },
+    {
+      "id": "sausage_veg",
+      "emoji": "🌭",
+      "title": "Lean sausages + salad",
+      "portionGuide": "2 sausages · fist ×2 salad · thumb dressing"
+    },
+    {
+      "id": "apple_pb",
+      "emoji": "🍎",
+      "title": "Snack: apple + peanut butter",
+      "portionGuide": "1 apple · thumb peanut butter"
+    },
+    {
+      "id": "carrot_hummus",
+      "emoji": "🥕",
+      "title": "Snack: carrot sticks + hummus",
+      "portionGuide": "Fist carrots · thumb hummus"
+    },
+    {
+      "id": "boiled_eggs",
+      "emoji": "🥚",
+      "title": "Snack: 2 boiled eggs",
+      "portionGuide": "2 eggs · pinch of salt"
+    },
+    {
+      "id": "cheese_crackers",
+      "emoji": "🧀",
+      "title": "Snack: cheese + crackers",
+      "portionGuide": "Thumb ×2 cheese · 4 wholegrain crackers"
+    },
+    {
+      "id": "nuts_handful",
+      "emoji": "🥜",
+      "title": "Snack: handful of nuts",
+      "portionGuide": "Cupped hand unsalted nuts"
+    },
+    {
+      "id": "banana",
+      "emoji": "🍌",
+      "title": "Snack: a banana",
+      "portionGuide": "1 banana"
+    },
+    {
+      "id": "popcorn",
+      "emoji": "🍿",
+      "title": "Snack: plain popcorn",
+      "portionGuide": "2 cupped hands air-popped"
+    },
+    {
+      "id": "cottage_cheese",
+      "emoji": "🫐",
+      "title": "Snack: cottage cheese + berries",
+      "portionGuide": "Cupped cottage cheese · fist frozen berries"
+    },
+    {
+      "id": "cucumber_tuna",
+      "emoji": "🥒",
+      "title": "Snack: cucumber + tuna",
+      "portionGuide": "Fist cucumber · small tin tuna"
+    },
+    {
+      "id": "rice_cakes",
+      "emoji": "🍘",
+      "title": "Snack: rice cakes + avocado",
+      "portionGuide": "2 rice cakes · thumb ×2 avo"
     }
   ]
 }

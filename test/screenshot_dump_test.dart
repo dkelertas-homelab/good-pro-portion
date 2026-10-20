@@ -1,3 +1,5 @@
+import 'package:good_pro_portion/audio/sound.dart';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -12,12 +14,31 @@ import 'package:good_pro_portion/theme/app_theme.dart';
 
 import 'font_loader.dart';
 
+class _SilentBackend implements SoundBackend {
+  @override
+  Future<void> load(Map<String, String> assets) async {}
+  @override
+  Future<void> play(String name, double volume) async {}
+  @override
+  Future<void> startMusic(String asset, double volume) async {}
+  @override
+  Future<void> musicVolume(double volume) async {}
+  @override
+  Future<void> pauseMusic() async {}
+  @override
+  Future<void> resumeMusic() async {}
+  @override
+  Future<void> stopMusic() async {}
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late AppContent content;
 
   setUpAll(() async {
+    // Screenshots show the debug/staging build, which has audio on.
+    Sound.instance = Sound(backend: _SilentBackend(), enabled: true);
     content = ContentLoader.parse(
       File('assets/content.json').readAsStringSync(),
     );

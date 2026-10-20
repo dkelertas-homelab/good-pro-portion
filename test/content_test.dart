@@ -10,7 +10,7 @@ void main() {
 
     expect(content.appName, 'Nice Pro Portions ;-)');
     expect(content.moves.length, greaterThanOrEqualTo(15));
-    expect(content.meals.length, 5);
+    expect(content.meals.length, 30);
 
     final dayA = content.routines.firstWhere((r) => r.id == 'day_a');
     expect(dayA.warmup.length, 4);
@@ -18,7 +18,7 @@ void main() {
     expect(dayA.work.length, 8);
     expect(dayA.work[2].label, 'Reverse lunge (right)');
     expect(dayA.work[4].label, 'Reverse lunge (left)');
-    expect(dayA.work[4].mirror, isTrue);
+    expect(dayA.work[4].swapSides, isTrue);
     expect(dayA.workSeconds, 40);
     expect(dayA.restSeconds, 20);
 
@@ -29,11 +29,26 @@ void main() {
     for (final r in [dayA, dayB]) {
       for (var i = 1; i < r.work.length; i++) {
         expect(
-          r.work[i].moveId == r.work[i - 1].moveId && r.work[i].mirror,
+          r.work[i].moveId == r.work[i - 1].moveId && r.work[i].swapSides,
           isFalse,
         );
       }
     }
     expect(content.moves.every((m) => m.cue.isNotEmpty), isTrue);
+
+    // Reverse lunge and split squat must read as different moves.
+    expect(content.moveById('reverse_lunge').cue, 'Step back, drop, step in.');
+    expect(
+      content.moveById('split_squat').cue,
+      'Feet stay planted, staggered. Straight down and up.',
+    );
+    for (final r in [dayA, dayB]) {
+      for (final s in r.work.where((s) => s.moveId == 'split_squat')) {
+        expect(s.cue, contains('Feet stay planted'));
+      }
+      for (final s in r.work.where((s) => s.moveId == 'reverse_lunge')) {
+        expect(s.cue, contains('step back, drop, step in'));
+      }
+    }
   });
 }

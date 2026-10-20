@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'audio/sound.dart';
 import 'data/content_loader.dart';
 import 'monetisation/ads_config.dart';
 import 'monetisation/ads_service.dart';
@@ -20,6 +21,12 @@ Future<void> main() async {
       systemNavigationBarContrastEnforced: false,
     ),
   );
+
+  try {
+    await Sound.instance.init();
+  } catch (e) {
+    debugPrint('Sound init failed: $e');
+  }
 
   Object? loadError;
   AppContent? content;

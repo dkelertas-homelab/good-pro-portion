@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
 import '../monetisation/ad_slot.dart';
 import '../monetisation/ads_config.dart';
 
@@ -14,11 +15,15 @@ class DoneScreen extends StatelessWidget {
     required this.content,
     required this.routine,
     required this.elapsed,
+    this.meal,
   });
 
   final AppContent content;
   final Routine routine;
   final Duration elapsed;
+
+  /// Today's idea from MealRotation; falls back to the first one.
+  final MealIdea? meal;
 
   String get _timeLabel {
     final m = elapsed.inMinutes;
@@ -28,13 +33,14 @@ class DoneScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final meal = content.meals.first;
+    final meal = this.meal ?? content.meals.first;
     final partner = content.partnerOf(routine);
     void doneForToday() => Navigator.of(context).popUntil((r) => r.isFirst);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Done'),
         automaticallyImplyLeading: false,
+        actions: const [SoundButton()],
       ),
       body: ListView(
         padding: scrollPadding(

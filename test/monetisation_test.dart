@@ -20,7 +20,7 @@ void main() {
     home: Scaffold(body: ListView(children: [child])),
   );
 
-  test('ads are off unless the build turns them on', () {
+  test('debug/test builds have ads off unless the build turns them on', () {
     expect(adsEnabled, isFalse);
   });
 

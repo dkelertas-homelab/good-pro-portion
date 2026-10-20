@@ -24,6 +24,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _work = 40;
   int _rest = 20;
   bool _startCard = true;
+  bool _cooldown = false;
+  bool _dark = true;
 
   @override
   void initState() {
@@ -34,6 +36,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _work = s.workSeconds;
         _rest = s.restSeconds;
         _startCard = s.showStartCard;
+        _cooldown = s.cooldownEnabled;
+        _dark = s.darkModeEnabled;
       });
     });
   }
@@ -110,6 +114,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   : (v) {
                       _store!.setShowStartCard(v);
                       setState(() => _startCard = v);
+                    },
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text('APPEARANCE', style: Theme.of(context).textTheme.labelSmall),
+          Card(
+            child: SwitchListTile(
+              key: const ValueKey('dark-mode-switch'),
+              title: const Text('Dark mode'),
+              subtitle: const Text('Turn off for the light theme'),
+              value: _dark,
+              onChanged: _store == null
+                  ? null
+                  : (v) {
+                      _store!.setDarkMode(v);
+                      setState(() => _dark = v);
+                    },
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'AFTER A WORKOUT',
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+          Card(
+            child: SwitchListTile(
+              key: const ValueKey('cooldown-switch'),
+              title: const Text('Cooldown'),
+              subtitle: const Text(
+                'About 3 unhurried minutes of slow breathing after a workout',
+              ),
+              value: _cooldown,
+              onChanged: _store == null
+                  ? null
+                  : (v) {
+                      _store!.setCooldownEnabled(v);
+                      setState(() => _cooldown = v);
                     },
             ),
           ),

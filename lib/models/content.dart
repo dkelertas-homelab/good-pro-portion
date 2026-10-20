@@ -129,18 +129,81 @@ class MealIdea {
   );
 }
 
+enum BreathMotion { breatheIn, breatheOut, hold }
+
+/// One step of a breathing pattern. [label] says what to do, e.g.
+/// "Breathe in". The circle grows on in, shrinks on out, holds on hold.
+class BreathStep {
+  BreathStep({
+    required this.label,
+    required this.seconds,
+    required this.motion,
+  });
+
+  final String label;
+  final int seconds;
+  final BreathMotion motion;
+
+  factory BreathStep.fromJson(Map<String, dynamic> j) => BreathStep(
+    label: j['label'] as String,
+    seconds: j['seconds'] as int,
+    motion: switch (j['motion'] as String) {
+      'in' => BreathMotion.breatheIn,
+      'out' => BreathMotion.breatheOut,
+      'hold' => BreathMotion.hold,
+      final m => throw FormatException('Unknown breath motion: $m'),
+    },
+  );
+}
+
+/// A post-workout cooldown: a slow breathing pattern, a short mindfulness
+/// cue and a positive prompt.
+class CooldownSet {
+  CooldownSet({
+    required this.id,
+    required this.title,
+    required this.steps,
+    required this.rounds,
+    required this.cue,
+    required this.prompt,
+  });
+
+  final String id;
+  final String title;
+  final List<BreathStep> steps;
+  final int rounds;
+  final String cue;
+  final String prompt;
+
+  int get breathingSeconds =>
+      rounds * steps.fold(0, (sum, s) => sum + s.seconds);
+
+  factory CooldownSet.fromJson(Map<String, dynamic> j) => CooldownSet(
+    id: j['id'] as String,
+    title: j['title'] as String,
+    steps: (j['steps'] as List)
+        .map((e) => BreathStep.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    rounds: j['rounds'] as int,
+    cue: j['cue'] as String,
+    prompt: j['prompt'] as String,
+  );
+}
+
 class AppContent {
   AppContent({
     required this.appName,
     required this.moves,
     required this.routines,
     required this.meals,
+    this.cooldowns = const [],
   });
 
   final String appName;
   final List<Move> moves;
   final List<Routine> routines;
   final List<MealIdea> meals;
+  final List<CooldownSet> cooldowns;
 
   Move moveById(String id) => moves.firstWhere((m) => m.id == id);
 
@@ -166,6 +229,9 @@ class AppContent {
         .toList(),
     meals: (j['meals'] as List)
         .map((e) => MealIdea.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    cooldowns: ((j['cooldowns'] as List?) ?? const [])
+        .map((e) => CooldownSet.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }

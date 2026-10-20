@@ -13,6 +13,8 @@ import '../theme/app_theme.dart';
 import '../widgets/countdown_ring.dart';
 import '../widgets/figure_view.dart';
 import '../widgets/swap_sides_badge.dart';
+import '../data/settings_store.dart';
+import 'cooldown_screen.dart';
 import 'done_screen.dart';
 
 enum _Phase { warmup, work, rest }
@@ -160,14 +162,34 @@ class _TimerScreenState extends State<TimerScreen>
     try {
       meal = await (await MealRotation.open()).next(widget.content.meals);
     } catch (_) {}
+    CooldownSet? cooldown;
+    try {
+      if ((await SettingsStore.open()).cooldownEnabled &&
+          widget.content.cooldowns.isNotEmpty) {
+        cooldown = await (await CooldownRotation.open()).next(
+          widget.content.cooldowns,
+        );
+      }
+    } catch (_) {}
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
+    Route<void> done() => MaterialPageRoute(
+      builder: (_) => DoneScreen(
+        content: widget.content,
+        routine: widget.routine,
+        elapsed: elapsed,
+        meal: meal,
+      ),
+    );
+    final nav = Navigator.of(context);
+    if (cooldown == null) {
+      nav.pushReplacement(done());
+      return;
+    }
+    nav.pushReplacement(
       MaterialPageRoute(
-        builder: (_) => DoneScreen(
-          content: widget.content,
-          routine: widget.routine,
-          elapsed: elapsed,
-          meal: meal,
+        builder: (ctx) => CooldownScreen(
+          set: cooldown!,
+          onFinished: () => Navigator.of(ctx).pushReplacement(done()),
         ),
       ),
     );

@@ -1,6 +1,6 @@
 # Ads and Remove ads
 
-Issue #27. Real AdMob banner ads with Google's UMP consent form, plus a one-off Remove ads purchase through Google Play Billing. **Off by default**: release builds are built without `ADS_ENABLED` until David OKs turning ads on.
+Issue #27. Real AdMob banner ads with Google's UMP consent form, plus a one-off Remove ads purchase through Google Play Billing. **On in release builds from 0.1.5** (David OK'd, 20 Oct 2026); off in debug, profile and test builds unless built with `--dart-define=ADS_ENABLED=true`. Sound stays off in release (`AUDIO_ENABLED` defaults to off in release).
 
 ## IDs
 
@@ -16,7 +16,7 @@ Debug builds can never request a live ad, so tapping ads while testing can't get
 
 | Piece | File | Notes |
 |---|---|---|
-| Master switch | `lib/monetisation/ads_config.dart` | `--dart-define=ADS_ENABLED=true` turns ads on. Default off. |
+| Master switch | `lib/monetisation/ads_config.dart` | Defaults to `kReleaseMode` (on in release, off otherwise). Override with `--dart-define=ADS_ENABLED=true|false`. |
 | IDs | same (`TestAdIds`, `LiveAdIds`, `bannerUnitId`) | Live IDs used only when `kReleaseMode`. |
 | Consent + SDK start | `lib/monetisation/ads_service.dart` | Every launch: UMP consent info update, shows the form if required (EEA/UK), then starts the SDK only if `canRequestAds`. Settings shows "Ad privacy options" when UMP says it's required. |
 | Ad slot | `lib/monetisation/ad_slot.dart` | Off: nothing in release, "Ad placeholder" in debug. On: a 320×50 banner, hidden until consent allows ads, if no ad fills, or once Remove ads is owned. Never on workout, rest or timer screens. |

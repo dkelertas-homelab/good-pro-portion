@@ -10,8 +10,14 @@ library;
 
 import 'package:flutter/foundation.dart';
 
-/// Master switch. Off by default; release builds ship without ads.
-const bool adsEnabled = bool.fromEnvironment('ADS_ENABLED');
+/// Master switch. Release builds have ads on by default from 0.1.5 (David
+/// OK'd ads + Remove ads for internal testing, 20 Oct 2026); debug, profile
+/// and test builds have them off unless built with ADS_ENABLED=true.
+/// Build release with --dart-define=ADS_ENABLED=false to ship without ads.
+const bool adsEnabled = bool.fromEnvironment(
+  'ADS_ENABLED',
+  defaultValue: kReleaseMode,
+);
 
 /// Google's published sample AdMob IDs. They always serve test ads, so
 /// tapping them can't get an account flagged. Real IDs go in only when the

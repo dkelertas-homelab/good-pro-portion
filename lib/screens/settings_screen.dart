@@ -24,6 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _work = 40;
   int _rest = 20;
   bool _startCard = true;
+  bool _cooldown = false;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _work = s.workSeconds;
         _rest = s.restSeconds;
         _startCard = s.showStartCard;
+        _cooldown = s.cooldownEnabled;
       });
     });
   }
@@ -110,6 +112,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   : (v) {
                       _store!.setShowStartCard(v);
                       setState(() => _startCard = v);
+                    },
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'AFTER A WORKOUT',
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+          Card(
+            child: SwitchListTile(
+              key: const ValueKey('cooldown-switch'),
+              title: const Text('Cooldown'),
+              subtitle: const Text(
+                'About 2 minutes of slow breathing after a workout',
+              ),
+              value: _cooldown,
+              onChanged: _store == null
+                  ? null
+                  : (v) {
+                      _store!.setCooldownEnabled(v);
+                      setState(() => _cooldown = v);
                     },
             ),
           ),

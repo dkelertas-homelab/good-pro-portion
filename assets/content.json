@@ -464,5 +464,112 @@
       "title": "Snack: rice cakes + avocado",
       "portionGuide": "2 rice cakes · thumb ×2 avo"
     }
+  ],
+  "cooldowns": [
+    {
+      "id": "K1",
+      "title": "Breathe in 4, out 6",
+      "steps": [
+        {
+          "label": "Breathe in",
+          "seconds": 4,
+          "motion": "in"
+        },
+        {
+          "label": "Breathe out",
+          "seconds": 6,
+          "motion": "out"
+        }
+      ],
+      "rounds": 5,
+      "cue": "Notice your feet on the floor.",
+      "prompt": "What's one thing today you're grateful for?"
+    },
+    {
+      "id": "K2",
+      "title": "Box breathing: in 4, hold 4, out 4, hold 4",
+      "steps": [
+        {
+          "label": "Breathe in",
+          "seconds": 4,
+          "motion": "in"
+        },
+        {
+          "label": "Hold",
+          "seconds": 4,
+          "motion": "hold"
+        },
+        {
+          "label": "Breathe out",
+          "seconds": 4,
+          "motion": "out"
+        },
+        {
+          "label": "Hold",
+          "seconds": 4,
+          "motion": "hold"
+        }
+      ],
+      "rounds": 3,
+      "cue": "Let your shoulders drop.",
+      "prompt": "Picture your perfect-weather day. What are you doing?"
+    },
+    {
+      "id": "K3",
+      "title": "Two sniffs in, long sigh out",
+      "steps": [
+        {
+          "label": "Sniff, sniff",
+          "seconds": 2,
+          "motion": "in"
+        },
+        {
+          "label": "Long sigh out",
+          "seconds": 6,
+          "motion": "out"
+        }
+      ],
+      "rounds": 5,
+      "cue": "Scan from head to toe.",
+      "prompt": "Who made your week a bit better?"
+    },
+    {
+      "id": "K4",
+      "title": "In 4, out 8",
+      "steps": [
+        {
+          "label": "Breathe in",
+          "seconds": 4,
+          "motion": "in"
+        },
+        {
+          "label": "Breathe out",
+          "seconds": 8,
+          "motion": "out"
+        }
+      ],
+      "rounds": 4,
+      "cue": "Listen for three sounds around you.",
+      "prompt": "What's one small thing you're looking forward to?"
+    },
+    {
+      "id": "K5",
+      "title": "Hand on belly, rise 4, fall 6",
+      "steps": [
+        {
+          "label": "Belly rises",
+          "seconds": 4,
+          "motion": "in"
+        },
+        {
+          "label": "Belly falls",
+          "seconds": 6,
+          "motion": "out"
+        }
+      ],
+      "rounds": 5,
+      "cue": "Unclench your jaw.",
+      "prompt": "You showed up today. What did your body let you do?"
+    }
   ]
 }

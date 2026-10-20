@@ -5,64 +5,98 @@ import 'package:flutter/material.dart';
 import '../models/content.dart';
 import '../widgets/insets.dart';
 
-enum CooldownStage { breathe, cue, prompt }
+enum CooldownStage { intro, slide, breathe, settle, prompt }
 
-/// About two minutes after a workout: slow breathing with a growing and
-/// shrinking circle, a short mindfulness cue, then a positive prompt.
+/// A slow, unhurried cooldown (about three minutes):
+/// 1. the mindfulness cue sits centred on screen for a few breaths' worth;
+/// 2. it glides down to the bottom as the breathing circle fades in;
+/// 3. slow breathing — the circle grows over each breath in and shrinks over
+///    each breath out, exactly as long as that phase; holds keep its size;
+/// 4. a positive prompt that stays until Finish.
 /// Floor-readable (nothing under 16sp), silent, and Skip is always there.
 class CooldownScreen extends StatefulWidget {
   const CooldownScreen({
     super.key,
     required this.set,
     required this.onFinished,
-    this.cueSeconds = 30,
+    this.introSeconds = 8,
+    this.slideSeconds = 4,
+    this.settleSeconds = 4,
   });
 
   final CooldownSet set;
 
-  /// Called once, by Skip, Finish, or when the user leaves the prompt.
+  /// Called once, by Skip or Finish.
   final VoidCallback onFinished;
-  final int cueSeconds;
+  final int introSeconds;
+  final int slideSeconds;
+  final int settleSeconds;
+
+  /// Seconds before the prompt appears (the prompt then waits for Finish).
+  static int secondsToPrompt(
+    CooldownSet s, {
+    int intro = 8,
+    int slide = 4,
+    int settle = 4,
+  }) => intro + slide + s.breathingSeconds + settle;
 
   @override
   State<CooldownScreen> createState() => _CooldownScreenState();
 }
 
 class _CooldownScreenState extends State<CooldownScreen>
-    with SingleTickerProviderStateMixin {
-  static const _small = 0.55;
+    with TickerProviderStateMixin {
+  static const small = 0.5;
 
+  /// Circle size, 0.5–1.0, driven phase by phase.
   late final AnimationController _circle = AnimationController(
     vsync: this,
-    value: _small,
-    lowerBound: _small,
+    value: small,
+    lowerBound: small,
     upperBound: 1.0,
   );
+
+  /// 0 = cue centred, circle hidden; 1 = cue at bottom, circle shown.
+  late final AnimationController _layout = AnimationController(vsync: this);
+
+  /// 0 = breathing visible; 1 = prompt visible.
+  late final AnimationController _outro = AnimationController(vsync: this);
+
   Timer? _timer;
-  CooldownStage _stage = CooldownStage.breathe;
+  CooldownStage _stage = CooldownStage.intro;
   int _round = 0;
   int _step = 0;
   int _left = 0;
   bool _done = false;
+  bool _reduceMotion = false;
 
   CooldownSet get _set => widget.set;
   BreathStep get _current => _set.steps[_step];
 
+  Duration _d(int s) => _reduceMotion ? Duration.zero : Duration(seconds: s);
+
   @override
   void initState() {
     super.initState();
-    _startStep();
+    _left = widget.introSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = MediaQuery.of(context).disableAnimations;
   }
 
   void _startStep() {
     _left = _current.seconds;
     final d = Duration(seconds: _current.seconds);
+    if (_reduceMotion) return;
     switch (_current.motion) {
       case BreathMotion.breatheIn:
         _circle.animateTo(1.0, duration: d, curve: Curves.easeInOut);
       case BreathMotion.breatheOut:
-        _circle.animateTo(_small, duration: d, curve: Curves.easeInOut);
+        _circle.animateTo(small, duration: d, curve: Curves.easeInOut);
       case BreathMotion.hold:
         _circle.stop();
     }
@@ -74,6 +108,17 @@ class _CooldownScreenState extends State<CooldownScreen>
       _left--;
       if (_left > 0) return;
       switch (_stage) {
+        case CooldownStage.intro:
+          _stage = CooldownStage.slide;
+          _left = widget.slideSeconds;
+          _layout.animateTo(
+            1,
+            duration: _d(widget.slideSeconds),
+            curve: Curves.easeInOutCubic,
+          );
+        case CooldownStage.slide:
+          _stage = CooldownStage.breathe;
+          _startStep();
         case CooldownStage.breathe:
           if (_step < _set.steps.length - 1) {
             _step++;
@@ -83,11 +128,15 @@ class _CooldownScreenState extends State<CooldownScreen>
             _step = 0;
             _startStep();
           } else {
-            _stage = CooldownStage.cue;
-            _left = widget.cueSeconds;
-            _circle.animateTo(0.75, duration: const Duration(seconds: 3));
+            _stage = CooldownStage.settle;
+            _left = widget.settleSeconds;
+            _outro.animateTo(
+              1,
+              duration: _d(widget.settleSeconds),
+              curve: Curves.easeInOut,
+            );
           }
-        case CooldownStage.cue:
+        case CooldownStage.settle:
           _stage = CooldownStage.prompt;
           _timer?.cancel();
         case CooldownStage.prompt:
@@ -107,6 +156,8 @@ class _CooldownScreenState extends State<CooldownScreen>
   void dispose() {
     _timer?.cancel();
     _circle.dispose();
+    _layout.dispose();
+    _outro.dispose();
     super.dispose();
   }
 
@@ -114,19 +165,19 @@ class _CooldownScreenState extends State<CooldownScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    final breathing = _stage == CooldownStage.breathe;
+    final atPrompt =
+        _stage == CooldownStage.settle || _stage == CooldownStage.prompt;
 
-    final (String big, String small) = switch (_stage) {
-      CooldownStage.breathe => (
-        _current.label,
-        '${_set.cue}\nBreath ${_round + 1} of ${_set.rounds}',
+    final cue = Text(
+      _set.cue,
+      key: const ValueKey('cooldown-cue'),
+      textAlign: TextAlign.center,
+      style: theme.textTheme.headlineSmall?.copyWith(
+        fontWeight: FontWeight.w600,
+        height: 1.35,
       ),
-      CooldownStage.cue => (_set.cue, 'Stay here a moment.'),
-      CooldownStage.prompt => (
-        _set.prompt,
-        'Have a think. No need to answer out loud.',
-      ),
-    };
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -136,7 +187,7 @@ class _CooldownScreenState extends State<CooldownScreen>
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
           child: Column(
             children: [
               Text(
@@ -149,68 +200,48 @@ class _CooldownScreenState extends State<CooldownScreen>
                 ),
               ),
               Expanded(
-                child: Center(
-                  child: LayoutBuilder(
-                    builder: (context, c) {
-                      final max = (c.biggest.shortestSide * 0.85).clamp(
-                        120.0,
-                        320.0,
-                      );
-                      return AnimatedBuilder(
-                        animation: _circle,
-                        builder: (context, _) {
-                          final f = reduceMotion ? 0.8 : _circle.value;
-                          return Container(
-                            key: const ValueKey('breath-circle'),
-                            width: max * f,
-                            height: max * f,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: scheme.primary.withValues(alpha: 0.22),
-                              border: Border.all(
-                                color: scheme.primary,
-                                width: 4,
-                              ),
+                child: AnimatedBuilder(
+                  animation: Listenable.merge([_layout, _outro, _circle]),
+                  builder: (context, _) {
+                    final t = _layout.value;
+                    final o = _outro.value;
+                    return Stack(
+                      children: [
+                        // Breathing circle + phase label, fading/growing in.
+                        Positioned.fill(
+                          bottom: 120,
+                          child: Opacity(
+                            opacity: (t * (1 - o)).clamp(0.0, 1.0),
+                            child: _breathingPart(theme, breathing),
+                          ),
+                        ),
+                        // The cue: centred, then glides to the bottom.
+                        Align(
+                          key: const ValueKey('cooldown-cue-align'),
+                          alignment: Alignment(0, t),
+                          child: Opacity(
+                            opacity: (1 - o).clamp(0.0, 1.0),
+                            child: cue,
+                          ),
+                        ),
+                        if (o > 0)
+                          Center(
+                            child: Opacity(
+                              opacity: o,
+                              child: _promptPart(theme),
                             ),
-                            alignment: Alignment.center,
-                            child: _stage == CooldownStage.breathe
-                                ? Text(
-                                    '$_left',
-                                    style: theme.textTheme.displaySmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: scheme.primary,
-                                        ),
-                                  )
-                                : null,
-                          );
-                        },
-                      );
-                    },
-                  ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ),
-              Text(
-                big,
-                key: const ValueKey('cooldown-big'),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                small,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
-              ),
-              const SizedBox(height: 12),
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomBar(
-        child: _stage == CooldownStage.prompt
+        child: atPrompt
             ? FilledButton(
                 key: const ValueKey('cooldown-finish'),
                 onPressed: _finish,
@@ -224,4 +255,87 @@ class _CooldownScreenState extends State<CooldownScreen>
       ),
     );
   }
+
+  Widget _breathingPart(ThemeData theme, bool breathing) {
+    final scheme = theme.colorScheme;
+    return LayoutBuilder(
+      builder: (context, c) {
+        // Leave room for the two labels under the circle.
+        final max = [
+          c.maxWidth * 0.8,
+          c.maxHeight - 110,
+          320.0,
+        ].reduce((a, b) => a < b ? a : b).clamp(60.0, 320.0);
+        final f = _reduceMotion ? 0.8 : _circle.value;
+        // Grow in from slightly smaller while it fades in.
+        final grow = 0.85 + 0.15 * _layout.value;
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: max,
+              height: max,
+              child: Center(
+                child: Container(
+                  key: const ValueKey('breath-circle'),
+                  width: max * f * grow,
+                  height: max * f * grow,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: scheme.primary.withValues(alpha: 0.22),
+                    border: Border.all(color: scheme.primary, width: 4),
+                  ),
+                  alignment: Alignment.center,
+                  child: breathing
+                      ? Text(
+                          '$_left',
+                          style: theme.textTheme.displaySmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: scheme.primary,
+                          ),
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              breathing ? _current.label : _set.steps.first.label,
+              key: const ValueKey('cooldown-big'),
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Breath ${_round + 1} of ${_set.rounds}',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _promptPart(ThemeData theme) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(
+        _set.prompt,
+        key: const ValueKey('cooldown-prompt'),
+        textAlign: TextAlign.center,
+        style: theme.textTheme.headlineMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      const SizedBox(height: 12),
+      Text(
+        'Have a think. No need to answer out loud.\nTake as long as you like.',
+        textAlign: TextAlign.center,
+        style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
+      ),
+    ],
+  );
 }

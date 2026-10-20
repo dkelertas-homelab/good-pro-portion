@@ -20,21 +20,26 @@ void main() {
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('five cooldown sets K1–K5, each about a minute of breathing', () {
-    expect(sets.map((s) => s.id), ['K1', 'K2', 'K3', 'K4', 'K5']);
-    for (final s in sets) {
-      expect(s.breathingSeconds, inInclusiveRange(40, 60), reason: s.id);
-      expect(s.cue, isNotEmpty);
-      expect(s.prompt, endsWith('?'));
-    }
-    final k2 = sets[1];
-    expect(k2.steps.map((s) => s.motion), [
-      BreathMotion.breatheIn,
-      BreathMotion.hold,
-      BreathMotion.breatheOut,
-      BreathMotion.hold,
-    ]);
-  });
+  test(
+    'five cooldown sets K1–K5, each about two slow minutes of breathing',
+    () {
+      expect(sets.map((s) => s.id), ['K1', 'K2', 'K3', 'K4', 'K5']);
+      for (final s in sets) {
+        expect(s.breathingSeconds, inInclusiveRange(100, 130), reason: s.id);
+        expect(s.rounds, greaterThanOrEqualTo(6), reason: s.id);
+        expect(CooldownScreen.secondsToPrompt(s), inInclusiveRange(120, 150));
+        expect(s.cue, isNotEmpty);
+        expect(s.prompt, endsWith('?'));
+      }
+      final k2 = sets[1];
+      expect(k2.steps.map((s) => s.motion), [
+        BreathMotion.breatheIn,
+        BreathMotion.hold,
+        BreathMotion.breatheOut,
+        BreathMotion.hold,
+      ]);
+    },
+  );
 
   test('cooldown setting defaults to off and persists', () async {
     final prefs = await SharedPreferences.getInstance();
@@ -83,10 +88,15 @@ void main() {
     home: CooldownScreen(set: s, onFinished: onDone),
   );
 
+  double circle(WidgetTester t) =>
+      t.getSize(find.byKey(const ValueKey('breath-circle'))).width;
+  double cueY(WidgetTester t) =>
+      t.getCenter(find.byKey(const ValueKey('cooldown-cue'))).dy;
+
   testWidgets('Skip is there from the start and finishes once', (t) async {
     var done = 0;
     await t.pumpWidget(screen(sets.first, () => done++));
-    expect(find.text('Breathe in'), findsOneWidget);
+    expect(find.text(sets.first.cue), findsOneWidget);
     expect(find.byKey(const ValueKey('cooldown-skip')), findsOneWidget);
     await t.tap(find.byKey(const ValueKey('cooldown-skip')));
     await t.pump();
@@ -94,18 +104,85 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
-  testWidgets('breathe → cue → prompt, then Finish', (t) async {
+  testWidgets('cue starts centred, then slides to the bottom', (t) async {
+    await t.pumpWidget(screen(sets.first, () {}));
+    final mid = t.getSize(find.byType(Scaffold)).height / 2;
+    final start = cueY(t);
+    expect((start - mid).abs(), lessThan(80));
+    await t.pump(const Duration(seconds: 7));
+    expect(cueY(t), closeTo(start, 0.5)); // still centred during intro
+    await t.pump(const Duration(seconds: 1)); // slide begins
+    await t.pump(const Duration(seconds: 2));
+    final half = cueY(t);
+    expect(half, greaterThan(start + 20));
+    await t.pump(const Duration(seconds: 2));
+    await t.pump(const Duration(milliseconds: 100));
+    expect(cueY(t), greaterThan(half));
+    expect(find.text('Breathe in'), findsOneWidget);
+    // Cue stays visible at the bottom while breathing.
+    await t.pump(const Duration(seconds: 30));
+    expect(find.text(sets.first.cue), findsOneWidget);
+    await t.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('circle grows over the whole in-breath, shrinks over out, '
+      'and holds still', (t) async {
+    final k2 = sets[1]; // box: in 4, hold 4, out 4, hold 4
+    await t.pumpWidget(screen(k2, () {}));
+    await t.pump(const Duration(seconds: 12)); // intro 8 + slide 4
+    await t.pump(const Duration(milliseconds: 1));
+    final s0 = circle(t);
+    await t.pump(const Duration(seconds: 2));
+    final s2 = circle(t);
+    await t.pump(const Duration(milliseconds: 1999));
+    final s4 = circle(t);
+    expect(s2, greaterThan(s0));
+    expect(s4, greaterThan(s2)); // still growing near end of the 4s phase
+    await t.pump(const Duration(seconds: 2));
+    expect(find.text('Hold'), findsOneWidget);
+    expect(circle(t), closeTo(s4, 1)); // hold = same size
+    await t.pump(const Duration(seconds: 2));
+    await t.pump(const Duration(seconds: 2));
+    expect(find.text('Breathe out'), findsOneWidget);
+    final o2 = circle(t);
+    await t.pump(const Duration(milliseconds: 1999));
+    expect(circle(t), lessThan(o2));
+    expect(circle(t), lessThan(s4));
+    await t.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('reduce motion: circle stays one size', (t) async {
+    await t.pumpWidget(
+      MaterialApp(
+        theme: buildLightTheme(),
+        home: MediaQuery(
+          data: const MediaQueryData(disableAnimations: true),
+          child: CooldownScreen(set: sets.first, onFinished: () {}),
+        ),
+      ),
+    );
+    await t.pump(const Duration(seconds: 13));
+    final a = circle(t);
+    await t.pump(const Duration(seconds: 3));
+    expect(circle(t), a);
+    await t.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('intro → slide → breathe → prompt, which waits for Finish', (
+    t,
+  ) async {
     final k1 = sets.first;
     var done = 0;
     await t.pumpWidget(screen(k1, () => done++));
-    await t.pump(const Duration(seconds: 4));
-    expect(find.text('Breathe out'), findsOneWidget);
-    await t.pump(Duration(seconds: k1.breathingSeconds - 4));
-    expect(find.byKey(const ValueKey('cooldown-big')), findsOneWidget);
-    expect(find.text(k1.cue), findsOneWidget);
-    expect(find.byKey(const ValueKey('cooldown-skip')), findsOneWidget);
-    await t.pump(const Duration(seconds: 30));
-    expect(find.text(k1.prompt), findsOneWidget);
+    final toPrompt = CooldownScreen.secondsToPrompt(k1);
+    for (var i = 0; i < toPrompt - 1; i++) {
+      await t.pump(const Duration(seconds: 1));
+    }
+    expect(find.byKey(const ValueKey('cooldown-prompt')), findsOneWidget);
+    expect(find.byKey(const ValueKey('cooldown-finish')), findsOneWidget);
+    await t.pump(const Duration(seconds: 1));
+    await t.pump(const Duration(minutes: 5));
+    expect(find.text(k1.prompt), findsOneWidget); // no auto-close
     expect(done, 0);
     await t.tap(find.byKey(const ValueKey('cooldown-finish')));
     expect(done, 1);

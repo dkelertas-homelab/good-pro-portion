@@ -237,6 +237,28 @@ void main() {
       await t.pumpWidget(const SizedBox());
     });
 
+    testWidgets('Skip is silent, timer move change still cues', (t) async {
+      await freshSound();
+      await pumpTimer(t);
+      fake.events.clear();
+      for (var i = 0; i < 3; i++) {
+        await t.tap(find.text('Skip ›'));
+        await t.pump();
+      }
+      expect(fake.plays, isEmpty);
+      // Let the current segment run out: its end still plays a tone.
+      for (var i = 0; i < 12; i++) {
+        await t.pump(const Duration(seconds: 1));
+      }
+      expect(
+        fake.plays.where(
+          (p) => p.startsWith('moveStart') || p.startsWith('restStart'),
+        ),
+        isNotEmpty,
+      );
+      await t.pumpWidget(const SizedBox());
+    });
+
     testWidgets('no blips while paused', (t) async {
       await freshSound();
       await pumpTimer(t);

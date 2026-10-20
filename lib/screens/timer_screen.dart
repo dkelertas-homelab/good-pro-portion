@@ -133,7 +133,9 @@ class _TimerScreenState extends State<TimerScreen>
     }
   }
 
-  void _advance() {
+  /// [cue] is false for a manual Skip: David found the tap beeps annoying.
+  /// Timer-driven move changes still play their tone.
+  void _advance({bool cue = true}) {
     if (_index >= _segments.length - 1) {
       _finish();
       return;
@@ -142,7 +144,7 @@ class _TimerScreenState extends State<TimerScreen>
       _index += 1;
       _remaining = _segments[_index].seconds;
     });
-    _cueStart();
+    if (cue) _cueStart();
   }
 
   void _goBack() {
@@ -335,7 +337,7 @@ class _TimerScreenState extends State<TimerScreen>
                 paused: _paused,
                 onBack: _goBack,
                 onPause: _togglePause,
-                onSkip: _advance,
+                onSkip: () => _advance(cue: false),
               ),
             ],
           ),

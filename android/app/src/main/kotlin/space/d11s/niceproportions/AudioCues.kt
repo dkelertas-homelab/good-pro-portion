@@ -17,8 +17,10 @@ import java.io.File
 
 /**
  * Workout sound cues and the optional music loop, played from the app's own
- * bundled WAVs. Other apps' audio is ducked (lowered), never stopped, and
- * nothing plays while the phone is on silent or vibrate.
+ * bundled WAVs. Other apps' audio is ducked (lowered), never stopped.
+ * Sound follows media volume and the in-app On/Soft/Mute button only. The
+ * ringer mode is NOT checked: Do Not Disturb reports SILENT and that made the
+ * app totally silent on a Samsung S22 even with media volume up.
  */
 class AudioCues(private val context: Context, messenger: BinaryMessenger) :
     MethodChannel.MethodCallHandler {
@@ -66,7 +68,7 @@ class AudioCues(private val context: Context, messenger: BinaryMessenger) :
                 "play" -> {
                     val id = sounds[call.argument<String>("name")]
                     val volume = (call.argument<Double>("volume") ?: 1.0).toFloat()
-                    if (id != null && volume > 0f && !isSilenced()) {
+                    if (id != null && volume > 0f ) {
                         requestFocus()
                         cueFocusHeld = true
                         main.removeCallbacks(releaseCueFocus)
@@ -78,7 +80,7 @@ class AudioCues(private val context: Context, messenger: BinaryMessenger) :
                 "startMusic" -> {
                     val asset = call.argument<String>("asset")!!
                     val volume = (call.argument<Double>("volume") ?: 0.3).toFloat()
-                    if (!isSilenced()) startMusic(asset, volume)
+                    startMusic(asset, volume)
                     result.success(null)
                 }
                 "musicVolume" -> {
@@ -91,22 +93,19 @@ class AudioCues(private val context: Context, messenger: BinaryMessenger) :
                     result.success(null)
                 }
                 "resumeMusic" -> {
-                    if (!isSilenced()) music?.start()
+                    music?.start()
                     result.success(null)
                 }
                 "stopMusic" -> {
                     stopMusic()
                     result.success(null)
                 }
-                "isSilenced" -> result.success(isSilenced())
                 else -> result.notImplemented()
             }
         } catch (e: Exception) {
             result.error("audio", e.message, null)
         }
     }
-
-    private fun isSilenced() = audioManager.ringerMode != AudioManager.RINGER_MODE_NORMAL
 
     /** SoundPool and MediaPlayer need a real file; copy the bundled asset to the cache once. */
     private fun copyAsset(asset: String): File {

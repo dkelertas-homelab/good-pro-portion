@@ -3,6 +3,9 @@ import 'dart:ui' show PathMetric;
 
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+
+import '../audio/sound.dart';
 import '../models/content.dart';
 import '../theme/app_theme.dart';
 import '../widgets/countdown_ring.dart';
@@ -69,6 +72,20 @@ class _TimerScreenState extends State<TimerScreen>
       duration: const Duration(milliseconds: 500),
     );
     _ticker = Timer.periodic(const Duration(seconds: 1), _onTick);
+    _sound.startWorkoutMusic();
+    _cueStart();
+  }
+
+  Sound get _sound => Sound.instance;
+
+  /// Distinct tones so the user can follow along without watching.
+  void _cueStart() => _sound.play(
+    _segments[_index].phase == _Phase.rest ? Cue.restStart : Cue.moveStart,
+  );
+
+  void _togglePause() {
+    setState(() => _paused = !_paused);
+    _paused ? _sound.pauseWorkoutMusic() : _sound.resumeWorkoutMusic();
   }
 
   _Segment _stepSegment(_Phase phase, RoutineStep s, int seconds) {
@@ -107,6 +124,8 @@ class _TimerScreenState extends State<TimerScreen>
       _advance();
     } else {
       setState(() => _remaining -= 1);
+      // Soft countdown blips on 3, 2, 1.
+      if (_remaining <= 3) _sound.play(Cue.blip);
     }
   }
 
@@ -119,6 +138,7 @@ class _TimerScreenState extends State<TimerScreen>
       _index += 1;
       _remaining = _segments[_index].seconds;
     });
+    _cueStart();
   }
 
   void _goBack() {
@@ -127,10 +147,12 @@ class _TimerScreenState extends State<TimerScreen>
       _index -= 1;
       _remaining = _segments[_index].seconds;
     });
+    _cueStart();
   }
 
   void _finish() {
     _ticker?.cancel();
+    _sound.stopWorkoutMusic();
     final elapsed = DateTime.now().difference(_startedAt);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
@@ -146,6 +168,7 @@ class _TimerScreenState extends State<TimerScreen>
   @override
   void dispose() {
     _ticker?.cancel();
+    _sound.stopWorkoutMusic();
     _blink.dispose();
     super.dispose();
   }
@@ -202,6 +225,7 @@ class _TimerScreenState extends State<TimerScreen>
           tooltip: 'End workout',
           onPressed: () => Navigator.of(context).maybePop(),
         ),
+        actions: const [SoundButton()],
       ),
       body: SafeArea(
         top: false,
@@ -280,7 +304,7 @@ class _TimerScreenState extends State<TimerScreen>
                 canGoBack: _index > 0,
                 paused: _paused,
                 onBack: _goBack,
-                onPause: () => setState(() => _paused = !_paused),
+                onPause: _togglePause,
                 onSkip: _advance,
               ),
             ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
+
 import '../models/content.dart';
 import '../widgets/figure_view.dart';
 import 'exercise_screen.dart';
@@ -21,6 +23,7 @@ class RoutineScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(routine.name),
         actions: [
+          const SoundButton(),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: Center(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/content.dart';
+import '../widgets/sound_button.dart';
 import '../widgets/figure_view.dart';
 import '../widgets/insets.dart';
 import '../widgets/swap_sides_badge.dart';
@@ -95,6 +96,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 ),
               ),
             ),
+          const SoundButton(),
         ],
       ),
       body: PageView.builder(

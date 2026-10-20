@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/sound_button.dart';
 import '../monetisation/ad_slot.dart';
 import '../monetisation/ads_config.dart';
 
@@ -35,6 +36,7 @@ class DoneScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Done'),
         automaticallyImplyLeading: false,
+        actions: const [SoundButton()],
       ),
       body: ListView(
         padding: scrollPadding(

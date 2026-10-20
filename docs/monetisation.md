@@ -43,6 +43,6 @@ google.com, pub-4030959040832472, DIRECT, f08c47fec0942fa0
    - Data safety: the Mobile Ads SDK collects device or other IDs (advertising ID), approximate location, app interactions and diagnostics, shared with Google for advertising and analytics; data is encrypted in transit. Update the form before shipping an ads build.
    - Monetise → Products → In-app products: create `remove_ads` (one-off), set the price and activate it. Play only lets you create products after an AAB with the BILLING permission (0.1.5+6 or later) has been uploaded to a track.
    - Licence testing: add David's Google account so test purchases aren't charged. Install from the internal-testing track (Play-signed); sideloaded debug builds show "Not available".
-   - Payments profile is already set up (AdMob/Play merchant).
+   - Play needs a payments (merchant) profile linked to the developer account before paid products work. This is separate from AdMob payments.
 4. Privacy policy page on d11s.space that covers AdMob ads and consent: draft text in `docs/privacy-policy-ads.md`.
 5. Build release with `ADS_ENABLED=true` once David OKs it (the Remove ads card is hidden/disabled while ads are off).

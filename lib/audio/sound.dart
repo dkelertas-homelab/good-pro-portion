@@ -70,11 +70,11 @@ class Sound {
       enabled = enabled ?? audioEnabled;
 
   /// Compile-time switch for the sound button, music toggle and cues.
-  /// Release (prod) builds: off unless built with --dart-define=AUDIO_ENABLED=true.
-  /// Debug/staging builds (the CI debug APK): on unless AUDIO_ENABLED=false.
+  /// On in every build (debug and release) unless built with
+  /// --dart-define=AUDIO_ENABLED=false.
   static const audioEnabled = bool.fromEnvironment(
     'AUDIO_ENABLED',
-    defaultValue: !kReleaseMode,
+    defaultValue: true,
   );
 
   /// When false the app is silent and hides every sound control.

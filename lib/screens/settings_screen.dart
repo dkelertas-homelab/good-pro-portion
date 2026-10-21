@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/sound_button.dart';
@@ -26,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _startCard = true;
   bool _cooldown = false;
   bool _dark = true;
+  bool _testMode = false;
 
   @override
   void initState() {
@@ -38,6 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _startCard = s.showStartCard;
         _cooldown = s.cooldownEnabled;
         _dark = s.darkModeEnabled;
+        _testMode = s.testMode;
       });
     });
   }
@@ -139,21 +142,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: Theme.of(context).textTheme.labelSmall,
           ),
           Card(
-            child: SwitchListTile(
-              key: const ValueKey('cooldown-switch'),
-              title: const Text('Cooldown'),
-              subtitle: const Text(
-                'About 3 unhurried minutes of slow breathing after a workout',
+            child: ValueListenableBuilder(
+              valueListenable: SettingsStore.cooldown,
+              builder: (context, cooldown, _) => SwitchListTile(
+                key: const ValueKey('cooldown-switch'),
+                title: const Text('Cooldown'),
+                subtitle: const Text(
+                  'About 3 unhurried minutes of slow breathing after a workout',
+                ),
+                value: _store == null ? _cooldown : cooldown,
+                onChanged: _store == null
+                    ? null
+                    : (v) {
+                        _store!.setCooldownEnabled(v);
+                        setState(() => _cooldown = v);
+                      },
               ),
-              value: _cooldown,
-              onChanged: _store == null
-                  ? null
-                  : (v) {
-                      _store!.setCooldownEnabled(v);
-                      setState(() => _cooldown = v);
-                    },
             ),
           ),
+          if (kDebugMode) ...[
+            const SizedBox(height: 14),
+            Text('DEBUG', style: Theme.of(context).textTheme.labelSmall),
+            Card(
+              child: SwitchListTile(
+                key: const ValueKey('test-mode-switch'),
+                title: const Text('Test mode'),
+                subtitle: const Text(
+                  'Every timer starts at 5 seconds left, to test sounds fast. '
+                  'Debug builds only.',
+                ),
+                value: _testMode,
+                onChanged: _store == null
+                    ? null
+                    : (v) {
+                        _store!.setTestMode(v);
+                        setState(() => _testMode = v);
+                      },
+              ),
+            ),
+          ],
           const SizedBox(height: 14),
           Text('REMINDERS', style: Theme.of(context).textTheme.labelSmall),
           Card(

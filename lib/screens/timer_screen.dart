@@ -44,12 +44,24 @@ class TimerScreen extends StatefulWidget {
     required this.routine,
     required this.workSeconds,
     required this.restSeconds,
+    this.warmup = true,
+    this.testMode = false,
   });
 
   final AppContent content;
   final Routine routine;
   final int workSeconds;
   final int restSeconds;
+
+  /// False skips the warm-up moves entirely.
+  final bool warmup;
+
+  /// Debug-only test mode: each segment starts with 5 s left.
+  final bool testMode;
+
+  /// Seconds left when a segment starts.
+  static int startSeconds(int full, bool testMode) =>
+      testMode && full > 5 ? 5 : full;
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
@@ -70,7 +82,7 @@ class _TimerScreenState extends State<TimerScreen>
     super.initState();
     _startedAt = DateTime.now();
     _segments = _buildSegments();
-    _remaining = _segments.first.seconds;
+    _remaining = _startOf(_segments.first);
     _blink = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -81,6 +93,9 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   Sound get _sound => Sound.instance;
+
+  int _startOf(_Segment s) =>
+      TimerScreen.startSeconds(s.seconds, widget.testMode);
 
   /// Distinct tones so the user can follow along without watching.
   void _cueStart() => _sound.play(
@@ -107,7 +122,7 @@ class _TimerScreenState extends State<TimerScreen>
   List<_Segment> _buildSegments() {
     final r = widget.routine;
     final out = <_Segment>[];
-    for (final s in r.warmup) {
+    for (final s in widget.warmup ? r.warmup : const <RoutineStep>[]) {
       out.add(_stepSegment(_Phase.warmup, s, r.warmupSeconds));
     }
     for (var i = 0; i < r.work.length; i++) {
@@ -142,7 +157,7 @@ class _TimerScreenState extends State<TimerScreen>
     }
     setState(() {
       _index += 1;
-      _remaining = _segments[_index].seconds;
+      _remaining = _startOf(_segments[_index]);
     });
     if (cue) _cueStart();
   }
@@ -151,7 +166,7 @@ class _TimerScreenState extends State<TimerScreen>
     if (_index <= 0) return;
     setState(() {
       _index -= 1;
-      _remaining = _segments[_index].seconds;
+      _remaining = _startOf(_segments[_index]);
     });
   }
 
@@ -190,6 +205,7 @@ class _TimerScreenState extends State<TimerScreen>
       MaterialPageRoute(
         builder: (ctx) => CooldownScreen(
           set: cooldown!,
+          testMode: widget.testMode,
           onFinished: () => Navigator.of(ctx).pushReplacement(done()),
         ),
       ),
@@ -236,7 +252,7 @@ class _TimerScreenState extends State<TimerScreen>
     final ringColor = seg.phase == _Phase.rest
         ? const Color(0xFFF59E0B)
         : Theme.of(context).colorScheme.primary;
-    final warmupCount = widget.routine.warmup.length;
+    final warmupCount = widget.warmup ? widget.routine.warmup.length : 0;
     final header = switch (seg.phase) {
       _Phase.warmup => 'Warm-up ${_index + 1}/$warmupCount',
       _Phase.work =>
@@ -256,7 +272,14 @@ class _TimerScreenState extends State<TimerScreen>
           tooltip: 'End workout',
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        actions: const [SoundButton()],
+        actions: [
+          if (widget.testMode)
+            const Padding(
+              padding: EdgeInsets.only(right: 4),
+              child: Center(child: TestModeBadge()),
+            ),
+          const SoundButton(),
+        ],
       ),
       body: SafeArea(
         top: false,
@@ -645,6 +668,31 @@ class _Controls extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Small "TEST MODE" tag on the timer when debug test mode is on.
+class TestModeBadge extends StatelessWidget {
+  const TestModeBadge({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      key: const ValueKey('test-mode-badge'),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: scheme.tertiaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        'TEST MODE',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: scheme.onTertiaryContainer,
+        ),
+      ),
     );
   }
 }

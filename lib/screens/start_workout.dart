@@ -26,6 +26,8 @@ Future<void> startWorkout(
       routine: routine,
       workSeconds: store.workSeconds,
       restSeconds: store.restSeconds,
+      warmup: store.warmupEnabled,
+      testMode: store.testMode,
     ),
   );
   final nav = Navigator.of(context);

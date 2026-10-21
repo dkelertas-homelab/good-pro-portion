@@ -11,7 +11,9 @@ class AppColors {
   static const lightBg = Color(0xFFF7F8FA);
 }
 
-ThemeData buildLightTheme() {
+ThemeData buildLightTheme() => _quiet(_light());
+
+ThemeData _light() {
   final scheme = ColorScheme.fromSeed(
     seedColor: AppColors.teal,
     brightness: Brightness.light,
@@ -29,13 +31,16 @@ ThemeData buildLightTheme() {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(52),
+        enableFeedback: false,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
     ),
   );
 }
 
-ThemeData buildDarkTheme() {
+ThemeData buildDarkTheme() => _quiet(_dark());
+
+ThemeData _dark() {
   final scheme = ColorScheme.fromSeed(
     seedColor: AppColors.coral,
     brightness: Brightness.dark,
@@ -54,8 +59,27 @@ ThemeData buildDarkTheme() {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(52),
+        enableFeedback: false,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
     ),
   );
 }
+
+/// No Android touch click sounds on any button or list tile (David: "no
+/// beeps on or after any presses"). Filled buttons set it in their own theme.
+ThemeData _quiet(ThemeData t) => t.copyWith(
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(enableFeedback: false),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(enableFeedback: false),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(enableFeedback: false),
+  ),
+  iconButtonTheme: IconButtonThemeData(
+    style: IconButton.styleFrom(enableFeedback: false),
+  ),
+  listTileTheme: const ListTileThemeData(enableFeedback: false),
+);

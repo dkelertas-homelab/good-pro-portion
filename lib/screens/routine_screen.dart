@@ -7,6 +7,8 @@ import '../widgets/figure_view.dart';
 import 'exercise_screen.dart';
 import 'start_workout.dart';
 import '../widgets/insets.dart';
+import '../widgets/workout_parts_chip.dart';
+import '../data/settings_store.dart';
 
 class RoutineScreen extends StatelessWidget {
   const RoutineScreen({
@@ -20,22 +22,7 @@ class RoutineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(routine.name),
-        actions: [
-          const SoundButton(),
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Center(
-              child: Chip(
-                label: const Text('No cool-down'),
-                visualDensity: VisualDensity.compact,
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(routine.name), actions: [const SoundButton()]),
       body: Column(
         children: [
           Expanded(
@@ -55,10 +42,18 @@ class RoutineScreen extends StatelessWidget {
                   '~${routine.approxMinutes} min · example',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const SizedBox(height: 12),
-                _SectionHeader(
-                  title: 'Warm-up · 2 min',
-                  trailing: '${routine.warmupSeconds}s each',
+                const SizedBox(height: 10),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: WorkoutPartsChip(),
+                ),
+                const SizedBox(height: 8),
+                ValueListenableBuilder(
+                  valueListenable: SettingsStore.warmup,
+                  builder: (context, on, _) => _SectionHeader(
+                    title: on ? 'Warm-up · 2 min' : 'Warm-up · skipped',
+                    trailing: '${routine.warmupSeconds}s each',
+                  ),
                 ),
                 ...routine.warmup.asMap().entries.map((e) {
                   final s = e.value;

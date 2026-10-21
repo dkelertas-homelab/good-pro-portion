@@ -40,6 +40,8 @@ void main() {
         home: RoutineScreen(content: content, routine: r),
       ),
     );
+    await t.ensureVisible(find.text('1. Squat'));
+    await t.pumpAndSettle();
     await t.tap(find.text('1. Squat'));
     await settle(t);
 

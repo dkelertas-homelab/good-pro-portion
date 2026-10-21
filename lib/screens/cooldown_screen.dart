@@ -33,6 +33,7 @@ class CooldownScreen extends StatefulWidget {
     this.introSeconds = 8,
     this.slideSeconds = 4,
     this.settleSeconds = 4,
+    this.testMode = false,
   });
 
   final CooldownSet set;
@@ -44,6 +45,9 @@ class CooldownScreen extends StatefulWidget {
   final int introSeconds;
   final int slideSeconds;
   final int settleSeconds;
+
+  /// Debug-only test mode: breathing starts with 5 s left (last breath).
+  final bool testMode;
 
   /// Seconds before the prompt appears (the prompt then waits for Finish).
   static int secondsToPrompt(
@@ -110,8 +114,8 @@ class _CooldownScreenState extends State<CooldownScreen>
   }
 
   void _startStep() {
-    _left = _current.seconds;
-    final d = Duration(seconds: _current.seconds);
+    _left = widget.testMode && _current.seconds > 5 ? 5 : _current.seconds;
+    final d = Duration(seconds: _left);
     if (_reduceMotion) return;
     switch (_current.motion) {
       case BreathMotion.breatheIn:
@@ -151,6 +155,11 @@ class _CooldownScreenState extends State<CooldownScreen>
           );
         case CooldownStage.slide:
           _stage = CooldownStage.breathe;
+          if (widget.testMode) {
+            // Jump to the final breath, trimmed to 5 s.
+            _round = _set.rounds - 1;
+            _step = _set.steps.length - 1;
+          }
           _startStep();
         case CooldownStage.breathe:
           if (_step < _set.steps.length - 1) {

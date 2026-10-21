@@ -12,6 +12,8 @@ import 'package:good_pro_portion/screens/routine_screen.dart';
 import 'package:good_pro_portion/screens/timer_screen.dart';
 import 'package:good_pro_portion/theme/app_theme.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'font_loader.dart';
 
 class _SilentBackend implements SoundBackend {
@@ -37,6 +39,7 @@ void main() {
   late AppContent content;
 
   setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
     // Screenshots show the debug/staging build, which has audio on.
     Sound.instance = Sound(backend: _SilentBackend(), enabled: true);
     content = ContentLoader.parse(

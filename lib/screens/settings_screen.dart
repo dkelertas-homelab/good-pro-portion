@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/sound_button.dart';
 import '../widgets/sound_settings.dart';
@@ -11,6 +12,14 @@ import '../monetisation/ads_service.dart';
 import '../monetisation/remove_ads_card.dart';
 import '../widgets/version_text.dart';
 import '../widgets/insets.dart';
+
+/// The hosted privacy policy (also linked from the Play listing).
+const privacyPolicyUrl = 'https://d11s.space/privacy/nice-pro-portions';
+
+/// Opens [url] in the browser. Swappable in tests.
+@visibleForTesting
+Future<bool> Function(Uri url) openExternalUrl = (url) =>
+    launchUrl(url, mode: LaunchMode.externalApplication);
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.content});
@@ -226,11 +235,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Card(
             child: Column(
               children: [
-                const ListTile(
-                  title: Text('Privacy policy'),
-                  subtitle: Text('Hosted page coming before Play release'),
-                  trailing: Icon(Icons.chevron_right),
-                  enabled: false,
+                ListTile(
+                  title: const Text('Privacy policy'),
+                  subtitle: const Text('d11s.space/privacy/nice-pro-portions'),
+                  trailing: const Icon(Icons.open_in_new),
+                  onTap: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    bool ok;
+                    try {
+                      ok = await openExternalUrl(Uri.parse(privacyPolicyUrl));
+                    } catch (_) {
+                      ok = false;
+                    }
+                    if (!ok) {
+                      messenger.showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Couldn't open a browser. The policy is at "
+                            'd11s.space/privacy/nice-pro-portions',
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
                 ListTile(
                   title: const Text('Health disclaimer'),

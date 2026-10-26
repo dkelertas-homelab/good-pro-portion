@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ads_config.dart';
@@ -16,6 +17,11 @@ abstract class BillingStore {
   Future<bool> buyNonConsumable(ProductDetails product);
   Future<void> completePurchase(PurchaseDetails purchase);
   Future<void> restorePurchases();
+
+  /// Purchases Play currently holds for this account, straight from Play's
+  /// cache (no UI). Refunded or revoked purchases aren't in it. Throws if
+  /// Play can't answer, so a failed check never turns ads back on.
+  Future<List<PurchaseDetails>> queryOwnedPurchases();
 }
 
 class InAppPurchaseStore implements BillingStore {
@@ -38,6 +44,14 @@ class InAppPurchaseStore implements BillingStore {
       _iap.completePurchase(purchase);
   @override
   Future<void> restorePurchases() => _iap.restorePurchases();
+  @override
+  Future<List<PurchaseDetails>> queryOwnedPurchases() async {
+    final r = await _iap
+        .getPlatformAddition<InAppPurchaseAndroidPlatformAddition>()
+        .queryPastPurchases();
+    if (r.error != null) throw StateError(r.error!.message);
+    return r.pastPurchases;
+  }
 }
 
 /// Remove ads through Google Play Billing (one-off, non-consumable
@@ -47,6 +61,9 @@ class InAppPurchaseStore implements BillingStore {
 ///   start-up before Play answers.
 /// - Every purchase update is acknowledged with `completePurchase` (Play
 ///   refunds purchases that aren't acknowledged within 3 days).
+/// - On start-up it quietly checks what Play says the account owns, so a
+///   reinstall or new phone hides ads without tapping Restore, and a refunded
+///   or revoked purchase brings ads back.
 /// - No server-side verification: this is a cosmetic entitlement.
 class PlayPurchaseService implements PurchaseService {
   PlayPurchaseService({
@@ -71,6 +88,10 @@ class PlayPurchaseService implements PurchaseService {
   Future<void>? _initFuture;
   Completer<PurchaseOutcome>? _buying;
   Completer<void>? _restoring;
+
+  /// The background start-up ownership check, for tests.
+  @visibleForTesting
+  Future<void>? ownershipCheck;
 
   @override
   ValueListenable<bool> get adFree => _adFree;
@@ -104,6 +125,37 @@ class PlayPurchaseService implements PurchaseService {
       _available.value = _product != null;
     } catch (e) {
       debugPrint('Billing unavailable: $e');
+      return;
+    }
+    // Don't hold up the first frame; the cached flag covers that.
+    ownershipCheck = _syncOwnership();
+  }
+
+  /// Matches the cached flag to what Play holds right now.
+  Future<void> _syncOwnership() async {
+    final List<PurchaseDetails> owned;
+    try {
+      owned = await _store!.queryOwnedPurchases();
+    } catch (e) {
+      debugPrint('Ownership check failed, keeping cached state: $e');
+      return;
+    }
+    final mine = owned.where((p) => p.productID == removeAdsProductId);
+    final has = mine.any(
+      (p) =>
+          p.status == PurchaseStatus.purchased ||
+          p.status == PurchaseStatus.restored,
+    );
+    // A purchase still pending payment isn't owned yet, but don't take ads
+    // off or put them back because of it.
+    if (!has && mine.any((p) => p.status == PurchaseStatus.pending)) return;
+    if (has != _adFree.value) await _setOwned(has);
+    for (final p in mine.where((p) => p.pendingCompletePurchase)) {
+      try {
+        await _store!.completePurchase(p);
+      } catch (e) {
+        debugPrint('completePurchase failed: $e');
+      }
     }
   }
 

@@ -74,6 +74,18 @@ class FakeStore implements BillingStore {
   Future<void> completePurchase(PurchaseDetails purchase) async =>
       completed.add(purchase);
 
+  /// What Play's purchase cache returns; null makes the query fail.
+  List<PurchaseStatus>? ownedStatuses;
+
+  @override
+  Future<List<PurchaseDetails>> queryOwnedPurchases() async {
+    final st = ownedStatuses ?? (owned ? [PurchaseStatus.purchased] : []);
+    if (queryFails) throw StateError('Play unavailable');
+    return [for (final x in st) _p(x)];
+  }
+
+  bool queryFails = false;
+
   @override
   Future<void> restorePurchases() async => scheduleMicrotask(
     () => _ctrl.add(owned ? [_p(PurchaseStatus.restored)] : []),
@@ -144,7 +156,8 @@ void main() {
     final s = svc(store);
     expect(await s.restore(), isTrue);
     expect(s.adFree.value, isTrue);
-    expect(store.completed, hasLength(1));
+    // Acknowledged by the restore and the start-up check.
+    expect(store.completed, isNotEmpty);
   });
 
   test('missing product or no Play: unavailable, nothing charged', () async {
@@ -158,6 +171,54 @@ void main() {
       expect(await s.buyRemoveAds(), PurchaseOutcome.unavailable);
       expect(s.adFree.value, isFalse);
     }
+  });
+
+  test('start-up check: reinstall hides ads without tapping Restore', () async {
+    final store = FakeStore()..owned = true;
+    final s = svc(store);
+    await s.init();
+    await s.ownershipCheck;
+    expect(s.adFree.value, isTrue);
+    expect(prefs.getBool(PlayPurchaseService.ownedKey), isTrue);
+    expect(store.completed, hasLength(1), reason: 'acknowledged if needed');
+  });
+
+  test(
+    'start-up check: refunded or revoked purchase brings ads back',
+    () async {
+      await prefs.setBool(PlayPurchaseService.ownedKey, true);
+      final s = svc(FakeStore());
+      await s.init();
+      expect(s.adFree.value, isTrue, reason: 'cached until Play answers');
+      await s.ownershipCheck;
+      expect(s.adFree.value, isFalse);
+      expect(prefs.getBool(PlayPurchaseService.ownedKey), isFalse);
+    },
+  );
+
+  test(
+    'start-up check: a failed query or pending payment changes nothing',
+    () async {
+      await prefs.setBool(PlayPurchaseService.ownedKey, true);
+      final failing = svc(FakeStore()..queryFails = true);
+      await failing.init();
+      await failing.ownershipCheck;
+      expect(failing.adFree.value, isTrue);
+
+      final pending = svc(
+        FakeStore()..ownedStatuses = [PurchaseStatus.pending],
+      );
+      await pending.init();
+      await pending.ownershipCheck;
+      expect(pending.adFree.value, isTrue);
+    },
+  );
+
+  test('start-up check skipped when Play is down', () async {
+    final s = svc(FakeStore(storeUp: false)..owned = true);
+    await s.init();
+    expect(s.ownershipCheck, isNull);
+    expect(s.adFree.value, isFalse);
   });
 
   Widget wrap(Widget child) => MaterialApp(

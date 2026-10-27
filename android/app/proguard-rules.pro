@@ -7,3 +7,10 @@
 
 # Launcher activity — must match applicationId/namespace exactly.
 -keep class space.d11s.niceproportions.MainActivity { *; }
+
+# WorkManager (pulled in by play-services-ads) builds its Room database by
+# reflection: Class.forName("...WorkDatabase_Impl").newInstance(). Old Room
+# 2.2.5 consumer rules only say "-keep class * extends RoomDatabase", which in
+# R8 full mode (AGP 8+ default) no longer keeps the no-arg constructor, so
+# every release build crashed at startup in androidx.startup.InitializationProvider.
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
